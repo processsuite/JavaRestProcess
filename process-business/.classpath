@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="conf/" kind="src" path="src"/>
+	<classpathentry kind="src" path="src/conf"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/process-domain"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Process"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Com4j"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/BPMprocess/mule-standalone-3.7.0/lib/user/com4j.jar"/>
+	<classpathentry kind="lib" path="C:/BPMprocess/mule-standalone-3.7.0/lib/user/jersey-media-multipart-2.11.jar"/>
+	<classpathentry kind="lib" path="C:/BPMprocess/mule-standalone-3.7.0/lib/boot/log4j-core-2.1.jar"/>
+	<classpathentry kind="lib" path="C:/BPMprocess/mule-standalone-3.7.0/lib/boot/log4j-1.2-api-2.1.jar"/>
+	<classpathentry kind="lib" path="C:/BPMprocess/mule-standalone-3.7.0/lib/opt/spring-context-4.1.6.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/BPMprocess/mule-standalone-3.7.0/lib/opt/spring-beans-4.1.6.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/BPMprocess/mule-standalone-3.7.0/lib/opt/spring-core-4.1.6.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/BPMprocess/mule-standalone-3.7.0/lib/user/org.eclipse.persistence.core.jar"/>
+	<classpathentry kind="lib" path="C:/BPMprocess/mule-standalone-3.7.0/lib/user/org.eclipse.persistence.moxy.jar"/>
+	<classpathentry kind="lib" path="C:/BPMprocess/mule-standalone-3.7.0/lib/opt/commons-codec-1.11.jar"/>
+	<classpathentry kind="lib" path="C:/BPMprocess/mule-standalone-3.7.0/lib/opt/commons-dbcp2-2.4.0.jar"/>
+	<classpathentry kind="lib" path="C:/BPMprocess/mule-standalone-3.7.0/lib/opt/commons-pool2-2.6.0.jar"/>
+	<classpathentry kind="lib" path="C:/BPMprocess/mule-standalone-3.7.0/lib/opt/sqljdbc4-2.0.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

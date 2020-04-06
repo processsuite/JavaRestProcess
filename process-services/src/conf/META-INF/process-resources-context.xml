@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:aop="http://www.springframework.org/schema/aop"
+  xsi:schemaLocation="
+http://www.springframework.org/schema/beans 
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-3.0.xsd
+http://www.springframework.org/schema/aop 
+http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+
+  <context:annotation-config />    
+  <context:component-scan base-package="com.process.services.rest.aop" />  
+  
+  <bean id="myAspect" class="com.process.services.rest.aop.SystemAudit"/>
+	<aop:config>
+		<aop:aspect ref="myAspect">
+			<aop:pointcut id="runtime-check" expression="execution(* com.process.business..*(..))" />
+			<aop:around method="injectAround" pointcut-ref="runtime-check" />			
+		</aop:aspect>
+	</aop:config>
+ 
+  <!-- Auth resources -->
+  <bean id="authResource" class="com.process.services.rest.auth.AuthResource"/>
+  
+  <!-- Enviroment resources -->
+  <bean id="environmentResource" class="com.process.services.rest.environment.EnvironmentResource"/>  
+   <!-- data services resources -->
+  <bean id="dataServicesResource" class="com.process.services.rest.dataServices.DataServicesResource"/> 
+  <!-- User resources -->
+  <bean id="userResource" class="com.process.services.rest.user.UserResource"/>  
+  
+  <!-- Service resources -->
+  <bean id="serviceResource" class="com.process.services.rest.user.ServicioResource"/> 
+  
+  <!-- Report resources -->
+  <bean id="reportResource" class="com.process.services.rest.user.ReportResource"/> 
+  
+  <!-- File resources -->
+  <bean id="fileResource" class="com.process.services.rest.user.FileResource"/>   
+  
+  <!-- File resources -->
+  <bean id="colaborarResource" class="com.process.services.rest.user.ColaborarResource"/>   
+  
+  <!-- Cesta resources -->
+  <bean id="cestaResource" class="com.process.services.rest.user.CestaResource"/> 
+  
+  <!-- Archivos plantilla-->
+  <bean id="generarReporte" class="com.process.services.rest.user.GenerarReporte"/> 
+  
+  <!-- Document resources -->
+  <bean id="documentResource" class="com.process.services.rest.document.DocumentResource"/>  
+  <bean id="uploadResource" class="com.process.services.rest.document.UploadResource"/>  
+  
+  <!-- Email resources -->
+  <bean id="emailResource" class="com.process.services.rest.user.EmailResource"/>
+  <!-- logs resources -->
+  <bean id="logResource" class="com.process.services.rest.log.LogResource"/>
+  <!-- Console resources -->
+  <bean id="consoleResource" class="com.process.services.rest.console.ConsoleResource"/>   
+</beans>

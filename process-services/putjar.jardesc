@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jardesc>
+    <jar path="C:/BPMprocess/mule-standalone-3.7.0/apps/process/lib/process-services.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/process-services/putjar.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="true" overwrite="true" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+    <selectedProjects/>
+    <manifest generateManifest="true" manifestLocation="" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
+        <javaElement handleIdentifier="=process-services/src\/conf"/>
+        <file path="/process-services/.classpath"/>
+        <file path="/process-services/.project"/>
+        <javaElement handleIdentifier="=process-services/src"/>
+    </selectedElements>
+</jardesc>
