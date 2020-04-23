@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:tls="http://www.mulesoft.org/schema/mule/tls" 
+    xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jersey="http://www.mulesoft.org/schema/mule/jersey" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.6.1"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:mule-ss="http://www.mulesoft.org/schema/mule/spring-security"
+    xmlns:ss="http://www.springframework.org/schema/security"	
+	xmlns:ldap="http://www.mulesoft.org/schema/mule/ldap"
+	xmlns:json="http://www.mulesoft.org/schema/mule/json"
+	xmlns:quartz="http://www.mulesoft.org/schema/mule/quartz"
+	xsi:schemaLocation="http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-current.xsd
+http://www.mulesoft.org/schema/mule/jersey http://www.mulesoft.org/schema/mule/jersey/current/mule-jersey.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/spring-security http://www.mulesoft.org/schema/mule/spring-security/3.1/mule-spring-security.xsd
+http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
+http://www.mulesoft.org/schema/mule/ldap http://www.mulesoft.org/schema/mule/ldap/current/mule-ldap.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/quartz http://www.mulesoft.org/schema/mule/quartz/current/mule-quartz.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd">
+
+	<spring:beans>
+		<spring:import resource="classpath:META-INF/process-business-context.xml" />
+		<spring:import resource="classpath:META-INF/process-resources-context.xml" />
+	</spring:beans>
+
+	<http:listener-config name="HTTP_Listener_Configuration_NoSSL"	host="0.0.0.0" port="9092" protocol="HTTP" doc:name="HTTPS Listener Configuration NO SSL" >
+	</http:listener-config> 	
+	
+	<flow name="ambienteProcessFlow">
+		<http:listener config-ref="HTTP_Listener_Configuration_NoSSL"	path="/process/api/admin/*" doc:name="HTTP" />
+		<set-property propertyName="Access-Control-Allow-Origin" value="*" doc:name="Property"/>
+		<set-property propertyName="Access-Control-Allow-Methods" value="GET, POST, PATCH, PUT, DELETE, OPTIONS" doc:name="Property"/>
+		<set-property propertyName="Access-Control-Allow-Headers" value="Origin, Authorization, Content-Type, X-Auth-Token" doc:name="Property"/>	
+		<jersey:resources>
+		  <component>		    
+			<spring-object bean="environmentResource" />
+		  </component>
+		  <component>		    
+			<spring-object bean="emailComponentResource" />
+		  </component>
+		   <component>		    
+			<spring-object bean="dataServicesResource" />
+		  </component>
+		</jersey:resources>		
+	</flow>		
+	 
+	<flow name="processFlow">
+		<http:listener config-ref="HTTP_Listener_Configuration_NoSSL"	path="/process/api/*" parseRequest="false" doc:name="HTTP" />
+		<set-property propertyName="Access-Control-Allow-Origin" value="*" doc:name="Property"/>
+		<set-property propertyName="Access-Control-Allow-Methods" value="GET, POST, PATCH, PUT, DELETE, OPTIONS" doc:name="Property"/>
+		<set-property propertyName="Access-Control-Allow-Headers" value="Origin, Authorization, Content-Type, X-Auth-Token" doc:name="Property"/>		
+		<set-property propertyName="Access-Control-Expose-Headers" value="Ticket" doc:name="Property"/>			
+		<jersey:resources>
+		  <custom-interceptor class="com.process.services.rest.aop.InterceptorAuthorizationMule"/>
+		  <component>		    
+			<spring-object bean="authResource" />
+		  </component>
+		  <component>		    
+			<spring-object bean="userResource" />
+		  </component>
+		  <component>		    
+			<spring-object bean="serviceResource" />
+		  </component>	
+		  <component>		    
+			<spring-object bean="reportResource" />
+		  </component>
+		  <component>		    
+			<spring-object bean="fileResource" />
+		  </component>
+		  <component>		    
+			<spring-object bean="colaborarResource" />
+		  </component>		  
+		  <component>		    
+			<spring-object bean="cestaResource" />
+		  </component>
+		  <component>		    
+			<spring-object bean="generarReporte" />
+		  </component>
+		  <component>		    
+			<spring-object bean="documentResource" />
+		  </component>
+		  <component>		    
+			<spring-object bean="emailResource" />
+		  </component>
+		  <component>		    
+			<spring-object bean="uploadResource" />			
+		  </component>
+		  <component>		    
+			<spring-object bean="logResource" />			
+		  </component>
+		  <component>		    
+			<spring-object bean="consoleResource" />			
+		  </component>
+		  <jersey:property key="jersey.config.server.provider.classnames" value="org.glassfish.jersey.media.multipart.MultiPartFeature" />		  
+		</jersey:resources>
+		<choice-exception-strategy doc:name="Choice Exception Strategy">
+			<catch-exception-strategy doc:name="Catch Exception Strategy" when="#[exception.causedBy(javax.ws.rs.NotAuthorizedException)]">
+				 <set-payload value="#[exception.cause.message]" doc:name="Set Payload"/>
+				 <set-property propertyName="http.status" value="401" doc:name="Property" />
+			</catch-exception-strategy>		
+		</choice-exception-strategy>		
+	</flow>	
+
+</mule>

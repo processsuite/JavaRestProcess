@@ -21,4 +21,5 @@ http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
   <context:component-scan base-package="com.process.business.plantilla.impl" /> 
   <context:component-scan base-package="com.process.business.log.impl" />
   <context:component-scan base-package="com.process.business.console.impl" /> 
+  <context:component-scan base-package="com.process.business.component.impl" />
 </beans>
