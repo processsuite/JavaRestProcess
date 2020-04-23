@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<registro>
+   <direcInternet>
+      <item valorDef="(directorio virtual)" descrip="Directorio virtual para los agentes" id="i_RepAgentes" lectura="false" type="T"></item>
+      <item valorDef="(directorio virtual)" descrip="Directorio virtual para los anexos" id="i_RepAnexos" lectura="false" type="T"></item>
+      <item valorDef="(directorio virtual)" descrip="Directorio virtual para la ayuda" id="i_RepAyuda" lectura="false" type="T"></item>
+      <item valorDef="(directorio virtual)" descrip="Directorio virtual para los includes (Cuando se trabaja con WebAmbientes)" id="i_RepIncludes" lectura="false" type="T"></item>
+      <item valorDef="" descrip="Repositorio de agentes internet" id="RepAgenteI" lectura="false" type="T"></item>
+      <item valorDef="[¿?]" descrip="Dirección de salida [¿?]" id="SalidaHTTP" lectura="false" type="T"></item>
+   </direcInternet>
+   <administrador>
+      <item valorDef="(nombre archivo lst)" descrip="Scripts a ejecutar para la creación de administradores" id="AdmScripts" lectura="false" type="T"></item>
+      <item valorDef="(Encriptado)" descrip="Clave genérica (Creación de usuarios en los procesos administrativos)" id="CG" lectura="false" type="T">74090C3AF1366446568AE692509AD642</item>
+      <item valorDef="(Encriptado)" descrip="Código del owner" id="Cod" lectura="false" type="T">0E79764F954E17</item>
+      <item valorDef="código;password (Encriptado)" descrip="Conexión del usuario pool" id="cpu" lectura="false" type="T">0E79764F954E1728078EE0932E88AD379C9D424DC4AD</item>
+      <item valorDef="S / N" descrip="Indica si el password debe contener números (la validación se hace al conectarse)" id="NumPwd" lectura="false" type="T"></item>
+      <item valorDef="" descrip="Rol de usuario" id="Role" lectura="false" type="T">KIMETIC_USR</item>
+      <item valorDef="" descrip="Rol de administrador" id="RoleAdm" lectura="false" type="T">KIMETIC_ADM</item>
+      <item valorDef="" descrip="Nombre del Tablespace  de datos" id="Tablespace" lectura="false" type="T">KIMETIC</item>
+      <item valorDef="" descrip="Nombre del Tablespace temporal" id="tmp_tablespace" lectura="false" type="T"></item>
+      <item valorDef="S / N" descrip="Indica si se activa el usuario para conexión Pool" id="UCPU" lectura="false" type="T">S</item>
+      <item valorDef="(nombre archivo lst)" descrip="Scripts a ejecutar para la creación de usuarios" id="UsrScripts" lectura="false" type="T"></item>
+   </administrador>
+   <seguridad>
+      <item valorDef="S / N" descrip="Indica que el password es Case sensitive" id="CS" lectura="false" type="T"></item>
+      <item valorDef="" descrip="Longitud mínima del password (aplica a todos los ambientes, la validación se hace al conectarse)" id="lnp" lectura="false" type="T"></item>
+      <item valorDef="" descrip="Cantidad de intentos para bloqueo" id="SegCantidadBloqueoConex" lectura="false" type="T"></item>
+      <item valorDef="" descrip="Cantidad de contraseñas almacenadas" id="SegCantidadPWDAlmac" lectura="false" type="T"></item>
+      <item valorDef="" descrip="Longitud mínima del password" id="SegLongMinPWD" lectura="false" type="T"></item>
+      <item valorDef="S / N" descrip="Indica que las políticas no aplican a usuarios administradores" id="SegNoAplicarPoliticasAAdmin" lectura="false" type="T"></item>
+      <item valorDef="S / N" descrip="Indica que la contraseña debe contener caracteres especiales" id="SegPWDConCaracteresEsp" lectura="false" type="T"></item>
+      <item valorDef="S / N" descrip="Indica que la contraseña debe contener letras mayúsculas (se debe definir CS=S)" id="SegPWDConMayusculas" lectura="false" type="T"></item>
+      <item valorDef="S / N" descrip="Indica que la contraseña debe contener letras minúsculas (se debe definir CS=S)" id="SegPWDConMinusculas" lectura="false" type="T"></item>
+      <item valorDef="S / N" descrip="Indica que la contraseña debe contener números" id="SegPWDConNumeros" lectura="false" type="T"></item>
+      <item valorDef="(Minutos)" descrip="Tiempo de bloqueo de conexión por intentos fallidos" id="SegTiempoBloqueoConex" lectura="false" type="T"></item>
+      <item valorDef="(Días)" descrip="Tiempo máximo de duración de contraseña (si es S define TVP=S y ValDurPwd=S)" id="SegTiempoMaxPWD" lectura="false" type="T"></item>
+      <item valorDef="(Días)" descrip="Tiempo mínimo de duración de contraseña" id="SegTiempoMinPWD" lectura="false" type="T"></item>
+      <item valorDef="(Cantidad de días)" descrip="Tiempo de vencimiento de password" id="TVP" lectura="false" type="T"></item>
+   </seguridad>
+   <inspeccion>
+      <item valorDef="11111111111111111" descrip="Habilitar / deshabilitar variables de inspección" id="Inspeccion" lectura="false" type="C">
+         <opciones>
+            <opcion valor="1" posicion="1" checked="true">Estadisticas globales</opcion>
+            <opcion valor="0" posicion="2" checked="false">Estadistica SQL</opcion>
+            <opcion valor="1" posicion="3" checked="true">Traza destinos asignados</opcion>
+            <opcion valor="0" posicion="4" checked="false">Traza email</opcion>
+            <opcion valor="1" posicion="5" checked="true">Traza CALL STACK DE PARA CAMPO</opcion>
+            <opcion valor="0" posicion="6" checked="false">Traza CALL STACK</opcion>
+            <opcion valor="1" posicion="7" checked="true">Traza interface</opcion>
+            <opcion valor="0" posicion="8" checked="false">Modificacion de sesión de usuario</opcion>
+            <opcion valor="0" posicion="9" checked="false">Creación y destrucción</opcion>
+            <opcion valor="0" posicion="10" checked="false">Roles programables</opcion>
+            <opcion valor="0" posicion="11" checked="false">Condiciones de flujo</opcion>
+            <opcion valor="0" posicion="12" checked="false">Estadisticas</opcion>
+            <opcion valor="1" posicion="13" checked="true">transformadas</opcion>
+            <opcion valor="1" posicion="14" checked="true">Modificarción de campos via agente</opcion>
+            <opcion valor="1" posicion="15" checked="true">Agente Internet</opcion>
+            <opcion valor="1" posicion="16" checked="true">Agente Windows</opcion>
+            <opcion valor="1" posicion="17" checked="true">Agente SQL</opcion>
+         </opciones>
+	  </item>
+      <item valorDef="" descrip="Indicador de SQL" id="_SQL_" lectura="false" type="T"></item>
+      <item valorDef="" descrip="Longitud mínima de la contraseña" id="LNP" lectura="false" type="T"></item>
+   </inspeccion>
+   <repFisico>
+      <item valorDef="(Path Ambiente)\Modelos" descrip="Path de diseño" id="PathDiseno" lectura="false" type="T"></item>
+      <item valorDef="(Path Ambiente)\Formas" descrip="Path de formas" id="PathFormas" lectura="false" type="T"></item>
+      <item valorDef="(Path Ambiente)\Agentes" descrip="Repositorio de agentes" id="RepAgentes" lectura="false" type="T"></item>
+      <item valorDef="(Path Ambiente)\Anexos" descrip="Repositorio de anexos" id="RepAnexos" lectura="false" type="T"></item>
+      <item valorDef="" descrip="Repositorio ftp para anexos (Process JSP)" id="RepAnexosFtp" lectura="false" type="T"></item>
+      <item valorDef="(Path Ambiente)\vAnexos" descrip="Repositorio de anexos virtuales" id="RepAnexosVirtual" lectura="false" type="T"></item>
+      <item valorDef="(Path Ambiente)\Misc" descrip="Repositorio de ayuda" id="RepAyuda" lectura="false" type="T"></item>
+      <item valorDef="(Path Ambiente)\Data" descrip="Repositorio de data" id="RepData" lectura="false" type="T"></item>
+      <item valorDef="(Path Ambiente)\Fuera" descrip="Repositorio de documentos terminados" id="RepDocsTerminados" lectura="false" type="T"></item>
+      <item valorDef="(Path Ambiente)\Logs" descrip="Repositorio de errores" id="RepError" lectura="false" type="T"></item>
+      <item valorDef="(Path Ambiente)\Mics" descrip="Repositorio de firmas" id="RepFirmas" lectura="false" type="T"></item>
+      <item valorDef="(Path Ambiente)\Mics" descrip="Repositorio de fotos" id="RepFotos" lectura="false" type="T"></item>
+      <item valorDef="(Path Ambiente)\Mics" descrip="Repositorio de idioma" id="RepIdioma" lectura="false" type="T"></item>
+      <item valorDef="(Path Ambiente)\Transito" descrip="Repositorio de documentos en tránsito" id="Repositorio" lectura="false" type="T"></item>
+      <item valorDef="(Path Ambiente)\Scripts" descrip="Repositorio de scripts" id="RepScripts" lectura="false" type="T"></item>
+      <item valorDef="(Path WKP)" descrip="Repositorio de Process Web (Cuando se trabaja con WebAmbientes debe apuntar al directorio que contiene los Includes)" id="RepWeb" lectura="false" type="T"></item>
+   </repFisico>
+   <fuenteDatos>
+      <item valorDef="5 minutos por defecto" descrip="Tiempo en minutos para la espera de las conexiones bloqueadas" id="BloqueoConexion" lectura="false" type="T"></item>
+      <item valorDef="0 ODBC / 1 OLEDB" descrip="Tipo de conexión con la base de datos" id="Canal" lectura="false" type="T"></item>
+      <item valorDef="" descrip="DSN del ambiente" id="Dsn" lectura="false" type="T"></item>
+      <item valorDef="Oracle7 / PostgresSQL / SqlServer" descrip="Manejador de base de datos" id="Rdbms" lectura="false" type="T"></item>
+      <item valorDef="" descrip="Tiempo de timeout de la base de datos (En segundos)" id="timeOutBD" lectura="false" type="T"></item>
+      <item valorDef="S / N" descrip="Indica que la columna Data de la tabla tip_sesion se maneja como tipo varbinary para Sql Server" id="TipSesionDataVarBinary" lectura="false" type="T"></item>
+      <item valorDef="[¿?]" descrip="Tipo de cursor" id="tpCursor" lectura="false" type="T"></item>
+   </fuenteDatos>
+   <configuracion>
+      <item valorDef="" descrip="Guarda la información de los eventos en los Contextos XML [Designer]" id="AGDEF" lectura="false" type="T"></item>
+      <item valorDef="S / N" descrip="[¿?]" id="AnularNamedPipes" lectura="false" type="T"></item>
+      <item valorDef="(nombre archivo htm)" descrip="Página del banner" id="Banner" lectura="false" type="T"></item>
+      <item valorDef="1 Baja / 2 Regular / 3 Normal / 4 Alta" descrip="Prioridad de ejecución de conector" id="cp" lectura="false" type="T"></item>
+      <item valorDef="S / N" descrip="Muestra en el seguimiento el número de documento derivado" id="DerivadasEnSeguimiento" lectura="false" type="T"></item>
+      <item valorDef="20 (por defecto)" descrip="Cantidad de documentos en Consultas" id="DocColaborar" lectura="false" type="T"></item>
+      <item valorDef="" descrip="Dominio al que se desea conectar para la conexión de confianza con verificación" id="DOMINIO" lectura="false" type="T"></item>
+      <item valorDef="1111100" descrip="Habilitar / deshabilitar días laborables de la semana" id="DVS" lectura="false" type="T"></item>
+      <item valorDef="" descrip="Email del web master" id="emailmaster" lectura="false" type="T"></item>
+      <item valorDef="(día/mes, día/mes)" descrip="Días y meses no laborables" id="FFA" lectura="false" type="T"></item>
+      <item valorDef="0 no hay / != 0 si hay" descrip="Indica si hay paginación de matrices" id="Filas" lectura="false" type="T"></item>
+      <item valorDef="" descrip="Fechas no laborables" id="FVA" lectura="false" type="T"></item>
+      <item valorDef="DD/MM/YYYY / MM/DD/YYYY" descrip="Definición por ambiente de formato de fecha, sustituye al global de la máquina" id="FormatoFecha" lectura="false" type="T"></item>
+      <item valorDef="., 0 ,." descrip="Definición por ambiente de formato de separador de miles y decimal, sustituye al global de la máquina" id="FormatoMilesDecimal" lectura="false" type="T"></item>
+      <item valorDef="1 Ingles / 2 Español" descrip="Idioma de Process Web" id="idioma" lectura="false" type="T"></item>
+      <item valorDef="S / N" descrip="[¿?]" id="LibreSeguimiento" lectura="false" type="T"></item>
+      <item valorDef="S / N" descrip="Indica que el motor envía emails" id="NENGM" lectura="false" type="T"></item>
+      <item valorDef="S / N" descrip="Envió de email síncrono" id="Notifica" lectura="false" type="T"></item>
+      <item valorDef="50 (por defecto)" descrip="Cantidad de documentos en Bandeja de trabajo" id="Pendientes" lectura="false" type="T"></item>
+      <item valorDef="" descrip="Porcentaje de avance para mostrar el semáforo en amarillo" id="PorcAvance" lectura="false" type="T"></item>
+      <item valorDef="Página de presentación" descrip="Página de presentación" id="Presenta" lectura="false" type="T"></item>
+      <item valorDef="S / N" descrip="Indica si se utiliza el ReadPast en los Deletes" id="ReadPastDelete" lectura="false" type="T"></item>
+      <item valorDef="20 (por defecto)" descrip="Cantidad de documentos en Seguimiento" id="Salidas" lectura="false" type="T"></item>
+      <item valorDef="S / N" descrip="Obliga al Designer a salvar en la versión 4 del tpp [Designer]" id="SalvarTPPVers4" lectura="false" type="T"></item>
+      <item valorDef="" descrip="Servidor SMTP" id="SMTP" lectura="false" type="T"></item>
+      <item valorDef="" descrip="Texto de aviso por defecto" id="textomail" lectura="false" type="T"></item>
+      <item valorDef="S / N" descrip="Manejo del tiempo de servicio en horas" id="TiempoServicioHoras" lectura="false" type="T"></item>
+      <item valorDef="S / N" descrip="Habilita todas las trazas" id="TodaTraza" lectura="false" type="T"></item>
+      <item valorDef="0 / 1" descrip="Indica si se muestra el botón de aceptar en el listados de los eventos Lista Sql" id="TpoLista" lectura="false" type="T"></item>
+      <item valorDef="S / N" descrip="Indica si se valida vencimiento del password" id="ValDurPwd" lectura="false" type="T"></item>
+      <item valorDef="S / N" descrip="Valida los XML generados a mano" id="Validarxml" lectura="false" type="T"></item>
+      <item valorDef="S / N" descrip="[¿?]" id="VerificarRepetidos" lectura="false" type="T"></item>
+      <item valorDef="S / N" descrip="Indica si la solución maneja ambientes web" id="WebAmbientes" lectura="false" type="T"></item>
+      <item valorDef="0 Normal / 2 De confianza" descrip="Tipo de conexión process web" id="WebtipoConexion" lectura="false" type="T"></item>
+      <item valorDef="" descrip="??" id="LIB" lectura="false" type="T"></item>
+   </configuracion>
+   <email>
+      <item valorDef="" descrip="Asunto del correo cuando culmina la espera" id="asuntomailfinespera" lectura="false" type="T"></item>
+      <item valorDef="email;clave;Usa SSL(true, false);puerto (Encriptado)" descrip="Correo autenticado" id="email_dispatch" lectura="false" type="T"></item>
+      <item valorDef="email;nombre" descrip="Cuenta que envía todos los correos electrónicos" id="emailCorporativo" lectura="false" type="T"></item>
+      <item valorDef="111111 (1 activa / 0 desactiva)" descrip="Encender los diferentes tipos de correo electrónico (aviso, notificación,  agente, clave, copia email)" id="emailCorporativoSet" lectura="false" type="T"></item>
+      <item valorDef="S / N" descrip="Permite el envío de correos a la misma persona" id="mailself" lectura="false" type="T"></item>
+      <item valorDef="" descrip="Texto del correo cuando culmina la espera" id="textomailfinespera" lectura="false" type="T">prueba de registro</item>
+   </email>
+   <varAmbiente>
+      <item valorDef="" descrip="agregado1" id="agregado" lectura="false" type="T">1</item>
+      <item valorDef="" descrip="descripcion" id="agregado2" lectura="false" type="T">2</item>
+   </varAmbiente>
+</registro>

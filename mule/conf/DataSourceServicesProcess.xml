@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<connections>
+	<ANGULAR>
+		<driverJdbc>com.microsoft.sqlserver.jdbc.SQLServerDriver</driverJdbc>
+		<cadena>jdbc:sqlserver://localhost:1433;databaseName=ANGULAR</cadena>
+		<usuario>ANGULAR_TIPS</usuario>
+		<clave>ANGULAR_TIPS</clave>
+	</ANGULAR>
+</connections>
+
+

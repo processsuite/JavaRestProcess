@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ArrayData>
+	<KIMETIC>
+		<Query id="query1">
+			<sql>select puesto, nb_puesto, cd_usr_act from puesto where cd_usr_act = {usr}</sql>
+		</Query>
+		<Query id="query2">
+			<sql>select * from inst where nu_doc = {nu_doc} and nu_inst = {nu_inst}</sql>
+		</Query>
+		<Query id="query3">
+			<sql>select * from WF</sql>
+		</Query>
+	</KIMETIC>
+	<BPMPROCESS>
+		<Query id="query1">
+			<sql>select puesto from puesto</sql>
+		</Query>
+	</BPMPROCESS>	
+	<ANGULAR>
+		<Query id="queryCapitales">
+			<sql>select * from param where ID_CLASIFICACION = 'C6' AND ID_PARAMETRO_PADRE ={idParam}</sql>
+		</Query>
+		<Query id="queryClasificacion">
+			<sql>select ID_PARAMETRO, TX_PARAMETRO from param where ID_CLASIFICACION = {idParam}</sql>
+		</Query>
+	</ANGULAR>
+	
+	
+</ArrayData>
