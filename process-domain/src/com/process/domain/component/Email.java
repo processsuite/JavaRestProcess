@@ -1,8 +1,11 @@
 package com.process.domain.component;
 
+import java.util.List;
+
 public class Email {
 	private String smtp;// props.put("mail.smtp.host", "smtp.gmail.com");  //El servidor SMTP de Google
-	private String remitente;// props.put("mail.smtp.user", remitente);
+	private String remitente;// alias para el envio de correo
+	private String usuario; // props.put("mail.smtp.user", remitente);
 	private String clave;// props.put("mail.smtp.clave", clave);    //La clave de la cuenta
 	private String authUsuClave;// props.put("mail.smtp.auth", "true");    //Usar autenticación mediante usuario y clave
 	private String startTls;// props.put("mail.smtp.starttls.enable", "true"); //Para conectar de manera segura al servidor SMTP
@@ -10,7 +13,22 @@ public class Email {
 	private String asunto;
 	private String cuerpo;
 	private String destinatario;
+	private List<FileEmail> listFile;
 	
+	
+
+	public List<FileEmail> getListFile() {
+		return listFile;
+	}
+	public void setListFile(List<FileEmail> listFile) {
+		this.listFile = listFile;
+	}
+	public String getUsuario() {
+		return usuario;
+	}
+	public void setUsuario(String usuario) {
+		this.usuario = usuario;
+	}
 	public String getSmtp() {
 		return smtp;
 	}

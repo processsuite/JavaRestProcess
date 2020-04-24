@@ -2,18 +2,26 @@ package com.process.business.component.impl;
 
 import java.util.Properties;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.process.business.component.ComponentEmailManager;
 import com.process.domain.component.Email;
+import com.process.domain.component.FileEmail;
 
 
 @Service("componentEmailManager")
@@ -34,13 +42,13 @@ public class SimpleComponentEmailManager implements ComponentEmailManager{
 	    props.put("mail.smtp.mail.sender",email.getRemitente());
 	    props.put("mail.smtp.port", email.getPort()); //El puerto SMTP seguro de Google
 	    
-	    props.put("mail.smtp.user", email.getRemitente());
+	    props.put("mail.smtp.user", email.getUsuario());
 	    //props.put("mail.smtp.clave", email.getClave());    //La clave de la cuenta
 
 	    Session session = Session.getDefaultInstance(props);
 	    MimeMessage message = new MimeMessage(session);
 	    
-	    String[] recipientList = email.getDestinatario().split(",");
+	    String[] recipientList = email.getDestinatario().split(";");
 	    InternetAddress[] recipientAddress = new InternetAddress[recipientList.length];
 	    int counter = 0;
 
@@ -51,19 +59,46 @@ public class SimpleComponentEmailManager implements ComponentEmailManager{
 		        counter++;
 		    }
 	    	
-	        message.setFrom(new InternetAddress(email.getRemitente()));
+	    	// Se compone la parte del texto
+            BodyPart texto = new MimeBodyPart();
+            texto.setText(email.getCuerpo());
+        
+         // Una MultiParte para agrupar texto e imagen.
+            MimeMultipart multiParte = new MimeMultipart();
+            multiParte.addBodyPart(texto);
+            //multiParte.addBodyPart(adjunto);
+            //Multipart multipart = new MimeMultipart("mixed");
+            if(email.getListFile().size() > 0){
+            	for (FileEmail listFile : email.getListFile()) {
+                    MimeBodyPart messageBodyPart = new MimeBodyPart();
+                    DataSource source = new FileDataSource(listFile.getRutaArchivo());
+                    messageBodyPart.setDataHandler(new DataHandler(source));
+                    messageBodyPart.setFileName(listFile.getNombreArchivo());
+                    multiParte.addBodyPart(messageBodyPart);
+                }
+            }
+            
+            
+            
+	    	
+	        /*Correo*/
+            message.setFrom(new InternetAddress(email.getRemitente()));
 	        message.addRecipients(Message.RecipientType.TO, recipientAddress);   //Se podrían añadir varios de la misma manera
 	        message.setSubject(email.getAsunto());
 	        message.setText(email.getCuerpo());
-	       
+	        message.setContent(multiParte);
+	        
+	     
+            
+	        //envio de correo
 	        Transport transport = session.getTransport("smtp");
-	        transport.connect(email.getSmtp(), email.getRemitente(),email.getClave());
+	        transport.connect(email.getSmtp(), email.getUsuario(),email.getClave());
 	        transport.sendMessage(message, message.getAllRecipients());
 	        transport.close();
-	         resp=true;
+	        resp=true;
 	    }
 	    catch (MessagingException me) {
-	        logger.error(me.getMessage());   //Si se produce un error
+	        logger.error(me.getMessage()+" "+me.getCause());   //Si se produce un error
 	         resp=false;
 	    }
 	    return resp;
