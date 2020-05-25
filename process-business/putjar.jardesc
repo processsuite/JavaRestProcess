@@ -12,9 +12,9 @@
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
         <file path="/process-business/.project"/>
-        <file path="/process-business/.classpath"/>
         <javaElement handleIdentifier="=process-business/src\/conf"/>
-        <javaElement handleIdentifier="=process-business/src"/>
+        <file path="/process-business/.classpath"/>
         <file path="/process-business/putjar.jardesc"/>
+        <javaElement handleIdentifier="=process-business/src"/>
     </selectedElements>
 </jardesc>

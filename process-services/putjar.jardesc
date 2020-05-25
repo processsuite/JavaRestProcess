@@ -11,9 +11,9 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
-        <javaElement handleIdentifier="=process-services/src\/conf"/>
-        <file path="/process-services/.classpath"/>
         <file path="/process-services/.project"/>
+        <javaElement handleIdentifier="=process-services/src\/conf"/>
         <javaElement handleIdentifier="=process-services/src"/>
+        <file path="/process-services/.classpath"/>
     </selectedElements>
 </jardesc>
