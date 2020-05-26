@@ -1869,15 +1869,15 @@ public class SimpleDocumentManager implements DocumentManager {
 		File archivo = new File(fileLocation.getFile());
 		 Object[][] arrayResult = null;
 		 RespDataService resp = new RespDataService();
-		 logger.info("localizacion ambiente "+fileLocation.getFile());
+		 //logger.info("localizacion ambiente "+fileLocation.getFile());
 		try{
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
-	        logger.info("Nodo ambiente existe archivo "+archivo.exists());
+	        //logger.info("Nodo ambiente existe archivo "+archivo.exists());
 	        Document document = documentBuilder.parse(archivo);
 	        document.getDocumentElement().normalize();
 			 NodeList listServ = document.getElementsByTagName(ambiente);
-			 logger.info("Nodo ambiente "+listServ.getLength());
+			 //logger.info("Nodo ambiente "+listServ.getLength());
 			 Node nodo = listServ.item(0);
 			 //logger.info("Nodo ambiente "+nodo.toString());
 			 Element elemtServi = (Element) nodo;
@@ -1925,7 +1925,7 @@ public class SimpleDocumentManager implements DocumentManager {
 					 	 for (int c = 0; c < param.length; c++) {
 					 		 String campo = (String) param[c][0];
 							 String valor = (String) param[c][1];
-							 logger.info("Full match: " + matcher.group(1)+" = "+campo);
+							 //logger.info("Full match: " + matcher.group(1)+" = "+campo);
 					 		 if(matcher.group(1).equals(campo)){
 					 			 sql = sql.replace(matcher.group(0), "'"+valor+"'");
 					 			 break;
@@ -1949,7 +1949,7 @@ public class SimpleDocumentManager implements DocumentManager {
 		        resp.setArrayResult(arrayResult);
 		        resp.setCodError("200");
 			} catch (SQLException e) {
-				logger.info("Error dataServuces "+e.getMessage()+" causa "+e.getLocalizedMessage());
+				logger.error("Error dataServices ",e);
 				resp.setCodError("800");
 				resp.setMsgError("Error BD "+e.getMessage());
 				//return false;
@@ -1960,7 +1960,7 @@ public class SimpleDocumentManager implements DocumentManager {
 		        		 logger.info("cierra conexion");
 		        		 }
 				} catch (SQLException e) {
-					logger.info("Error "+e.getMessage());
+					logger.error("Error dataServices close ",e);
 					resp.setCodError("801");
 					resp.setMsgError("Cerrar cadena de conexión "+e.getMessage());
 				}

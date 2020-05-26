@@ -78,20 +78,32 @@ public class SimpleGeneradorIreport implements GeneradorIreportManager{
 		
 		map = jsonToJasper(nombreForm, wfa, plantilla.getPathArch(), xmlDatosDoc);
 		//map.put("SUBREPORT_DIR", "C:/BPMprocess/Reps/angular/reportes/");
-		logger.info(map.toString());
+		
+		File archivoJrxml = new File(archivo);
+		
+		//logger.info(map.toString());
 		try {
-			JasperReport report = JasperCompileManager.compileReport(archivo);
-			JasperPrint print = JasperFillManager.fillReport(report, map);
-			//JasperExportManager.exportReportToPdfFile(print, plantilla.getPathArch()+plantilla.getpNombreArch()+plantilla.getpExtArch());
-			 JRPdfExporter exporter = new JRPdfExporter();
-			 exporter.setExporterInput(new SimpleExporterInput(print));
-		     exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(plantilla.getPathArch()+plantilla.getpNombreArch()+plantilla.getpExtArch()));
-		     SimplePdfExporterConfiguration configuration = new SimplePdfExporterConfiguration();
-		     configuration.setMetadataAuthor("BPMProcess");
-		     exporter.setConfiguration(configuration);
-		     exporter.exportReport();
-			 
-		     motor.p4bAnexarDocumento(0, plantilla.getPathArch()+plantilla.getpNombreArch()+plantilla.getpExtArch(), "", plantilla.getpDescripcion(), "", "");
+			if(archivoJrxml.exists()) {
+				JasperReport report = JasperCompileManager.compileReport(archivo);
+				JasperPrint print = JasperFillManager.fillReport(report, map);
+				//JasperExportManager.exportReportToPdfFile(print, plantilla.getPathArch()+plantilla.getpNombreArch()+plantilla.getpExtArch());
+				 JRPdfExporter exporter = new JRPdfExporter();
+				 exporter.setExporterInput(new SimpleExporterInput(print));
+			     exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(plantilla.getPathArch()+plantilla.getpNombreArch()+plantilla.getpExtArch()));
+			     SimplePdfExporterConfiguration configuration = new SimplePdfExporterConfiguration();
+			     configuration.setMetadataAuthor("BPMProcess");
+			     exporter.setConfiguration(configuration);
+			     exporter.exportReport();
+				if(plantilla.getpAnexar() == 1) {
+					 int res = motor.p4bAnexarDocumento(0, plantilla.getPathArch()+plantilla.getpNombreArch()+plantilla.getpExtArch(), "", plantilla.getpDescripcion(), "", "");
+					 logger.info("respuesta p4bAnexar "+res);
+				}else {
+					logger.info("No se anexa archivo");
+				}		    
+			
+			}else {
+				logger.info("El archivo JRXML No ha sido creado");
+			}
 			
 		} catch (JRException e) {
 			// TODO Auto-generated catch block
@@ -171,7 +183,7 @@ public class SimpleGeneradorIreport implements GeneradorIreportManager{
 			
 			InputStream is =new ByteArrayInputStream(json.build().toString().getBytes("UTF-8"));
 			map.put(JsonQueryExecuterFactory.JSON_INPUT_STREAM, is);
-	        logger.info("Json "+json.build().toString());
+	        //logger.info("Json "+json.build().toString());
 	        jsonToFile(json, nombreArchivoJson, ruta);
 		}catch(Exception e){
 			logger.error("mapeoVariablesJrxml error "+e.getMessage()+" codigo "+e.getLocalizedMessage());
