@@ -7,6 +7,6 @@ public interface GeneradorIreportManager {
 
 	void setEngineId(Integer engineId);
 
-	Boolean ireportGenerator(String nombreForm, String wfa, Plantilla plantilla);
+	String ireportGenerator(String nombreForm, String wfa, Plantilla plantilla);
 
 }

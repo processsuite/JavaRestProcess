@@ -26,11 +26,7 @@ import com.process.domain.report.Report;
 import com.process.domain.report.ResultReport;
 
 
-/**
- * Resource Report REST for user module
- * @author  Oswel Sanchez
- *    
- */
+
 @Path("/report")
 public class ReportResource {
     
@@ -70,6 +66,7 @@ public class ReportResource {
 	 * url: GET http://localhost:9090/process/api/report/param?wfp={wfPadre}&wfh={wfHijo}
 	 * 
 	 * @return List<ParamReport> Object
+	 * 
 	 */
 	@GET
 	@Path("/param")

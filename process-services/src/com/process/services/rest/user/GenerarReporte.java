@@ -76,7 +76,7 @@ public class GenerarReporte {
 		Response response = null;
 		try{
 			gi.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));
-			GenericEntity<Boolean> entity = new GenericEntity<Boolean>(gi.ireportGenerator(nombreForm,wfa,plantilla)) {};			
+			GenericEntity<String> entity = new GenericEntity<String>(gi.ireportGenerator(nombreForm,wfa,plantilla)) {};			
 			response = Response.ok(entity).build();
 		}catch (Exception e){
 			logger.error("generarArchivo", e);

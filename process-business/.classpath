@@ -17,12 +17,14 @@
 	<classpathentry kind="lib" path="C:/BPMprocess/mule-standalone-3.7.0/lib/user/org.eclipse.persistence.moxy.jar"/>
 	<classpathentry kind="lib" path="C:/BPMprocess/mule-standalone-3.7.0/lib/opt/commons-codec-1.11.jar"/>
 	<classpathentry kind="lib" path="C:/BPMprocess/mule-standalone-3.7.0/lib/opt/commons-dbcp2-2.4.0.jar"/>
-	<classpathentry kind="lib" path="C:/BPMprocess/mule-standalone-3.7.0/lib/opt/commons-pool2-2.6.0.jar"/>
 	<classpathentry kind="lib" path="C:/BPMprocess/mule-standalone-3.7.0/lib/opt/sqljdbc4-2.0.jar"/>
 	<classpathentry kind="lib" path="C:/BPMprocess/mule-standalone-3.7.0/lib/opt/mail.jar"/>
 	<classpathentry kind="lib" path="C:/BPMprocess/mule-standalone-3.7.0/lib/opt/AbsoluteLayout.jar"/>
-	<classpathentry kind="lib" path="C:/BPMprocess/mule-standalone-3.7.0/lib/opt/commons-collections-3.2.1.jar"/>
 	<classpathentry kind="lib" path="C:/BPMprocess/mule-standalone-3.7.0/lib/opt/javax.json-1.0.jar"/>
 	<classpathentry kind="lib" path="C:/BPMprocess/mule-standalone-3.7.0/lib/opt/jasperreports-6.12.2.jar"/>
+	<classpathentry kind="lib" path="C:/BPMprocess/mule-standalone-3.7.0/lib/opt/commons-beanutils-1.9.4.jar"/>
+	<classpathentry kind="lib" path="C:/BPMprocess/mule-standalone-3.7.0/lib/opt/commons-digester-2.1.jar"/>
+	<classpathentry kind="lib" path="C:/BPMprocess/mule-standalone-3.7.0/lib/opt/commons-pool-2.6.0.jar"/>
+	<classpathentry kind="lib" path="C:/BPMprocess/mule-standalone-3.7.0/lib/opt/commons-collections-4-4.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

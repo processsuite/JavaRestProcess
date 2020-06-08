@@ -1,0 +1,28 @@
+Pasos para generar certificado ssl para mule:
+
+1)keytool -genkey -alias mule -keyalg RSA -keystore keystore.jks
+	contraseña del almacen de claves: mule2020
+
+	nombre y apellido: local
+	organizacion: process
+	nombre de organizacion: dev
+	ciudad: caracas
+	provincia : GC
+	Pais: VE
+
+	constraseña para mule : mule2020
+	
+2) el primer paso creará un archivo en el directorio local llamado keystore.jks. Idealmente, esto debería crearse en el directorio MULE_HOME / conf si se va a usar en múltiples aplicaciones o se puede poner 
+en el directorio <MY MULE APP> / src / main / resources si se usa dentro de una sola aplicación.
+
+3) Una vez que el almacén de claves esté en su lugar, se debe agregar lo siguiente a su archivo de configuración de mula:
+	<tls:context name="serverTlsContext" >
+		<tls:key-store path="keystore.jks" keyPassword="mule2020" password="mule2020"/>
+	</tls:context>
+
+	<http:listener-config name="globalConfig" protocol="HTTPS" host="0.0.0.0" port="9092" tlsContext-ref="serverTlsContext">
+	</http:listener-config> 
+	<!--
+	<http:listener-config name="HTTP_Listener_Configuration_NoSSL"	host="0.0.0.0" port="9092" protocol="HTTP" doc:name="HTTPS Listener Configuration NO SSL" >
+	</http:listener-config> 
+	-->

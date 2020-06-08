@@ -19,11 +19,7 @@ import com.process.business.user.UserManager;
 import com.process.domain.user.User;
 
 
-/**
- * Resource User REST for user module
- * @author  Oswel Sanchez
- *    
- */
+
 @Path("/user")
 public class UserResource {
     
