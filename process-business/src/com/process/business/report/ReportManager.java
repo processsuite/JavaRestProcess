@@ -43,7 +43,9 @@ public interface ReportManager extends Engine {
 	 * @param desde
 	 * @param camposBuscar
 	 * @param campoOrden
+	 * @param ambiente
 	 * @return ResultReport
 	 */
-	public ResultReport ejecutarConsulta(Integer wfPadre, Integer wfHijo, Integer tipoOpcion, Integer desde, List<FieldReport> camposBuscar, String campoOrden);
+	public ResultReport ejecutarConsulta(Integer wfPadre, Integer wfHijo, Integer tipoOpcion, Integer desde, List<FieldReport> camposBuscar, String campoOrden, String ambiente);
+
 }

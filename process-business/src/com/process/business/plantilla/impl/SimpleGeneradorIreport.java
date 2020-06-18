@@ -1,15 +1,10 @@
 package com.process.business.plantilla.impl;
 
-import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
 import java.io.StringReader;
-import java.io.Writer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +18,10 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathFactory;
 
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
@@ -32,28 +31,35 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JsonDataSource;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
-import net.sf.jasperreports.engine.query.JsonQueryExecuterFactory;
+import net.sf.jasperreports.engine.export.JRXlsExporter;
+import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import net.sf.jasperreports.export.SimplePdfExporterConfiguration;
+import net.sf.jasperreports.export.SimpleXlsExporterConfiguration;
+import net.sf.jasperreports.export.SimpleXlsxExporterConfiguration;
 
 import org.apache.log4j.Logger;
 import org.eclipse.persistence.jaxb.JAXBContextFactory;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import com.process.business.environment.impl.SimpleEnvironmentManager;
 import com.process.business.helper.ClassFactory;
 import com.process.business.helper.c_Process;
 import com.process.business.plantilla.GeneradorIreportManager;
-import com.process.domain.document2.Anexos;
+import com.process.business.report.impl.SimpleReportManager;
 import com.process.domain.document2.Campo;
 import com.process.domain.document2.Doc2;
 import com.process.domain.document2.Fila;
 import com.process.domain.document2.Forma;
 import com.process.domain.document2.Formas;
+import com.process.domain.environment.Environment;
 import com.process.domain.generadordocument.Plantilla;
+import com.process.domain.report.FieldReport;
 
 
 
@@ -156,10 +162,12 @@ public class SimpleGeneradorIreport implements GeneradorIreportManager{
 			}else {
 				logger.info("El archivo JRXML No ha sido creado");
 			}
+			motor.p4bAsignarValorCampoDocumento(plantilla.getpCampoInd(), "X", 0, 0);
 			
 		} catch (JRException | ParserConfigurationException | SAXException | IOException | JAXBException e) {
 			// TODO Auto-generated catch block
 			logger.error("pdfPrueba", e);
+			motor.p4bAsignarValorCampoDocumento(plantilla.getpCampoInd(), "", 0, 0);
 		}
 		
 		return rutaTemp;
@@ -269,4 +277,90 @@ public class SimpleGeneradorIreport implements GeneradorIreportManager{
 		return true;
 	}
 	*/
+	
+	@Override
+	public String ejecutarConsultaReport(Integer wfPadre, Integer wfHijo, Integer tipoOpcion, Integer desde, List<FieldReport> camposBuscar, String campoOrden, String rutaAgentes, String ext, String ambiente) {
+		String archivo = rutaAgentes+wfHijo+".jrxml";
+		String ruta= "";
+		motor = ClassFactory.getProcess(engineP);
+		SimpleEnvironmentManager am = new SimpleEnvironmentManager();
+		String repAnexos =am.getDatoAmbiente(ambiente, "RepAnexosVirtual");
+		String finalArchivo = repAnexos+"\\"+engineP+"_"+wfHijo+ext;
+		logger.info("finalArchivo "+finalArchivo);
+		SimpleReportManager rm = new SimpleReportManager();
+		JsonObjectBuilder json = Json.createObjectBuilder();
+		try{
+			String resultXml = motor.p4bEjecutarConsulta(wfPadre, wfHijo, tipoOpcion, desde,  rm.getXmlParam(camposBuscar), campoOrden);
+			logger.info("filtros "+camposBuscar.size());
+				for(int x=0; x<camposBuscar.size(); x++ ) {
+					//String f = "filtro"+Integer.toString(x+1);
+					json.add(camposBuscar.get(x).getCampoBd(), camposBuscar.get(x).getValor());
+					
+				}
+			
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			Document document = builder.parse(new InputSource(new StringReader(resultXml)));
+			
+			XPathFactory xPathfactory = XPathFactory.newInstance();
+			XPath xpath = xPathfactory.newXPath();	
+			
+			XPathExpression expr = xpath.compile("//inst");
+			Object result = expr.evaluate(document, XPathConstants.NODESET);
+			NodeList nodes = (NodeList) result;				
+			
+
+			JsonArrayBuilder jsonMatriz = Json.createArrayBuilder(); //Matriz			
+				for(int i=0;i < nodes.getLength(); i++){
+					XPathExpression exprMostrar = xpath.compile("//inst[" + (i+1) + "]/camposMostrar/campo");
+					Object resultMostrar = exprMostrar.evaluate(document, XPathConstants.NODESET);
+					NodeList nodesMostrar = (NodeList) resultMostrar;
+					JsonObjectBuilder jsonFila = Json.createObjectBuilder(); //fila
+					for(int j=0;j < nodesMostrar.getLength(); j++){
+						jsonFila.add(xpath.compile("campoBD").evaluate(nodesMostrar.item(j), XPathConstants.STRING).toString(), xpath.compile("valor").evaluate(nodesMostrar.item(j), XPathConstants.STRING).toString());
+					}		
+					jsonMatriz.add(jsonFila);
+				}
+				json.add("reporte", jsonMatriz);
+				logger.info("json "+json.build().toString());
+				HashMap<String, Object>	map = new HashMap<String, Object>();
+				File archivoJrxml = new File(archivo);
+					if(archivoJrxml.exists()) {
+						InputStream is =new ByteArrayInputStream(json.build().toString().getBytes("UTF-8"));
+						JRDataSource dataSource = new JsonDataSource(is);
+						JasperReport report = JasperCompileManager.compileReport(archivo);
+						//JasperPrint print = JasperFillManager.fillReport(report, map);
+						JasperPrint print = JasperFillManager.fillReport(report, map, dataSource);				
+						if(ext.equals(".pdf")) {
+							 JRPdfExporter exporter = new JRPdfExporter();
+							 exporter.setExporterInput(new SimpleExporterInput(print));
+						     exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(finalArchivo));
+						     SimplePdfExporterConfiguration configuration = new SimplePdfExporterConfiguration();
+						     configuration.setMetadataAuthor("BPMProcess");
+						     exporter.setConfiguration(configuration);
+						     exporter.exportReport();
+							
+						}else if(ext.equals(".xlsx")) {
+							JRXlsxExporter exporter = new JRXlsxExporter();
+							 exporter.setExporterInput(new SimpleExporterInput(print));
+						     exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(finalArchivo));
+						     SimpleXlsxExporterConfiguration configuration = new SimpleXlsxExporterConfiguration();
+						     configuration.setMetadataAuthor("BPMProcess");
+						     exporter.setConfiguration(configuration);
+						     exporter.exportReport();
+						     logger.info("impresion xls");
+						     
+						}
+						ruta =engineP+"_"+wfHijo+ext;
+					 
+				}else {
+					logger.info("El archivo JRXML No ha sido creado, [No posee plantilla]");
+				}
+			
+		}catch(Exception e){
+			logger.error("ejecutarConsulta:", e);
+		}
+		
+		return ruta;
+	}
 }

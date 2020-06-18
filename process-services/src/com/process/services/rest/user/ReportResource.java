@@ -100,6 +100,7 @@ public class ReportResource {
 									 @QueryParam("tipo") Integer tipo,
 									 @QueryParam("desde") Integer desde,
 									 @QueryParam("order") String campoOrden,
+									 @QueryParam("ambiente") String ambiente,
 									 DataParamReport camposBuscar) {
 		Response response = null;
 		try {
@@ -107,7 +108,7 @@ public class ReportResource {
 			if ((campoOrden==null)) campoOrden = "";
 			
 			reportManager.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));
-			ResultReport responseService = reportManager.ejecutarConsulta(wfPadre, wfHijo, tipo, desde, camposBuscar.getCamposBuscar(), campoOrden);			
+			ResultReport responseService = reportManager.ejecutarConsulta(wfPadre, wfHijo, tipo, desde, camposBuscar.getCamposBuscar(), campoOrden, ambiente);			
 			GenericEntity<ResultReport> entity = new GenericEntity<ResultReport>(responseService) {};			
 			response = Response.ok(entity).build();
 		} catch (Exception e) {

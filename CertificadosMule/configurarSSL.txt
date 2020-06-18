@@ -1,17 +1,27 @@
+Fuente :https://www.adictosaltrabajo.com/2005/09/09/security-ssl-keytool/
 Pasos para generar certificado ssl para mule:
 
-1)keytool -genkey -alias mule -keyalg RSA -keystore keystore.jks
+1)keytool -certreq -alias muneyways -file autentia.csr -keypass mule2020 -storepass mule2020 -keystore mule.jks
 	contraseña del almacen de claves: mule2020
-
-	nombre y apellido: local
-	organizacion: process
-	nombre de organizacion: dev
-	ciudad: caracas
-	provincia : GC
-	Pais: VE
-
-	constraseña para mule : mule2020
 	
+	CN = www.moneywayscorp.com
+	O = Money Ways Corp
+	L = Caracas
+	S = Distrito Capital
+	C = VE
+	
+	constraseña para alias muneyways : mule2020
+¿Es correcto CN=www.moneywayscorp.com, OU=Money Ways Corp, O=Money Ways Corp, L=Caracas, ST=Distrito Capital, C=VE?
+
+
+	
+--Extraer el archivi csr 
+	keytool -certreq -alias mule -file autentia.csr -keypass mule2020 -storepass mule2020 -keystore mule.jks
+	
+	
+	
+	
+Fuente : https://docs.mulesoft.com/mule-runtime/3.7/tls-configuration
 2) el primer paso creará un archivo en el directorio local llamado keystore.jks. Idealmente, esto debería crearse en el directorio MULE_HOME / conf si se va a usar en múltiples aplicaciones o se puede poner 
 en el directorio <MY MULE APP> / src / main / resources si se usa dentro de una sola aplicación.
 
@@ -26,3 +36,66 @@ en el directorio <MY MULE APP> / src / main / resources si se usa dentro de una 
 	<http:listener-config name="HTTP_Listener_Configuration_NoSSL"	host="0.0.0.0" port="9092" protocol="HTTP" doc:name="HTTPS Listener Configuration NO SSL" >
 	</http:listener-config> 
 	-->
+	
+	
+	<!--<tls:context name="serverTlsContext" >
+	<tls:key-store path="keystore.jks" keyPassword="mule2020" password="mule2020"/>
+	</tls:context>
+
+	<http:listener-config name="globalConfig" protocol="HTTPS" host="0.0.0.0" port="9092" tlsContext-ref="serverTlsContext">
+	</http:listener-config> -->
+	
+	
+	
+	
+/*************************************************************************************************************Encontrado a ultima hora Crear un archivo pkcs12 desde yb archivo crt*/
+
+
+
+
+
+--
+Uso para mule produccion moneyways
+keytool -genkey -alias moneyways -keyalg RSA -keystore muleMoney.jks
+Contraseña: MuleMoney2020
+
+
+--¿Es correcto CN=Sectigo RSA Domain Validation Secure Server CA, OU=Sectigo Limited, O=Sectigo Limited, L=Salford, ST=Greater Manchester, C=GB?
+
+--El almacén de claves JKS utiliza un formato propietario. Se recomienda migrar a PKCS12, que es un formato estándar del sector que utiliza "keytool -importkeystore -srckeystore keystore.jks -destkeystore keystore.jks -deststoretype pkcs12".
+
+keytool -import -v -trustcacerts -alias gd_bundle_g2_g1 -file C:\wso2as-5.3.0\repository\resources\security\certificado\gd_bundle-g2-g1.crt -keystore wso2carbon.jks -storepass wso2carbon
+
+keytool -import -v -trustcacerts -alias moneyways -file D:\proyectos_cooperativa\personales\SSL\certificate.crt -keystore keystore.jks -storepass MuleMoney2020
+
+
+
+-- Prueba pkcs 12
+openssl pkcs12 -export -in certificate.crt -inkey certificate.key -out server.p12 -name monewaysMule -CAfile certificate.crt -caname root
+passwork: root
+
+keytool -importkeystore -deststorepass MuleMoney2020 -destkeypass MuleMoney2020 -destkeystore muleMoney.jks  -srckeystore server.p12 -srcstoretype PKCS12 -srcstorepass root  -alias moneyways
+
+
+
+ keytool -v -list -storetype pkcs12 -keystore certificate.pfx
+ 
+ keytool -importkeystore -srckeystore certificate.pfx -srcstoretype pkcs12 -srcalias 1 -destkeystore muleMoney.jks -deststoretype jks -destalias 1 
+ 
+ 
+---keytool -genkey -alias 1 -keyalg RSA -keysize 2048 -keystore muleMoney.jks
+contraseña : mule2020
+contraceña de alias vacio
+
+
+
+----------------------------------------------------------------
+pfx to pem
+pkcs12 -in certificate.pfx -out money.pem -nodes
+pem to p12
+pkcs12 -export -in money.pem -out money.p12 -name moneyways
+
+
+
+
+

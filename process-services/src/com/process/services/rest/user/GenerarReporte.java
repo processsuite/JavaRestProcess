@@ -84,5 +84,28 @@ public class GenerarReporte {
 		}
 		return response;		
 	}
+	
+	@POST
+	@Path("/ireportConsulta")
+	public Response prueba(@QueryParam("wfp") Integer wfPadre,
+			 @QueryParam("wfh") Integer wfHijo,
+			 @QueryParam("tipo") Integer tipo,
+			 @QueryParam("desde") Integer desde,
+			 @QueryParam("order") String campoOrden,
+			 @QueryParam("ext") String ext,
+			 @QueryParam("ambiente") String ambiente,
+			 DataParamReport camposBuscar){
+		Response response = null;
+		try{
+			gi.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));
+			String r = gi.ejecutarConsultaReport(wfPadre, wfHijo, tipo, desde, camposBuscar.getCamposBuscar(), campoOrden,camposBuscar.getRutaAgent(), ext, ambiente);
+			GenericEntity<String> entity = new GenericEntity<String>(r) {};			
+			response = Response.ok(entity).build();
+		}catch (Exception e){
+			logger.error("generarArchivo", e);
+		    return Response.serverError().build();
+		}
+		return response;		
+	}
 
 }
