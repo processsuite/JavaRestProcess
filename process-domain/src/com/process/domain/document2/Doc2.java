@@ -37,6 +37,8 @@ public class Doc2 {
 	@XmlAttribute(name="status")
 	private Integer status;
 
+	
+
 	@XmlAttribute(name="estado")
 	private String estado;
 
@@ -72,6 +74,9 @@ public class Doc2 {
 	@XmlElement(name="FORMAS")
 	private Formas formas;
 	
+	@XmlElement(name="ANEXOS")
+	private Anexos anexos;
+	
 	@XmlElement(name="AGENTES")
 	private Agentes agentes;
 	
@@ -85,6 +90,13 @@ public class Doc2 {
 		return forma;
 	}
 
+	public Anexos getAnexos() {
+		return anexos;
+	}
+
+	public void setAnexos(Anexos anexos) {
+		this.anexos = anexos;
+	}
 	public void setForma(Forma forma) {
 		this.forma = forma;
 	}

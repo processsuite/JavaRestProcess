@@ -137,11 +137,15 @@ public class SimpleEnvironmentManager implements EnvironmentManager {
 	}
 	
 	public String getDatoAmbiente(String amb, String variable){
-		motor = ClassFactory.createAmbientes();
-		Holder<String> app = new Holder<String>();
-		motor.init(app);		
+		SimpleConsoleManager ambientesXml = new SimpleConsoleManager();
 		String valor;
-		valor = motor.leerVarAmbienteEx(amb, variable);
+		valor =  ambientesXml.leerVarAmbienteXml(amb,  variable);
+		if(valor.equals("")) {
+			motor = ClassFactory.createAmbientes();
+			Holder<String> app = new Holder<String>();
+			motor.init(app);
+			valor = motor.leerVarAmbienteEx(amb, variable);
+		}		
 		return valor;
 	} 
 

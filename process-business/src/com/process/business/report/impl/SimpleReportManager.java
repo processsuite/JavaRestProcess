@@ -4,6 +4,7 @@
  */
 package com.process.business.report.impl;
 
+import java.io.File;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import com.process.business.environment.impl.SimpleEnvironmentManager;
 import com.process.business.helper.ClassFactory;
 import com.process.business.helper.c_Process;
 import com.process.business.report.ReportManager;
@@ -31,11 +33,7 @@ import com.process.domain.report.ParamReport;
 import com.process.domain.report.Report;
 import com.process.domain.report.ResultReport;
 
-/**
- * Business Implementation SimpleReportManager for report Module 
- * @author Oswel Sanchez
- * 
- */
+
 @Service("reportManager")
 public class SimpleReportManager implements ReportManager {
     
@@ -149,7 +147,7 @@ public class SimpleReportManager implements ReportManager {
 	}
 
 	@Override
-	public ResultReport ejecutarConsulta(Integer wfPadre, Integer wfHijo, Integer tipoOpcion, Integer desde, List<FieldReport> camposBuscar, String campoOrden) {
+	public ResultReport ejecutarConsulta(Integer wfPadre, Integer wfHijo, Integer tipoOpcion, Integer desde, List<FieldReport> camposBuscar, String campoOrden, String ambiente) {
 		ResultReport resultReport = new ResultReport();
 		try{
 			motor = ClassFactory.getProcess(engineP);
@@ -220,14 +218,25 @@ public class SimpleReportManager implements ReportManager {
 					}				
 					resultReport.getInstReports().add(inst);
 				}					
-			}		
+			}
+			
+			SimpleEnvironmentManager am = new SimpleEnvironmentManager();
+			String rutaAgentes =am.getDatoAmbiente(ambiente, "RepAgentes");
+			String archivo = rutaAgentes+"\\"+wfHijo+".jrxml";
+			File archivoJrxml = new File(archivo);
+			logger.info("ruta "+archivo+" validacion "+archivoJrxml.exists());
+			if(archivoJrxml.exists()) {
+				resultReport.setArchReport(true);
+			}else {
+				resultReport.setArchReport(false);
+			}
 		}catch(Exception e){
 			logger.error("ejecutarConsulta:", e);
 		}
 		return resultReport;
 	}
 	
-	private String getXmlParam(List<FieldReport> camposBuscar){
+	public String getXmlParam(List<FieldReport> camposBuscar){
 		String xml = "<?xml version='1.0' encoding='ISO-8859-1'?>";
 		xml += "<camposBuscar>";
 		Integer i = 0;

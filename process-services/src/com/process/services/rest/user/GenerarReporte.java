@@ -2,6 +2,7 @@ package com.process.services.rest.user;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
@@ -12,16 +13,18 @@ import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.process.business.plantilla.GeneradorIreportManager;
 import com.process.business.plantilla.GenerarPlantilla;
 import com.process.domain.generadordocument.Plantilla;
 import com.process.domain.report.DataParamReport;
-import com.process.domain.report.FieldReport;
 
 @Path("/generarReporte")
 public class GenerarReporte {
 	private static final Logger logger = Logger.getLogger(GenerarReporte.class);
 	@Autowired
 	private GenerarPlantilla gePlantilla;
+	@Autowired
+	private GeneradorIreportManager gi;
 	/**
 	 * Obtiene la cesta de un usuario Process 
 	 * <p>
@@ -65,6 +68,44 @@ public class GenerarReporte {
 		
 		
 		return response;
+	}
+	
+	@POST
+	@Path("/ireport")
+	public Response prueba(@QueryParam("nombreForm") String nombreForm, @QueryParam("wfa") String wfa, Plantilla plantilla){
+		Response response = null;
+		try{
+			gi.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));
+			GenericEntity<String> entity = new GenericEntity<String>(gi.ireportGenerator(nombreForm,wfa,plantilla)) {};			
+			response = Response.ok(entity).build();
+		}catch (Exception e){
+			logger.error("generarArchivo", e);
+		    return Response.serverError().build();
+		}
+		return response;		
+	}
+	
+	@POST
+	@Path("/ireportConsulta")
+	public Response prueba(@QueryParam("wfp") Integer wfPadre,
+			 @QueryParam("wfh") Integer wfHijo,
+			 @QueryParam("tipo") Integer tipo,
+			 @QueryParam("desde") Integer desde,
+			 @QueryParam("order") String campoOrden,
+			 @QueryParam("ext") String ext,
+			 @QueryParam("ambiente") String ambiente,
+			 DataParamReport camposBuscar){
+		Response response = null;
+		try{
+			gi.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));
+			String r = gi.ejecutarConsultaReport(wfPadre, wfHijo, tipo, desde, camposBuscar.getCamposBuscar(), campoOrden,camposBuscar.getRutaAgent(), ext, ambiente);
+			GenericEntity<String> entity = new GenericEntity<String>(r) {};			
+			response = Response.ok(entity).build();
+		}catch (Exception e){
+			logger.error("generarArchivo", e);
+		    return Response.serverError().build();
+		}
+		return response;		
 	}
 
 }

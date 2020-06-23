@@ -11,8 +11,8 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
-        <file path="/process-domain/.classpath"/>
         <file path="/process-domain/.project"/>
         <javaElement handleIdentifier="=process-domain/src"/>
+        <file path="/process-domain/.classpath"/>
     </selectedElements>
 </jardesc>

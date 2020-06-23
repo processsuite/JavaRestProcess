@@ -34,6 +34,8 @@ public class ResultReport implements Serializable {
 	
 	private Integer tipoGrafico;
 	
+	private Boolean archReport; 
+	
 	private List<InstReport> instReports;
 
 	public Integer getWfa() {
@@ -101,6 +103,16 @@ public class ResultReport implements Serializable {
 
 	public void setTipoGrafico(Integer tipoGrafico) {
 		this.tipoGrafico = tipoGrafico;
+	}
+	
+	
+	
+	public Boolean getArchReport() {
+		return archReport;
+	}
+
+	public void setArchReport(Boolean archReport) {
+		this.archReport = archReport;
 	}
 
 	@Override

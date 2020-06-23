@@ -48,11 +48,6 @@ import com.process.domain.document2.Doc2;
 import com.process.domain.document2.Forma;
 
 
-/**
- * Resource Document REST for document module
- * @author  Oswel Sanchez
- *    
- */
 @Path("/document")
 public class DocumentResource {
     
@@ -62,9 +57,7 @@ public class DocumentResource {
 	private DocumentManager documentManager;
     
 	/**
-	 * Crea un documento  
-	 * <p>
-	 * 
+	 * Crea un documento
 	 * @param wfp 
 	 * @param frmn	 
 	 * url: POST http://localhost:9090/process/api/document?wfp={wfp}&frmn={frmn}&env={env}
@@ -578,7 +571,6 @@ public class DocumentResource {
 	 * @param amb
 	 * @param descripcion
 	 * url: POST http://localhost:9090/process/api/document/upload?amb={ambiente}&descripcion={descripcion}
-	 * 
 	 * @return 200 ok
 	 */	
     @POST
