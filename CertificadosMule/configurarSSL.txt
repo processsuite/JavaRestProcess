@@ -17,8 +17,17 @@ Pasos para generar certificado ssl para mule:
 	
 --Extraer el archivi csr 
 	keytool -certreq -alias mule -file autentia.csr -keypass mule2020 -storepass mule2020 -keystore mule.jks
-	
-	
+
+--Creacion de arhivo .pem con .key que enviaron desde la Autoridad certificadora. con OpenSLL
+OpenSLL
+	req -x509 -new -nodes -key certificate.key -days 1024 -out prueba.pem
+
+Se intenta registrar el .pen con el JKS	
+	keytool -import -alias mule -keypass mule2020 -file prueba.pem -storepass mule2020
+
+Se importa el certificado de la CA
+	--keytool -import -alias mule -keypass mule2020 -file autentiaCertFirmadoPorCA.pem -storepass claveDeKeyStore -trustcacerts
+	keytool -import -v -trustcacerts -alias certificate_chain -file certificate_chain.crt -keystore mule.jks -storepass mule2020
 	
 	
 Fuente : https://docs.mulesoft.com/mule-runtime/3.7/tls-configuration
@@ -38,12 +47,12 @@ en el directorio <MY MULE APP> / src / main / resources si se usa dentro de una 
 	-->
 	
 	
-	<!--<tls:context name="serverTlsContext" >
-	<tls:key-store path="keystore.jks" keyPassword="mule2020" password="mule2020"/>
+	<tls:context name="serverTlsContext" >
+		<tls:key-store path="mule.jks" keyPassword="mule2020" password="mule2020"/>
 	</tls:context>
 
 	<http:listener-config name="globalConfig" protocol="HTTPS" host="0.0.0.0" port="9092" tlsContext-ref="serverTlsContext">
-	</http:listener-config> -->
+	</http:listener-config> 
 	
 	
 	

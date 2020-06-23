@@ -33,11 +33,7 @@ import com.process.domain.report.ParamReport;
 import com.process.domain.report.Report;
 import com.process.domain.report.ResultReport;
 
-/**
- * Business Implementation SimpleReportManager for report Module 
- * @author Oswel Sanchez
- * 
- */
+
 @Service("reportManager")
 public class SimpleReportManager implements ReportManager {
     
