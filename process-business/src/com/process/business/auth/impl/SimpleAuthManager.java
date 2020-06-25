@@ -15,11 +15,6 @@ import com.process.business.helper.c_Process;
 import com.process.domain.auth.Login;
 import com.process.domain.auth.Session;
 
-/**
- * Business Implementation SimpleAuthManager for Auth Module 
- * @author Oswel Sanchez
- * 
- */
 @Service("authManager")
 public class SimpleAuthManager implements AuthManager {
     
