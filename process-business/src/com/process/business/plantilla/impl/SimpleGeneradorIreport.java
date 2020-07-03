@@ -5,6 +5,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,24 +34,25 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JsonDataSource;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
-import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import net.sf.jasperreports.export.SimplePdfExporterConfiguration;
-import net.sf.jasperreports.export.SimpleXlsExporterConfiguration;
 import net.sf.jasperreports.export.SimpleXlsxExporterConfiguration;
 
 import org.apache.log4j.Logger;
 import org.eclipse.persistence.jaxb.JAXBContextFactory;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.process.business.environment.impl.SimpleEnvironmentManager;
 import com.process.business.helper.ClassFactory;
+import com.process.business.helper.ConexionBD;
 import com.process.business.helper.c_Process;
 import com.process.business.plantilla.GeneradorIreportManager;
 import com.process.business.report.impl.SimpleReportManager;
@@ -57,7 +61,6 @@ import com.process.domain.document2.Doc2;
 import com.process.domain.document2.Fila;
 import com.process.domain.document2.Forma;
 import com.process.domain.document2.Formas;
-import com.process.domain.environment.Environment;
 import com.process.domain.generadordocument.Plantilla;
 import com.process.domain.report.FieldReport;
 
@@ -79,41 +82,48 @@ public class SimpleGeneradorIreport implements GeneradorIreportManager{
 	}	
 	
 	@Override
-	public String ireportGenerator(String nombreForm, String wfa, Plantilla plantilla){
+	public String ireportGenerator(String nombreForm, String wfa, Plantilla plantilla, String ambiente){
 		Map<String, Object> map = new HashMap<String, Object>();
 		//map.put(titulo, valor); // se agrega la variable mapeada.
 		String archivo = plantilla.getPathArch()+plantilla.getpNombreArch()+".jrxml";
 		motor = ClassFactory.getProcess(engineP); //--> se instancia motor
 		String xmlDatosDoc = motor.p4bObtenerCamposDoc(0,0,0);//Obtener xml de documento
-		
+		JsonObjectBuilder json = null;
 		//map = jsonToJasper(nombreForm, wfa, plantilla.getPathArch(), xmlDatosDoc);
-		JsonObjectBuilder json = jsonToJasper(nombreForm, wfa, plantilla.getPathArch(), xmlDatosDoc);
-		
-		
-		//map.put(JsonQueryExecuterFactory.JSON_INPUT_STREAM, is);
-		
+		if(plantilla.getpConsultabool().equals("1")) {
+			map = jrxmlToPAram(plantilla);
+			logger.info(map);
+		}else {
+			json = jsonToJasper(nombreForm, wfa, plantilla.getPathArch(), xmlDatosDoc);
+		}
 		String rutaTemp = "";
-		//map.put("SUBREPORT_DIR", "C:/BPMprocess/Reps/angular/reportes/");
-		
 		File archivoJrxml = new File(archivo);
-		
-		//logger.info(map.toString());
 		try {
 			if(archivoJrxml.exists()) {
-				InputStream is =new ByteArrayInputStream(json.build().toString().getBytes("UTF-8"));
-				JRDataSource dataSource = new JsonDataSource(is);
 				JasperReport report = JasperCompileManager.compileReport(archivo);
-				//JasperPrint print = JasperFillManager.fillReport(report, map);
-				JasperPrint print = JasperFillManager.fillReport(report, map, dataSource);				
-				//JasperExportManager.exportReportToPdfFile(print, plantilla.getPathArch()+plantilla.getpNombreArch()+plantilla.getpExtArch());
-				 JRPdfExporter exporter = new JRPdfExporter();
-				 exporter.setExporterInput(new SimpleExporterInput(print));
-			     exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(plantilla.getPathArch()+plantilla.getpNombreArch()+plantilla.getpExtArch()));
-			     SimplePdfExporterConfiguration configuration = new SimplePdfExporterConfiguration();
-			     configuration.setMetadataAuthor("BPMProcess");
-			     exporter.setConfiguration(configuration);
-			     exporter.exportReport();
-				if(plantilla.getpAnexar() == 1) {
+				JasperPrint print;
+				if(plantilla.getpConsultabool().equals("1")){
+					ConexionBD cdb = new ConexionBD(ambiente);
+					Class.forName(cdb.getDriverJDBC());
+					Connection conn = DriverManager.getConnection(cdb.getCadena(),cdb.getUser(),cdb.getClave());
+					print = JasperFillManager.fillReport(report, map, conn);	
+				}else { //aplica si solo es json
+					InputStream is =new ByteArrayInputStream(json.build().toString().getBytes("UTF-8"));
+					JRDataSource dataSource = new JsonDataSource(is);
+					print = JasperFillManager.fillReport(report, map, dataSource);	
+				}
+								
+				JRPdfExporter exporter = new JRPdfExporter();
+				exporter.setExporterInput(new SimpleExporterInput(print));
+			    exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(plantilla.getPathArch()+plantilla.getpNombreArch()+plantilla.getpExtArch()));
+			    SimplePdfExporterConfiguration configuration = new SimplePdfExporterConfiguration();
+			    configuration.setMetadataAuthor("BPMProcess");
+			    exporter.setConfiguration(configuration);
+			    exporter.exportReport();
+				
+			     
+			     /*Anexar reporte generado*/
+			     if(plantilla.getpAnexar() == 1) {
 					
 					String anexosv = motor.p4bObtenerDocumento(0, 1, 0);
 					logger.info("anexos datos "+anexosv);
@@ -164,7 +174,7 @@ public class SimpleGeneradorIreport implements GeneradorIreportManager{
 			}
 			motor.p4bAsignarValorCampoDocumento(plantilla.getpCampoInd(), "X", 0, 0);
 			
-		} catch (JRException | ParserConfigurationException | SAXException | IOException | JAXBException e) {
+		} catch (JRException | ParserConfigurationException | SAXException | IOException | JAXBException | ClassNotFoundException | SQLException e) {
 			// TODO Auto-generated catch block
 			logger.error("pdfPrueba", e);
 			motor.p4bAsignarValorCampoDocumento(plantilla.getpCampoInd(), "", 0, 0);
@@ -174,7 +184,6 @@ public class SimpleGeneradorIreport implements GeneradorIreportManager{
 	}
 	
 	private JsonObjectBuilder jsonToJasper(String nombreForm, String wfa, String ruta, String docForm){
-		Map<String, Object> map = new HashMap<String, Object>(); //variable para pasar metodos
 		JsonObjectBuilder json = Json.createObjectBuilder();
 		//logger.info("xml atributo "+xmlDatosDoc);
 		//String nombreArchivoJson = nombreForm.replace(" ", "_")+"_"+wfa;
@@ -215,7 +224,13 @@ public class SimpleGeneradorIreport implements GeneradorIreportManager{
 									JsonObjectBuilder jsonFila = Json.createObjectBuilder();
 									Fila fila = campos.get(j).getFilas().getFila().get(m);
 									for(int f=0;f<fila.getCampo().size();f++){
-										jsonFila.add(fila.getCampo().get(f).getNombre(), fila.getCampo().get(f).getValue());
+										
+										if(campos.get(j).getCampos().get(f).getTipo().equals("V")) {
+											jsonFila.add(fila.getCampo().get(f).getNombre(), fila.getCampo().get(f).getValue().equals("T")?"X":"");
+										}else {
+											jsonFila.add(fila.getCampo().get(f).getNombre(), fila.getCampo().get(f).getValue());
+										}
+										
 									}
 									jsonMatriz.add(jsonFila);
 								}
@@ -226,13 +241,12 @@ public class SimpleGeneradorIreport implements GeneradorIreportManager{
 								for(int c=0; c < campos.get(j).getCampos().size(); c++){
 									Campo campoPA = campos.get(j).getCampos().get(c);
 									if(campoPA.getValue().equals("T")){
-										valorPA = valorPA+campoPA.getDescripcion()+", ";
+										json.add(campoPA.getNombre(), "X");
+									}else {
+										json.add(campoPA.getNombre(), "");
 									}								
 								}
-								if(valorPA.length() > 1) {
-									valorPA = valorPA.substring(0, valorPA.length() - 2);
-								}
-								json.add(campos.get(j).getNombre(), valorPA);
+								
 							}else{//campo normal
 								json.add(campos.get(j).getNombre(), campos.get(j).getValue());
 							} 
@@ -277,6 +291,41 @@ public class SimpleGeneradorIreport implements GeneradorIreportManager{
 		return true;
 	}
 	*/
+	
+	private  Map<String, Object> jrxmlToPAram(Plantilla plantilla) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		File archivo  = new File(plantilla.getPathArch()+plantilla.getpNombreArch()+".jrxml");
+		motor = ClassFactory.getProcess(engineP); //--> se instancia motor
+		
+		
+		try {
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+	        DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
+	        Document document = documentBuilder.parse(archivo);
+	        document.getDocumentElement().normalize();
+	        NodeList listServ = document.getElementsByTagName("parameter");
+	        for(int x = 0; x < listServ.getLength();x++) {
+	        	Node nodo = listServ.item(x);
+	        	Element element = (Element) nodo;
+	        	logger.info(element.getAttribute("name").toString()+" "+motor.p4bObtenerValorCampoDocumento(element.getAttribute("name").toString(),0,0,0));
+	        	map.put( element.getAttribute("name").toString(),motor.p4bObtenerValorCampoDocumento(element.getAttribute("name").toString(), 0, 0, 0)); 
+	        }
+	        
+	        
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			logger.error("jrxmlToPAram ParserConfigurationException",e);
+			e.printStackTrace();
+		} catch (SAXException e) {
+			logger.error("jrxmlToPAram SAXException",e);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			logger.error("jrxmlToPAram IOException",e);
+		}
+       
+			
+		return map;
+	}
 	
 	@Override
 	public String ejecutarConsultaReport(Integer wfPadre, Integer wfHijo, Integer tipoOpcion, Integer desde, List<FieldReport> camposBuscar, String campoOrden, String rutaAgentes, String ext, String ambiente) {

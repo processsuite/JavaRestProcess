@@ -72,11 +72,11 @@ public class GenerarReporte {
 	
 	@POST
 	@Path("/ireport")
-	public Response prueba(@QueryParam("nombreForm") String nombreForm, @QueryParam("wfa") String wfa, Plantilla plantilla){
+	public Response prueba(@QueryParam("nombreForm") String nombreForm, @QueryParam("wfa") String wfa, @QueryParam("ambiente") String ambiente,Plantilla plantilla){
 		Response response = null;
 		try{
 			gi.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));
-			GenericEntity<String> entity = new GenericEntity<String>(gi.ireportGenerator(nombreForm,wfa,plantilla)) {};			
+			GenericEntity<String> entity = new GenericEntity<String>(gi.ireportGenerator(nombreForm,wfa,plantilla,ambiente)) {};			
 			response = Response.ok(entity).build();
 		}catch (Exception e){
 			logger.error("generarArchivo", e);

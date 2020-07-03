@@ -30,6 +30,18 @@ public class Plantilla implements Serializable {
     private String pConsulta;
     
     private String pCampoInd;
+    
+    private String pConsultabool;
+    
+    
+
+	public String getpConsultabool() {
+		return pConsultabool;
+	}
+
+	public void setpConsultabool(String pConsultabool) {
+		this.pConsultabool = pConsultabool;
+	}
 
 	public String getPathArch() {
 		return pathArch;

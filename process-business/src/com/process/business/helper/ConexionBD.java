@@ -19,10 +19,10 @@ import org.apache.log4j.Logger;
 public class ConexionBD {
 	private static final Logger logger = Logger.getLogger(ConexionBD.class);
 	private static BasicDataSource basicDataSource=null;
-	static String driverJDBC;// = "oracle.jdbc.driver.OracleDriver"; 
-	static String cadena;// = "jdbc:oracle:thin://localhost:1521:orcl";
-	static String user;// = "USUARIO_SENIAT";
-	static String clave;// = "root";
+	private String driverJDBC;// = "oracle.jdbc.driver.OracleDriver"; 
+	private String cadena;// = "jdbc:oracle:thin://localhost:1521:orcl";
+	private String user;// = "USUARIO_SENIAT";
+	private String clave;// = "root";
 	
 	
 	
@@ -93,4 +93,36 @@ public class ConexionBD {
         }
         return obj;
     }
+
+		public String getDriverJDBC() {
+			return driverJDBC;
+		}
+	
+		public void setDriverJDBC(String driverJDBC) {
+			this.driverJDBC = driverJDBC;
+		}
+	
+		public String getCadena() {
+			return cadena;
+		}
+	
+		public void setCadena(String cadena) {
+			this.cadena = cadena;
+		}
+	
+		public String getUser() {
+			return user;
+		}
+	
+		public void setUser(String user) {
+			this.user = user;
+		}
+	
+		public String getClave() {
+			return clave;
+		}
+	
+		public void setClave(String clave) {
+			this.clave = clave;
+		}   
 }
