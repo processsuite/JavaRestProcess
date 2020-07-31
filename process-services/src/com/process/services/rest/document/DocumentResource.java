@@ -41,7 +41,6 @@ import com.process.domain.document.Destino;
 import com.process.domain.document.Doc;
 import com.process.domain.document.EventAgent;
 import com.process.domain.document.Form;
-import com.process.domain.document.RespDataService;
 import com.process.domain.document.SendMsg;
 import com.process.domain.document.WfDest;
 import com.process.domain.document2.Doc2;
@@ -573,7 +572,7 @@ public class DocumentResource {
 	 * url: POST http://localhost:9090/process/api/document/upload?amb={ambiente}&descripcion={descripcion}
 	 * @return 200 ok
 	 */	
-    @POST
+	@POST
     @Path("/upload")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces("text/html")
@@ -949,5 +948,32 @@ public class DocumentResource {
 		return response;
 	}
 	
-
+	/**
+	 * Crea un documento
+	 * @param wfp 
+	 * @param frmn	 
+	 * url: POST http://localhost:9090/process/api/document?wfp={wfp}&frmn={frmn}&env={env}
+	 * 
+	 * @return Doc Object
+	 */
+	@POST
+	@Path("/crearDocumentoExterno")
+	public Response crearDocumentoExterno(@QueryParam("wfa") Integer wfa,
+								   @QueryParam("observacion") String observacion,
+								   @QueryParam("env") String ambiente,
+								   Object[][] param
+									) {
+		Response response = null;
+		try {			
+			documentManager.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));
+			Integer responseService = documentManager.crearDocumentExterno(ambiente, wfa, param, observacion);		
+			GenericEntity<Integer> entity = new GenericEntity<Integer>(responseService) {};			
+			response = Response.ok(entity).build();
+		} catch (Exception e) {
+		    logger.error("crearDocumento", e);
+		    return Response.serverError().build();
+		}
+		return response;
+	}
+	
 }

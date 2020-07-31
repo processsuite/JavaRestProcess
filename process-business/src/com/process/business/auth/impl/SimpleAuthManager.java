@@ -52,6 +52,27 @@ public class SimpleAuthManager implements AuthManager {
 		logger.info("establecer session");
 		return session;
 	}
+	
+	@Override
+	public Session establecerSesionImpersonal(Login login) {
+		Session session = new Session();
+		try{
+			motor = ClassFactory.getProcess(engineP);
+			Integer result = motor.p4bEstablecerSesion(login.getUsuario(), login.getClave(), login.getAmbiente(), login.getSessionId(), login.getIp(), login.getValidaExt(), login.getSesionCaida());
+			if (result == -1) {
+				//session.setTicket(motor.p4bGuardarSesion(0));
+				session.setStatusCode(motor.p4bStatus());
+			}else{
+				session.setTicket("");
+				session.setStatusCode(motor.p4bStatus());
+				session.setSessionCaida(motor.sesionCaida());
+			}
+		}catch(Exception e){
+			logger.error("establecerSesion:", e);
+		}
+		logger.info("establecer session");
+		return session;
+	}
 
 	@Override
 	public Session recuperarSesion(Login login) {

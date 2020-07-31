@@ -1862,7 +1862,7 @@ public class SimpleDocumentManager implements DocumentManager {
 		}
 		return result;
 	}
-	
+	@Override
 	public RespDataService dataServices(String ambiente, String idQuery,Object[][] param){
 		String sql = "";
 		URL fileLocation = getClass().getClassLoader().getResource("DataServicesQuerysProcess.xml");
@@ -1967,6 +1967,56 @@ public class SimpleDocumentManager implements DocumentManager {
 			}
 		}
 		return resp;
+	}
+	
+	@Override
+	public Integer crearDocumentExterno(String ambiente, Integer wfa,Object[][] param, String observacion){
+		motor = ClassFactory.getProcess(engineP);
+		Doc2 doc = new Doc2();
+		try{
+			//Se instancia el objeto del motor con la sesion creada
+			
+			//Se crea el documento
+			Integer result =   motor.p4bCrearDocumento(wfa);
+			
+			//Se obtiene el documento para sacar el numero
+			String contextDocxml = motor.p4bObtenerDocumento(0, 1, -1);
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			Document document = builder.parse(new InputSource(new StringReader(contextDocxml)));
+			JAXBContext context = JAXBContextFactory.createContext(new Class[] {Doc2.class}, null);
+			Unmarshaller un = context.createUnmarshaller();
+			doc = (Doc2) un.unmarshal(document);
+			
+			if (result == -1){
+				if(param.length >0) {
+					for (int c = 0; c < param.length; c++) {
+				 		 String campo = (String) param[c][0];
+						 String valor = (String) param[c][1];
+						 //Guardar campos enviados
+						 motor.p4bAsignarValorCampoDocumento(campo, valor, 0, 0); 
+				 		}
+				}
+				//Se guarda el documento
+				motor.p4bGuardarDocumento(observacion);	
+				
+				
+			}else {
+				logger.info("error creado document");
+			}
+		}catch (Exception e) {
+			logger.error("Error createDocumentExterno",e);
+		}finally {
+			//se cierra sesion
+			try{
+				//Se cierra documento
+				//motor.p4bCerrarDocumento();		
+				logger.info("Cerrar sesion "+motor.p4bStatus());
+			}catch(Exception e){
+				logger.error("cerrarSesion:", e);
+			}
+		}
+		return doc.getNuDoc();
 	}
 	
 }

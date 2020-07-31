@@ -40,7 +40,7 @@ public class ReportResource {
 	 * <p>
 	 * url: GET http://localhost:9090/process/api/report
 	 * 
-	 * @return List<Report> Object
+	 * 	 * @return List<Report> Object
 	 */
 	@GET
 	public Response obtenerConsultas() {

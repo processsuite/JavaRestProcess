@@ -241,7 +241,16 @@ public interface DocumentManager extends Engine {
 	 */
 	public List<Agent> obtenerAgentesGenerales();
 	
-	
+	/**
+	 *Consulta servicios configurados a partir e un XML 
+	 *@return RespDaraService 
+	 */
 	public RespDataService dataServices(String ambiente, String idQuery,Object[][] param);
+
+	/*
+	 * Crea un documento desde servicios externos al cliente comun
+	 * @return Integer nuDoc
+	 */
+	public Integer crearDocumentExterno(String ambiente, Integer wfa, Object[][] param, String observacion);
 
 }

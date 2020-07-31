@@ -34,7 +34,7 @@ public class UserResource {
 	 * url: GET http://localhost:9090/process/api/user
 	 * 
 	 * @return User Object
-	 */
+	 * 	 */
 	@GET
 	public Response obtenerDatosUsuario() {
 		Response response = null;

@@ -40,7 +40,13 @@ public interface AuthManager extends Engine {
 	 * Cierra una sesion de usuario Process
 	 * @return Session 
 	 */
-	public Session cerrarSesion(); 	
+	public Session cerrarSesion();
+
+	/**
+	 * Establece una sesion de usuario Process sin validar si el usuario ya tiene sesion abierta
+	 * @return Session 
+	 */	
+	public Session establecerSesionImpersonal(Login login); 	
     
 }
 
