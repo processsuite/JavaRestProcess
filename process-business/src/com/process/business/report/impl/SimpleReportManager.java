@@ -223,12 +223,16 @@ public class SimpleReportManager implements ReportManager {
 			SimpleEnvironmentManager am = new SimpleEnvironmentManager();
 			String rutaAgentes =am.getDatoAmbiente(ambiente, "RepAgentes");
 			String archivo = rutaAgentes+"\\"+wfHijo+".jrxml";
+			String archivo2 = rutaAgentes+"\\"+wfHijo+".htm";
 			File archivoJrxml = new File(archivo);
+			File archivoHtm = new File(archivo2);
 			logger.info("ruta "+archivo+" validacion "+archivoJrxml.exists());
-			if(archivoJrxml.exists()) {
-				resultReport.setArchReport(true);
+			if(archivoJrxml.exists() ) {
+				resultReport.setArchReport(2);
+			}else if(archivoHtm.exists()){
+				resultReport.setArchReport(1);
 			}else {
-				resultReport.setArchReport(false);
+				resultReport.setArchReport(0);
 			}
 		}catch(Exception e){
 			logger.error("ejecutarConsulta:", e);

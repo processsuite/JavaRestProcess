@@ -34,7 +34,7 @@ public class ResultReport implements Serializable {
 	
 	private Integer tipoGrafico;
 	
-	private Boolean archReport; 
+	private Integer archReport; 
 	
 	private List<InstReport> instReports;
 
@@ -107,11 +107,11 @@ public class ResultReport implements Serializable {
 	
 	
 	
-	public Boolean getArchReport() {
+	public Integer getArchReport() {
 		return archReport;
 	}
 
-	public void setArchReport(Boolean archReport) {
+	public void setArchReport(Integer archReport) {
 		this.archReport = archReport;
 	}
 

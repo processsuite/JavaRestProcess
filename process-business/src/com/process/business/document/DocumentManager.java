@@ -251,6 +251,6 @@ public interface DocumentManager extends Engine {
 	 * Crea un documento desde servicios externos al cliente comun
 	 * @return Integer nuDoc
 	 */
-	public Integer crearDocumentExterno(String ambiente, Integer wfa, Object[][] param, String observacion);
+	public Integer crearDocumentExterno(String ambiente, Integer wfa, Object[][] param, String observacion, Boolean envio);
 
 }

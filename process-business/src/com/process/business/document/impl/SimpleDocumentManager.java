@@ -1970,7 +1970,7 @@ public class SimpleDocumentManager implements DocumentManager {
 	}
 	
 	@Override
-	public Integer crearDocumentExterno(String ambiente, Integer wfa,Object[][] param, String observacion){
+	public Integer crearDocumentExterno(String ambiente, Integer wfa,Object[][] param, String observacion, Boolean envio){
 		motor = ClassFactory.getProcess(engineP);
 		Doc2 doc = new Doc2();
 		try{
@@ -1999,6 +1999,26 @@ public class SimpleDocumentManager implements DocumentManager {
 				}
 				//Se guarda el documento
 				motor.p4bGuardarDocumento(observacion);	
+				
+				//Enviar documento
+				if(envio) {
+					Destino destinos = calcularProximosDestinos();
+					for(WfDest d:destinos.getDestinos()){
+						String eDest = "";
+						if (d.getE()){
+							eDest = "S";
+						}else{
+							eDest = "N";
+						}
+						motor.p4bAgregarProximoDestino(d.getWfa(), eDest, d.getValueSelected());
+					}
+					
+					result = motor.p4bAvanzar("", "", "", observacion, 0, 0, 0, "", "", 0);
+					logger.info("Resultado de avanzar "+result);
+					String xmlMessages =  motor.p4bStatusAll();
+					logger.info("Estatus de avanzar "+xmlMessages);					
+				}
+				
 				
 				
 			}else {
