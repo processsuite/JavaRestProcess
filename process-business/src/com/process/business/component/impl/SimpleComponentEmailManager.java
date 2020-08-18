@@ -1,5 +1,6 @@
 package com.process.business.component.impl;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
 import javax.activation.DataHandler;
@@ -82,7 +83,7 @@ public class SimpleComponentEmailManager implements ComponentEmailManager{
             
 	    	
 	        /*Correo*/
-            message.setFrom(new InternetAddress(email.getRemitente()));
+            message.setFrom(new InternetAddress(email.getRemitente(),email.getRemitente() ));
 	        message.addRecipients(Message.RecipientType.TO, recipientAddress);   //Se podrían añadir varios de la misma manera
 	        message.setSubject(email.getAsunto());
 	        message.setText(email.getCuerpo());
@@ -97,7 +98,7 @@ public class SimpleComponentEmailManager implements ComponentEmailManager{
 	        transport.close();
 	        resp=true;
 	    }
-	    catch (MessagingException me) {
+	    catch (MessagingException | UnsupportedEncodingException me) {
 	        logger.error(me.getMessage()+" "+me.getCause());   //Si se produce un error
 	         resp=false;
 	    }
