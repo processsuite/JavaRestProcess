@@ -15,6 +15,9 @@ import javax.xml.xpath.XPathFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 
 import com.process.business.helper.ClassFactory;
@@ -60,6 +63,10 @@ public class SimpleUserManager implements UserManager {
 			user.setFormatoFecha(xpath.compile("/usr/@formatofecha").evaluate(document, XPathConstants.STRING).toString());
 			user.setActivoD(Integer.valueOf(xpath.compile("/usr/@nu_doc").evaluate(document, XPathConstants.STRING).toString()));
 			user.setNuDocLect(xpath.compile("/usr/@nu_doc_lect").evaluate(document, XPathConstants.STRING).toString());
+			user.setIp(xpath.compile("/usr/@ip").evaluate(document, XPathConstants.STRING).toString());
+			
+			
+			
 			if (xpath.compile("/usr/pregunta/@vencida").evaluate(document, XPathConstants.STRING).toString().equals("S")){
 				user.setPreguntaVencida(true);
 			}else{
@@ -141,6 +148,12 @@ public class SimpleUserManager implements UserManager {
 				document = builder.parse(new InputSource(new StringReader(contextDocxml)));
 				user.setNbConversacion(xpath.compile("/FOLDER/@nb_conversacion").evaluate(document, XPathConstants.STRING).toString());
 			}
+			
+			document.getDocumentElement().normalize();
+			NodeList listServ =document.getElementsByTagName("usr");
+			Node nodo = (Node) listServ.item(0);
+	        Element element = (Element) nodo;
+			user.setFchultconex(element.getElementsByTagName("fchultconex").item(0).getTextContent());
 		}catch(Exception e){
 			logger.error("ObtenerDatosUsuario:", e);
 		}

@@ -68,8 +68,29 @@ public class User implements Serializable {
 	
 	private Boolean primaraVez;
 	
+	private String ip;
+	
+	private String fchultconex;
 	
 	
+	
+	
+	public String getIp() {
+		return ip;
+	}
+
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
+
+	public String getFchultconex() {
+		return fchultconex;
+	}
+
+	public void setFchultconex(String fchultconex) {
+		this.fchultconex = fchultconex;
+	}
+
 	public Boolean getPrimaraVez() {
 		return primaraVez;
 	}

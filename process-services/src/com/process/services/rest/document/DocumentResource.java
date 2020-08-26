@@ -603,8 +603,8 @@ public class DocumentResource {
     	      out.write(buffer, 0, bytes);
     	      file_size += bytes;
     	      
-    	      logger.info("tamaño size "+file_size);
-    	      logger.info("tamaño bytes "+bytes);
+    	      //logger.info("tamaño size "+file_size);
+    	      //logger.info("tamaño bytes "+bytes);
     	      if(tamanoAnexo != 0   && file_size > tamanoAnexo){
     	    	  logger.info("tamaño "+file_size);
     	    	  val = true;

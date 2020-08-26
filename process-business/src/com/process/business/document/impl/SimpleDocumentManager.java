@@ -1876,7 +1876,7 @@ public class SimpleDocumentManager implements DocumentManager {
 	        //logger.info("Nodo ambiente existe archivo "+archivo.exists());
 	        Document document = documentBuilder.parse(archivo);
 	        document.getDocumentElement().normalize();
-			 NodeList listServ = document.getElementsByTagName(ambiente);
+			 NodeList listServ = document.getElementsByTagName(ambiente.toUpperCase());
 			 //logger.info("Nodo ambiente "+listServ.getLength());
 			 Node nodo = listServ.item(0);
 			 //logger.info("Nodo ambiente "+nodo.toString());
@@ -1936,7 +1936,7 @@ public class SimpleDocumentManager implements DocumentManager {
 			 
 			 Connection con =  null;
 			 
-			 ConexionBD bd = new ConexionBD(ambiente);
+			 ConexionBD bd = new ConexionBD(ambiente.toUpperCase());
 			 
 			 
 			try {

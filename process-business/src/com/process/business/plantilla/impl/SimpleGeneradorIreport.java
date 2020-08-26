@@ -237,7 +237,6 @@ public class SimpleGeneradorIreport implements GeneradorIreportManager{
 								json.add(campos.get(j).getNombre(), jsonMatriz);
 								
 							}else if (campos.get(j).getTipo().equals("S")){ //Padre alternativa
-								String valorPA= "";
 								for(int c=0; c < campos.get(j).getCampos().size(); c++){
 									Campo campoPA = campos.get(j).getCampos().get(c);
 									if(campoPA.getValue().equals("T")){
