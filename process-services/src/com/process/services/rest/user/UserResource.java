@@ -28,7 +28,7 @@ public class UserResource {
     @Autowired
 	private UserManager userManager;
     
-	/**
+	/**q
 	 * Obtiene datos de usuario Process 
 	 * <p>
 	 * url: GET http://localhost:9090/process/api/user

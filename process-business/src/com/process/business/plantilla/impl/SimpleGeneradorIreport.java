@@ -56,6 +56,7 @@ import com.process.business.helper.ConexionBD;
 import com.process.business.helper.c_Process;
 import com.process.business.plantilla.GeneradorIreportManager;
 import com.process.business.report.impl.SimpleReportManager;
+import com.process.domain.component.Email;
 import com.process.domain.document2.Campo;
 import com.process.domain.document2.Doc2;
 import com.process.domain.document2.Fila;
@@ -410,5 +411,53 @@ public class SimpleGeneradorIreport implements GeneradorIreportManager{
 		}
 		
 		return ruta;
+	}
+	
+	public String emailToPDF(Email email) {
+		
+		
+		String archivo = "";
+		if(email.getCuerpo().indexOf("<html>") == -1){
+			archivo = email.getRutaPlantilla()+"email.jrxml";
+		}else {
+			archivo = email.getRutaPlantilla()+"emailHtml.jrxml";
+		}
+		
+			
+		String resp = "";
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("remitente",email.getRemitente());
+		map.put("destinatario",email.getDestinatario());
+		map.put("asunto",email.getAsunto());
+		map.put("cuerpo",email.getCuerpo());
+		
+		String name = Integer.toString((int) (100000 * Math.random()));
+		
+		File archivoJrxml = new File(archivo);
+		try {
+			if(archivoJrxml.exists()) {
+								
+				JRPdfExporter exporter = new JRPdfExporter();
+				JasperReport report = JasperCompileManager.compileReport(archivo);
+				JasperPrint print = JasperFillManager.fillReport(report, map);	
+				exporter.setExporterInput(new SimpleExporterInput(print));
+			    exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(email.getRutaPdf()+name+".pdf"));
+			    SimplePdfExporterConfiguration configuration = new SimplePdfExporterConfiguration();
+			    configuration.setMetadataAuthor("BPMProcess");
+			    exporter.setConfiguration(configuration);
+			    exporter.exportReport();
+				resp = email.getRutaPdf()+name+".pdf";
+			}else {
+				logger.info("El archivo JRXML No ha sido creado, [No posee plantilla]");
+				resp = "Plantilla no existe";
+			}
+			
+		}catch (Exception e) {
+			// TODO: handle exception
+			logger.error("emailToPdf", e);
+			resp = "Error revise log";
+		}
+		
+		return resp;
 	}
 }

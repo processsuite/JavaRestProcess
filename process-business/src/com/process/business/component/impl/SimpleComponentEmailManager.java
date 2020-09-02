@@ -21,8 +21,10 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.process.business.component.ComponentEmailManager;
+import com.process.business.plantilla.impl.SimpleGeneradorIreport;
 import com.process.domain.component.Email;
 import com.process.domain.component.FileEmail;
+import com.sun.xml.internal.ws.api.model.SEIModel;
 
 
 @Service("componentEmailManager")
@@ -31,8 +33,9 @@ public class SimpleComponentEmailManager implements ComponentEmailManager{
 	private static final Logger logger = Logger.getLogger(SimpleComponentEmailManager.class);
 	
 	@Override
-	public Boolean sendMail(Email email){
-		Boolean resp= false;
+	public String sendMail(Email email){
+		String resp= "false";
+		String pdf = "";
 		// Esto es lo que va delante de @gmail.com en tu cuenta de correo. Es el remitente también.
 
 	    		//process2b.smtp@gmail.com;process2b*;true;465
@@ -62,7 +65,7 @@ public class SimpleComponentEmailManager implements ComponentEmailManager{
 	    	
 	    	// Se compone la parte del texto
             BodyPart texto = new MimeBodyPart();
-            texto.setText(email.getCuerpo());
+            texto.setContent(email.getCuerpo(), "text/html; charset=utf-8");
         
          // Una MultiParte para agrupar texto e imagen.
             MimeMultipart multiParte = new MimeMultipart();
@@ -86,7 +89,7 @@ public class SimpleComponentEmailManager implements ComponentEmailManager{
             message.setFrom(new InternetAddress(email.getRemitente(),email.getRemitente() ));
 	        message.addRecipients(Message.RecipientType.TO, recipientAddress);   //Se podrían añadir varios de la misma manera
 	        message.setSubject(email.getAsunto());
-	        message.setText(email.getCuerpo());
+	       // message.setText(email.getCuerpo());
 	        message.setContent(multiParte);
 	        
 	     
@@ -96,12 +99,19 @@ public class SimpleComponentEmailManager implements ComponentEmailManager{
 	        transport.connect(email.getSmtp(), email.getUsuario(),email.getClave());
 	        transport.sendMessage(message, message.getAllRecipients());
 	        transport.close();
-	        resp=true;
+	        
+	        
+	        if(email.getRutaPlantilla() != null && !email.getRutaPlantilla().equals("")) {
+	        	SimpleGeneradorIreport sgi = new SimpleGeneradorIreport();
+	        	pdf = sgi.emailToPDF(email);
+	        }
+	        
+	        resp="true";
 	    }
 	    catch (MessagingException | UnsupportedEncodingException me) {
 	        logger.error(me.getMessage()+" "+me.getCause());   //Si se produce un error
-	         resp=false;
+	         resp="false";
 	    }
-	    return resp;
+	    return resp+";"+pdf;
 	}
 }

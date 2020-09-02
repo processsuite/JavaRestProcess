@@ -24,8 +24,8 @@ public class EmailComponentResource {
 	public Response sendMail(Email email){
 		Response response = null;
 		try {			
-			Boolean responseService = componentEmailManager.sendMail(email);			
-			GenericEntity<Boolean> entity = new GenericEntity<Boolean>(responseService) {};			
+			String responseService = componentEmailManager.sendMail(email);			
+			GenericEntity<String> entity = new GenericEntity<String>(responseService) {};			
 			response = Response.ok(entity).build();
 		} catch (Exception e) {
 		    logger.error("sendMail", e);

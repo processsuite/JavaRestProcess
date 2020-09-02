@@ -14,9 +14,23 @@ public class Email {
 	private String cuerpo;
 	private String destinatario;
 	private List<FileEmail> listFile;
-	
+	private String rutaPlantilla; //ruta de archivo para imprimir correo en pdf y anexar al documento
+	private String rutaPdf;
 	
 
+	
+	public String getRutaPlantilla() {
+		return rutaPlantilla;
+	}
+	public void setRutaPlantilla(String rutaPlantilla) {
+		this.rutaPlantilla = rutaPlantilla;
+	}
+	public String getRutaPdf() {
+		return rutaPdf;
+	}
+	public void setRutaPdf(String rutaPdf) {
+		this.rutaPdf = rutaPdf;
+	}
 	public List<FileEmail> getListFile() {
 		return listFile;
 	}

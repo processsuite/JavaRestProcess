@@ -5,6 +5,6 @@ import com.process.domain.component.Email;
 public interface ComponentEmailManager {
 
 
-	Boolean sendMail(Email email);
+	String sendMail(Email email);
 
 }
