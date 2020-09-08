@@ -60,6 +60,9 @@ public class SimpleUserManager implements UserManager {
 		
 			user.setNombre(xpath.compile("/usr/nb_usr_act").evaluate(document, XPathConstants.STRING).toString());
 			user.setEmail(xpath.compile("/usr/email").evaluate(document, XPathConstants.STRING).toString());
+			user.setFchultconex(xpath.compile("/usr/fchultconex").evaluate(document, XPathConstants.STRING).toString());
+			logger.info("revisar prueba "+ xpath.compile("/usr/fchultconex").evaluate(document, XPathConstants.STRING).toString());
+			
 			user.setFormatoFecha(xpath.compile("/usr/@formatofecha").evaluate(document, XPathConstants.STRING).toString());
 			user.setActivoD(Integer.valueOf(xpath.compile("/usr/@nu_doc").evaluate(document, XPathConstants.STRING).toString()));
 			user.setNuDocLect(xpath.compile("/usr/@nu_doc_lect").evaluate(document, XPathConstants.STRING).toString());
@@ -149,11 +152,14 @@ public class SimpleUserManager implements UserManager {
 				user.setNbConversacion(xpath.compile("/FOLDER/@nb_conversacion").evaluate(document, XPathConstants.STRING).toString());
 			}
 			
-			document.getDocumentElement().normalize();
+			/*document.getDocumentElement().normalize();
 			NodeList listServ =document.getElementsByTagName("usr");
 			Node nodo = (Node) listServ.item(0);
 	        Element element = (Element) nodo;
-			user.setFchultconex(element.getElementsByTagName("fchultconex").item(0).getTextContent());
+	        
+	        user.setFchultconex(element.getElementsByTagName("fchultconex").item(0).getTextContent());*/
+	        
+			
 		}catch(Exception e){
 			logger.error("ObtenerDatosUsuario:", e);
 		}

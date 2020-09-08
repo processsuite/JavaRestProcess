@@ -29,6 +29,8 @@ http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
   <bean id="environmentResource" class="com.process.services.rest.environment.EnvironmentResource"/> 
     <!-- Email Component resources -->
   <bean id="emailComponentResource" class="com.process.services.rest.component.EmailComponentResource"/>  
+    <!-- Email Component resources -->
+  <bean id="ireportComponentResource" class="com.process.services.rest.component.IreportComponentResource"/>  
    <!-- data services resources -->
   <bean id="dataServicesResource" class="com.process.services.rest.dataServices.DataServicesResource"/> 
   <!-- User resources -->
