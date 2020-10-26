@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.process.business.component.ComponentEmailManager;
 import com.process.domain.component.Email;
 
-
-
 @Path("/email")
 public class EmailComponentResource {
 	private static final Logger logger = Logger.getLogger(EmailComponentResource.class);

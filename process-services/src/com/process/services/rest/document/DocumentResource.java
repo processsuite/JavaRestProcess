@@ -707,15 +707,19 @@ public class DocumentResource {
      
     	     
     	     File archivo = new File(fileLocation);
-    	     
-    	     
-
+    	 
     	     if(val){ //eliminar archivo que exede el espacio 
      	    	 archivo.delete();
      	    	 status = "{\"tamanoAnexo\":\""+((tamanoAnexo/1024)/1024)+"\", \"error\":true}";
     	     }else{
-        	     //llamar anexar documento.  	    	
+        	     //llamar anexar documento.  	
+    	    	 
         	     File archivo2 = new File(directorioFis+"\\"+newNombre);
+        	     
+        	     /*Verificar si el archivo existe*/
+        	     if(archivo2.exists()) {
+        	    	 archivo2.delete();
+        	     }
         	     
         	     archivo.renameTo(archivo2);
         	     

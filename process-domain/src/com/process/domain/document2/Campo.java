@@ -109,8 +109,39 @@ public class Campo {
 	@XmlAttribute(name = "info")
 	private String info;
 	
+	@XmlAttribute(name ="reglavalida")
+	private String reglavalida;
+	@XmlAttribute(name ="reglamostrar")
+	private String reglamostrar;
+	@XmlAttribute(name ="reglaocultar")
+	private String reglaocultar;
 	
 	
+	
+	public String getReglavalida() {
+		return reglavalida;
+	}
+
+	public void setReglavalida(String reglavalida) {
+		this.reglavalida = reglavalida;
+	}
+
+	public String getReglamostrar() {
+		return reglamostrar;
+	}
+
+	public void setReglamostrar(String reglamostrar) {
+		this.reglamostrar = reglamostrar;
+	}
+
+	public String getReglaocultar() {
+		return reglaocultar;
+	}
+
+	public void setReglaocultar(String reglaocultar) {
+		this.reglaocultar = reglaocultar;
+	}
+
 	public String getFormula() {
 		return formula;
 	}
