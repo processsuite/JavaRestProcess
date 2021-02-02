@@ -62,11 +62,13 @@ public class UserResource {
 	@PUT
 	@Path("/updatedata")
 	public Response actualizarDatosUsuario(@QueryParam("name") String name,
+										   @QueryParam("apellido") String apellido,
 									       @QueryParam("email") String email) {
 		Response response = null;
 		try {		
 			userManager.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));
-			User responseService = userManager.actualizarDatosUsuario(name, email);			
+			logger.info("actualizarDatosUsuario resource "+apellido);
+			User responseService = userManager.actualizarDatosUsuario(name, apellido, email);			
 			GenericEntity<User> entity = new GenericEntity<User>(responseService) {};			
 			response = Response.ok(entity).build();
 		} catch (Exception e) {

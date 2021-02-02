@@ -20,6 +20,8 @@ public class User implements Serializable {
 
 	private String nombre;
 	
+	private String apellido;
+	
 	private String email;
 	
 	private String formatoFecha;
@@ -73,7 +75,13 @@ public class User implements Serializable {
 	private String fchultconex;
 	
 	
-	
+	public String getApellido() {
+		return apellido;
+	}
+
+	public void setApellido(String apellido) {
+		this.apellido = apellido;
+	}
 	
 	public String getIp() {
 		return ip;

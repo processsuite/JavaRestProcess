@@ -99,6 +99,7 @@ public class SimpleReportManager implements ReportManager {
 		try{
 			motor = ClassFactory.getProcess(engineP);
 			String resultXml = motor.p4bObtenerParametrosConsulta(wfPadre, wfHijo);
+			logger.info("Parametros de consulta "+resultXml);
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document document = builder.parse(new InputSource(new StringReader(resultXml)));

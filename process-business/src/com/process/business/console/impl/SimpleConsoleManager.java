@@ -286,6 +286,7 @@ public class SimpleConsoleManager implements ConsoleManager {
 			matriz.setDominio(leerVarAmbienteXml(ambiente, "Dominio"));	
 			matriz.setiRepInclude(leerVarAmbienteXml(ambiente, "i_RepInclude"));
 			matriz.setFormatoFecha(leerVarAmbienteXml(ambiente, "FormatoFecha"));
+			matriz.setRepAgentes(leerVarAmbienteXml(ambiente, "RepAgentes"));
 			matriz.setiRepAnexos(leerVarAmbienteXml(ambiente, "i_RepAnexos"));
 			matriz.setTamanoAnexo(leerVarAmbienteXml(ambiente, "tamanoAnexo"));
 			matriz.setTimeSave(leerVarAmbienteXml(ambiente, "timeSave"));

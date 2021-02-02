@@ -26,7 +26,7 @@ public interface UserManager extends Engine {
 	 * @param email	correo del usuario a cambiar  
 	 * @return User
 	 */
-	public User actualizarDatosUsuario(String name, String email);
+	public User actualizarDatosUsuario(String name, String apellido, String email);
 	
  
 	/**
@@ -55,5 +55,7 @@ public interface UserManager extends Engine {
 	 * @param respuesta
 	 */
 	void validarRespuestaRecuperar(String email, String pregunta, String respuesta);
+
+	
 	
 }

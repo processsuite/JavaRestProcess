@@ -59,6 +59,7 @@ public class SimpleUserManager implements UserManager {
 			XPath xpath = xPathfactory.newXPath();
 		
 			user.setNombre(xpath.compile("/usr/nb_usr_act").evaluate(document, XPathConstants.STRING).toString());
+			user.setApellido(xpath.compile("/usr/ap_usr_act").evaluate(document, XPathConstants.STRING).toString());
 			user.setEmail(xpath.compile("/usr/email").evaluate(document, XPathConstants.STRING).toString());
 			user.setFchultconex(xpath.compile("/usr/fchultconex").evaluate(document, XPathConstants.STRING).toString());
 			logger.info("revisar prueba "+ xpath.compile("/usr/fchultconex").evaluate(document, XPathConstants.STRING).toString());
@@ -167,16 +168,18 @@ public class SimpleUserManager implements UserManager {
 	}
 
 	@Override
-	public User actualizarDatosUsuario(String name, String email) {
+	public User actualizarDatosUsuario(String name, String apellido,String email) {
 		User user = new User();
 		try{
+			logger.info("actualizarDatosUsuario "+apellido);
 			motor = ClassFactory.getProcess(engineP);
-			motor.p4bActualizarDatosUsuario(name, email);		
+			motor.p4bActualizarDatosUsuario(name, email, apellido);		
 			Integer result = motor.p4bStatus();
 			if (result == 0){
 				user = obtenerDatosUsuario();
 				user.setNombre(name);
 				user.setEmail(email);
+				user.setApellido(apellido);
 			}		
 		}catch(Exception e){
 			logger.error("actualizarDatosUsuario:", e);

@@ -804,7 +804,8 @@ public interface c_Process extends Com4jObject {
   @VTID(62)
   int p4bActualizarDatosUsuario(
     java.lang.String pNombreUsuario,
-    java.lang.String pEmail);
+    java.lang.String pEmail,
+    java.lang.String  pApellido);
 
 
   /**
