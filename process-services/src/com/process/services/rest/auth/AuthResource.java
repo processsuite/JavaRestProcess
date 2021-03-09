@@ -53,20 +53,23 @@ public class AuthResource {
 									 @PathParam("ambiente") String ambiente) {
 		Response response = null;
 		try {	
-			;
-			String[] varData = BasicAuth.decode(auth);
-			Login login = new Login();
-			login.setUsuario(varData[0]);
-			login.setClave(varData[1]);
-			login.setAmbiente(ambiente);
-			login.setSessionId(0);
-			login.setIp(ip);
-			login.setValidaExt(0);
-			login.setSesionCaida(0);
-			authManager.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));
-			Session responseService = authManager.establecerSesion(login);			
-			GenericEntity<Session> entity = new GenericEntity<Session>(responseService) {};			
-			response = Response.ok(entity).build();
+			
+			if(auth.length() < 125) {
+				String[] varData = BasicAuth.decode(auth);
+				Login login = new Login();
+				login.setUsuario(varData[0]);
+				login.setClave(varData[1]);
+				login.setAmbiente(ambiente);
+				login.setSessionId(0);
+				login.setIp(ip);
+				login.setValidaExt(0);
+				login.setSesionCaida(0);
+				authManager.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));
+				Session responseService = authManager.establecerSesion(login);			
+				GenericEntity<Session> entity = new GenericEntity<Session>(responseService) {};			
+				response = Response.ok(entity).build();
+			}
+			
 		} catch (Exception e) {
 		    logger.error("establecerSesion", e);
 		    return Response.serverError().build();

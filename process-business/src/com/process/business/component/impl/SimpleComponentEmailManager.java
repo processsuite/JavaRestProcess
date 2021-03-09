@@ -42,7 +42,16 @@ public class SimpleComponentEmailManager implements ComponentEmailManager{
 	    Properties props = System.getProperties();
 	    props.put("mail.smtp.host", email.getSmtp());  //El servidor SMTP de Google
 	    props.put("mail.smtp.auth", email.getAuthUsuClave());    //Usar autenticación mediante usuario y clave
-	    props.put("mail.smtp.starttls.enable", email.getStartTls()); //Para conectar de manera segura al servidor SMTP
+	    
+	    if(email.getStartTls().equals("true")) {
+	    	props.put("mail.smtp.starttls.enable", email.getStartTls()); //Para conectar de manera segura al servidor SMTP	
+	    }else {
+	   	 // SSL Factory 
+	           props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+	    }
+	    
+	       
+	    
 	    props.put("mail.smtp.mail.sender",email.getRemitente());
 	    props.put("mail.smtp.port", email.getPort()); //El puerto SMTP seguro de Google
 	    
