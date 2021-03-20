@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.process.business.helper.BasicAuth;
 import com.process.business.user.UserManager;
 import com.process.domain.user.User;
 
@@ -97,6 +98,9 @@ public class UserResource {
 									           @QueryParam("clave3") String clave3) {
 		Response response = null;
 		try {		
+			clave1 = clave1!=null?BasicAuth.decodeString(clave1):clave1;
+			clave2 = clave2!=null?BasicAuth.decodeString(clave2):clave2;
+			clave3 = clave3!=null?BasicAuth.decodeString(clave3):clave3;
 			userManager.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));
 			userManager.actualizarSeguridadUsuario(contexto, clave1, clave2, clave3);			
 			response = Response.ok().build();

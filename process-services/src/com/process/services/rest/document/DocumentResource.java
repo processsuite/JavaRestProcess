@@ -641,7 +641,7 @@ public class DocumentResource {
     		}
     	 
     	    return Response.status(200).entity(status).build();
-    }	
+	}	
     
 	/**
 	 * Anexa un archivo por consultoria al directorio virtual
