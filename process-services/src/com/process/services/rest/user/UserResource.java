@@ -66,7 +66,10 @@ public class UserResource {
 										   @QueryParam("apellido") String apellido,
 									       @QueryParam("email") String email) {
 		Response response = null;
-		try {		
+		try {
+			name = name!=null?BasicAuth.decodeString(name):name;
+			apellido = apellido!=null?BasicAuth.decodeString(apellido):apellido;
+			email = email!=null?BasicAuth.decodeString(email):email;
 			userManager.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));
 			logger.info("actualizarDatosUsuario resource "+apellido);
 			User responseService = userManager.actualizarDatosUsuario(name, apellido, email);			
