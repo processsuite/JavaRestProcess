@@ -59,30 +59,31 @@ public class SimpleConsoleManager implements ConsoleManager {
 		pathMotor = obtenerPathMotor();
 		archivo = new File(pathMotor+ambiente+".xml");
 		//logger.info("archivo "+pathMotor+ambiente+".xml");
-		try {
-			
-			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-	        DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
-	        Document document = documentBuilder.parse(archivo);
-	        context = JAXBContextFactory.createContext(new Class[] {Registro.class}, null);
-	        Unmarshaller un = context.createUnmarshaller();
-	        un = context.createUnmarshaller();
-	        reg = (Registro) un.unmarshal(document);
-			
-		} catch (SAXException e) {
-			logger.error("Error archivo SAXException obtenerDatosConsole "+e.getMessage()+" causa "+e.getLocalizedMessage());
-			return reg;
-		} catch (IOException e) {
-			logger.error("Error archivo IOException obtenerDatosConsole "+e.getMessage()+" causa "+e.getLocalizedMessage());
-			return reg;
-		} catch (ParserConfigurationException e) {
-			logger.error("Error archivo ParserConfigurationException obtenerDatosConsole "+e.getMessage()+" causa "+e.getLocalizedMessage());
-			return reg;
-		} catch (JAXBException e) {
-			logger.error("Error archivo JAXBException obtenerDatosConsole "+e.getMessage()+" causa "+e.getLocalizedMessage());
-			return reg;
+		if(archivo.exists()) {
+			try {
+				
+				DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		        DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
+		        Document document = documentBuilder.parse(archivo);
+		        context = JAXBContextFactory.createContext(new Class[] {Registro.class}, null);
+		        Unmarshaller un = context.createUnmarshaller();
+		        un = context.createUnmarshaller();
+		        reg = (Registro) un.unmarshal(document);
+				
+			} catch (SAXException e) {
+				logger.error("Error archivo SAXException obtenerDatosConsole "+e.getMessage()+" causa "+e.getLocalizedMessage());
+				return reg;
+			} catch (IOException e) {
+				logger.error("Error archivo IOException obtenerDatosConsole "+e.getMessage()+" causa "+e.getLocalizedMessage());
+				return reg;
+			} catch (ParserConfigurationException e) {
+				logger.error("Error archivo ParserConfigurationException obtenerDatosConsole "+e.getMessage()+" causa "+e.getLocalizedMessage());
+				return reg;
+			} catch (JAXBException e) {
+				logger.error("Error archivo JAXBException obtenerDatosConsole "+e.getMessage()+" causa "+e.getLocalizedMessage());
+				return reg;
+			}
 		}
-		
 		
 		return reg;
 	}
@@ -97,7 +98,7 @@ public class SimpleConsoleManager implements ConsoleManager {
 		//verificar si el archivo esta creado
 		boolean correcto = origin.exists();
 				//moveFile(archivo1, archivo2);
-		logger.info("Ruta "+fileLocation);
+		//logger.info("Ruta "+fileLocation);
 		if(!correcto){
 		try {
 				archivo = new File(fileLocation);
@@ -227,7 +228,7 @@ public class SimpleConsoleManager implements ConsoleManager {
 		File[] ambientes = new File(pathMotor).listFiles();
 		if(ambientes != null && ambientes.length != 0){
 			for (int x=0; x< ambientes.length; x++) {
-				logger.info(ambientes[x].getName());
+				//logger.info(ambientes[x].getName());
 					
 				if(ambientes[x] != null && ambientes[x].isFile() && ambientes[x].getName().endsWith(".xml")){
 					Environment env = new Environment();
@@ -262,7 +263,7 @@ public class SimpleConsoleManager implements ConsoleManager {
 				}
 			}
 		}else{
-			logger.info("Error no existe ambientes XML");
+			logger.error("Error no existe ambientes XML");
 		}
 		return list;
 	}
@@ -374,42 +375,42 @@ public class SimpleConsoleManager implements ConsoleManager {
 		/*Administrador*/
 		for (int i = 0; i < regTemp.getAdministrador().getItem().size(); i++) {
 			regTemp.getAdministrador().getItem().get(i).setValue(motor.leerVarAmbienteEx(ambiente,regTemp.getAdministrador().getItem().get(i).getId()));
-			logger.info(i+" "+regTemp.getAdministrador().getItem().get(i).getId()+" "+motor.leerVarAmbienteEx(ambiente,regTemp.getAdministrador().getItem().get(i).getId()));
+			//logger.info(i+" "+regTemp.getAdministrador().getItem().get(i).getId()+" "+motor.leerVarAmbienteEx(ambiente,regTemp.getAdministrador().getItem().get(i).getId()));
 		}
 		/*configuracion*/
 		for (int i = 0; i < regTemp.getConfiguracion().getItem().size(); i++) {
 			regTemp.getConfiguracion().getItem().get(i).setValue(motor.leerVarAmbienteEx(ambiente,regTemp.getConfiguracion().getItem().get(i).getId()));
-			logger.info(i+" "+regTemp.getConfiguracion().getItem().get(i).getId()+" "+motor.leerVarAmbienteEx(ambiente,regTemp.getConfiguracion().getItem().get(i).getId()));
+			//logger.info(i+" "+regTemp.getConfiguracion().getItem().get(i).getId()+" "+motor.leerVarAmbienteEx(ambiente,regTemp.getConfiguracion().getItem().get(i).getId()));
 		}
 		/*DirecInternet*/
 		for (int i = 0; i < regTemp.getDirecInternet().getItem().size(); i++) {
 			regTemp.getDirecInternet().getItem().get(i).setValue(motor.leerVarAmbienteEx(ambiente,regTemp.getDirecInternet().getItem().get(i).getId()));
-			logger.info(i+" "+regTemp.getDirecInternet().getItem().get(i).getId()+" "+motor.leerVarAmbienteEx(ambiente,regTemp.getDirecInternet().getItem().get(i).getId()));
+			//logger.info(i+" "+regTemp.getDirecInternet().getItem().get(i).getId()+" "+motor.leerVarAmbienteEx(ambiente,regTemp.getDirecInternet().getItem().get(i).getId()));
 		}
 		/*Email*/
 		for (int i = 0; i < regTemp.getEmail().getItem().size(); i++) {
 			regTemp.getEmail().getItem().get(i).setValue(motor.leerVarAmbienteEx(ambiente,regTemp.getEmail().getItem().get(i).getId()));
-			logger.info(i+" "+regTemp.getEmail().getItem().get(i).getId()+" "+motor.leerVarAmbienteEx(ambiente,regTemp.getEmail().getItem().get(i).getId()));
+			//logger.info(i+" "+regTemp.getEmail().getItem().get(i).getId()+" "+motor.leerVarAmbienteEx(ambiente,regTemp.getEmail().getItem().get(i).getId()));
 		}
 		/*Fuente de datos*/
 		for (int i = 0; i < regTemp.getFuenteDatos().getItem().size(); i++) {
 			regTemp.getFuenteDatos().getItem().get(i).setValue(motor.leerVarAmbienteEx(ambiente,regTemp.getFuenteDatos().getItem().get(i).getId()));
-			logger.info(i+" "+regTemp.getFuenteDatos().getItem().get(i).getId()+" "+motor.leerVarAmbienteEx(ambiente,regTemp.getFuenteDatos().getItem().get(i).getId()));
+			//logger.info(i+" "+regTemp.getFuenteDatos().getItem().get(i).getId()+" "+motor.leerVarAmbienteEx(ambiente,regTemp.getFuenteDatos().getItem().get(i).getId()));
 		}
 		/*Inspeccion*/
 		for (int i = 0; i < regTemp.getInspeccion().getItem().size(); i++) {
 			regTemp.getInspeccion().getItem().get(i).setValue(motor.leerVarAmbienteEx(ambiente,regTemp.getInspeccion().getItem().get(i).getId()));
-			logger.info(i+" "+regTemp.getInspeccion().getItem().get(i).getId()+" "+motor.leerVarAmbienteEx(ambiente,regTemp.getInspeccion().getItem().get(i).getId()));
+			//logger.info(i+" "+regTemp.getInspeccion().getItem().get(i).getId()+" "+motor.leerVarAmbienteEx(ambiente,regTemp.getInspeccion().getItem().get(i).getId()));
 		}
 		/*Repositorio fisico*/
 		for (int i = 0; i < regTemp.getRepFisico().getItem().size(); i++) {
 			regTemp.getRepFisico().getItem().get(i).setValue(motor.leerVarAmbienteEx(ambiente,regTemp.getRepFisico().getItem().get(i).getId()));
-			logger.info(i+" "+regTemp.getRepFisico().getItem().get(i).getId()+" "+motor.leerVarAmbienteEx(ambiente,regTemp.getRepFisico().getItem().get(i).getId()));
+			//logger.info(i+" "+regTemp.getRepFisico().getItem().get(i).getId()+" "+motor.leerVarAmbienteEx(ambiente,regTemp.getRepFisico().getItem().get(i).getId()));
 		}
 		/*Var ambiente*/
 		for (int i = 0; i < regTemp.getVarAmbiente().getItem().size(); i++) {
 			regTemp.getVarAmbiente().getItem().get(i).setValue(motor.leerVarAmbienteEx(ambiente,regTemp.getVarAmbiente().getItem().get(i).getId()));
-			logger.info(i+" "+regTemp.getVarAmbiente().getItem().get(i).getId()+" "+motor.leerVarAmbienteEx(ambiente,regTemp.getVarAmbiente().getItem().get(i).getId()));
+			//logger.info(i+" "+regTemp.getVarAmbiente().getItem().get(i).getId()+" "+motor.leerVarAmbienteEx(ambiente,regTemp.getVarAmbiente().getItem().get(i).getId()));
 		}
 		Boolean flag =  crearDatosConsole(ambiente,regTemp);
 		return flag;

@@ -49,7 +49,7 @@ public class SimpleAuthManager implements AuthManager {
 		}catch(Exception e){
 			logger.error("establecerSesion:", e);
 		}
-		logger.info("establecer session");
+		//logger.info("establecer session");
 		return session;
 	}
 	
@@ -70,7 +70,7 @@ public class SimpleAuthManager implements AuthManager {
 		}catch(Exception e){
 			logger.error("establecerSesion:", e);
 		}
-		logger.info("establecer session");
+		//logger.info("establecer session");
 		return session;
 	}
 

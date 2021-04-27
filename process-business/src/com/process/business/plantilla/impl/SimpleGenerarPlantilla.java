@@ -53,7 +53,7 @@ public class SimpleGenerarPlantilla implements GenerarPlantilla {
 		
 		try{
 			motor = ClassFactory.getProcess(engineP);
-			logger.info(getXmlParam(wfPadre, wfHijo, tipo, desde, campoOrden, camposBuscar));
+			//logger.info(getXmlParam(wfPadre, wfHijo, tipo, desde, campoOrden, camposBuscar));
 			respuesta = motor.p4bGenerarReporte(rutaAgentes, wfHijo.toString(), ".xls", "", 0, "", "", "", getXmlParam(wfPadre, wfHijo, tipo, desde, campoOrden, camposBuscar));	
 		}catch(Exception e){
 			logger.error("generarArchivo:", e);

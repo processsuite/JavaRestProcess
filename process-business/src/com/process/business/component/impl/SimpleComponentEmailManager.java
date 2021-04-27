@@ -40,6 +40,7 @@ public class SimpleComponentEmailManager implements ComponentEmailManager{
 
 	    		//process2b.smtp@gmail.com;process2b*;true;465
 	    Properties props = System.getProperties();
+	    logger.info("SMTP: "+email.getSmtp());
 	    props.put("mail.smtp.host", email.getSmtp());  //El servidor SMTP de Google
 	    props.put("mail.smtp.auth", email.getAuthUsuClave());    //Usar autenticación mediante usuario y clave
 	    
@@ -118,7 +119,7 @@ public class SimpleComponentEmailManager implements ComponentEmailManager{
 	        resp="true";
 	    }
 	    catch (MessagingException | UnsupportedEncodingException me) {
-	        logger.error(me.getMessage()+" "+me.getCause());   //Si se produce un error
+	        logger.error("Email error ", me);   //Si se produce un error
 	         resp="false";
 	    }
 	    return resp+";"+pdf;

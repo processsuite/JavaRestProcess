@@ -50,7 +50,7 @@ public class SimpleUserManager implements UserManager {
 		try{
 			motor = ClassFactory.getProcess(engineP);
 			String resultXml = motor.p4bObtenerDatosUsuario();
-			logger.info("ObtenerDatosUsuario: "+ resultXml);
+			//logger.info("ObtenerDatosUsuario: "+ resultXml);
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document document = builder.parse(new InputSource(new StringReader(resultXml)));
@@ -62,7 +62,6 @@ public class SimpleUserManager implements UserManager {
 			user.setApellido(xpath.compile("/usr/ap_usr_act").evaluate(document, XPathConstants.STRING).toString());
 			user.setEmail(xpath.compile("/usr/email").evaluate(document, XPathConstants.STRING).toString());
 			user.setFchultconex(xpath.compile("/usr/fchultconex").evaluate(document, XPathConstants.STRING).toString());
-			logger.info("revisar prueba "+ xpath.compile("/usr/fchultconex").evaluate(document, XPathConstants.STRING).toString());
 			
 			user.setFormatoFecha(xpath.compile("/usr/@formatofecha").evaluate(document, XPathConstants.STRING).toString());
 			user.setActivoD(Integer.valueOf(xpath.compile("/usr/@nu_doc").evaluate(document, XPathConstants.STRING).toString()));

@@ -327,7 +327,6 @@ public class DocumentResource {
 	public Response guardarform2(@QueryParam("frmn") Integer frmn, Forma forma) {
 		Response response = null;
 		try {
-			logger.info(forma.toString());
 			documentManager.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));			
 			documentManager.guardarForm1(frmn, forma);
 			response = Response.ok().build();
@@ -603,10 +602,8 @@ public class DocumentResource {
     	      out.write(buffer, 0, bytes);
     	      file_size += bytes;
     	      
-    	      //logger.info("tamaño size "+file_size);
-    	      //logger.info("tamaño bytes "+bytes);
     	      if(tamanoAnexo != 0   && file_size > tamanoAnexo){
-    	    	  logger.info("tamaño "+file_size);
+    	    	  //logger.info("tamaño "+file_size);
     	    	  val = true;
     	    	  break;
     	      }
@@ -624,7 +621,7 @@ public class DocumentResource {
         	     documentManager.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));
         	     documentManager.anexarDocumento(0, fileLocation, "", descripcion, "", "");
         	     
-        	     logger.info("File has been uploaded to:" + fileLocation + ", size: " + myFormat.format(file_size) + " bytes");
+        	    // logger.info("File has been uploaded to:" + fileLocation + ", size: " + myFormat.format(file_size) + " bytes");
         	     status = "{\"error\":false}";
     	     }
     	     
@@ -697,7 +694,7 @@ public class DocumentResource {
     	      out.write(buffer, 0, bytes);
     	      file_size += bytes;
     	      if(tamanoAnexo != 0  && file_size > tamanoAnexo){
-    	    	  logger.info("tamaño "+file_size);
+    	    	  //logger.info("tamaño "+file_size);
     	    	  val = true;
     	    	  break;
     	      }
@@ -724,7 +721,7 @@ public class DocumentResource {
         	     archivo.renameTo(archivo2);
         	     
         	     status = "{\"rutaVirtual\":\""+directorioVir+"/"+newNombre+"\", \"error\":false}";
-        	     logger.info("File has been uploaded to:" + fileLocation + ", size: " + myFormat.format(file_size) + " bytes");
+        	     //logger.info("File has been uploaded to:" + fileLocation + ", size: " + myFormat.format(file_size) + " bytes");
         	     
     	     }
     	     
@@ -840,7 +837,7 @@ public class DocumentResource {
 			 						          String resultadoXml) {
 		Response response = null;
 		try {
-			logger.info(listSeleccion);
+			//logger.info(listSeleccion);
 			documentManager.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));			
 			EventAgent responseService = documentManager.resolverResultadoListaSQL(campo, fila, resultadoXml, seleccion, contexto, listSeleccion);			
 			GenericEntity<EventAgent> entity = new GenericEntity<EventAgent>(responseService) {};			

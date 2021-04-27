@@ -70,8 +70,7 @@ public class UploadResource {
     	     out.flush();  
     	     out.close();
     	             
-    	     logger.info(String.format("Inside uploadFile==> fileName: %s,  fileSize: %s", 
-    	          fileInputDetails.getFileName(), myFormat.format(file_size)));
+    	    // logger.info(String.format("Inside uploadFile==> fileName: %s,  fileSize: %s",  fileInputDetails.getFileName(), myFormat.format(file_size)));
     	             
     	     status = "File has been uploaded to:" + fileLocation 
     	                 + ", size: " + myFormat.format(file_size) + " bytes";

@@ -71,7 +71,6 @@ public class UserResource {
 			apellido = apellido!=null?BasicAuth.decodeString(apellido):apellido;
 			email = email!=null?BasicAuth.decodeString(email):email;
 			userManager.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));
-			logger.info("actualizarDatosUsuario resource "+apellido);
 			User responseService = userManager.actualizarDatosUsuario(name, apellido, email);			
 			GenericEntity<User> entity = new GenericEntity<User>(responseService) {};			
 			response = Response.ok(entity).build();

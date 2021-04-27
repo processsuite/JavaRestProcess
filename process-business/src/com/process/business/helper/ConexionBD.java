@@ -45,7 +45,7 @@ public class ConexionBD {
 			        driverJDBC = element.getElementsByTagName("driverJdbc").item(0).getTextContent();
 			        cadena = element.getElementsByTagName("cadena").item(0).getTextContent();
 			        
-			        logger.info("element driverJDBC "+driverJDBC+" "+clave+" "+user+" "+cadena);
+			        //logger.info("element driverJDBC "+driverJDBC+" "+clave+" "+user+" "+cadena);
 			}catch(Exception e){
 				logger.error("error  ConexionBD "+e.getMessage()+" codigo "+e.getLocalizedMessage());
 			}

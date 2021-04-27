@@ -51,7 +51,7 @@ public class SimpleLogManager implements LogManager {
 	}
 	@Override
 	public List<ListFechaUsaurio> initLog(String amb){
-		logger.info("ambiente: "+amb);
+		//logger.info("ambiente: "+amb);
 		
 		
 		
@@ -59,7 +59,7 @@ public class SimpleLogManager implements LogManager {
 		if(ruta.equals("")){
 			ruta = environmentManager.getDatoAmbiente(amb, "RepError");
 		}
-		logger.info("ruta: "+ruta);
+		//logger.info("ruta: "+ruta);
 		/*Ir al directorio*/
 		directorio = new File(ruta);
 		/*Listar carpetas */
@@ -129,7 +129,7 @@ public class SimpleLogManager implements LogManager {
 			while ((line = br2.readLine()) != null) {
 				datosTraza += line;
 		    }
-			logger.info("xml log "+datosTraza);
+			//logger.info("xml log "+datosTraza);
 			datosTraza = "<logs>"+datosTraza+"</logs>";
 			
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

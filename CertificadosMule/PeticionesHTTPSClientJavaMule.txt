@@ -1,0 +1,8 @@
+Peticiones desde cliente java a URl HTTP
+
+https://stackoverflow.com/questions/21076179/pkix-path-building-failed-and-unable-to-find-valid-certification-path-to-requ
+
+keytool -list -keystore "%JAVA_HOME%/jre/lib/security/cacerts"
+
+keytool -import -noprompt -trustcacerts -alias moneyways -file 2382d32cb0430202.cer -keystore "%JAVA_HOME%\jre\lib\security\cacerts" -storepass changeit
+

@@ -190,7 +190,7 @@ public class SimpleDocumentManager implements DocumentManager {
 			motor = ClassFactory.getProcess(engineP);
 			Boolean result = motor.p4bAbrirDocumentoLectura(nuDoc, nuInst);	
 			if (result){
-				logger.info("----->p4bAbrirDocumentoLectura:true");
+				//logger.info("----->p4bAbrirDocumentoLectura:true");
 				doc = obtenerDocumentoLectura(0);
 				//manejo cliente   
 				Environment env = environmentManager.getEnvironment(environment);
@@ -219,7 +219,7 @@ public class SimpleDocumentManager implements DocumentManager {
 		try{
 			motor = ClassFactory.getProcess(engineP);
 			Boolean result = motor.p4bAbrirDocumentoLectura(nuDoc, nuInst);
-			logger.info("resultado abrirDocumentoLectura1= "+ result);
+			//logger.info("resultado abrirDocumentoLectura1= "+ result);
 			if (result){
 				doc = obtenerDocumentoLectura1(0);
 			}
@@ -255,7 +255,7 @@ public class SimpleDocumentManager implements DocumentManager {
 			
 			String dataDocXml = motor.p4bObtenerCamposDoc(frmn, 0, -1);
 			
-			logger.info("forma de  obtenerDocumentoLectura1 "+dataDocXml);
+			//logger.info("forma de  obtenerDocumentoLectura1 "+dataDocXml);
 			document = builder.parse(new InputSource(new StringReader(dataDocXml)));
 			
 			JAXBContext jc = JAXBContextFactory.createContext(new Class[] {Forma.class}, null);
@@ -392,7 +392,7 @@ public class SimpleDocumentManager implements DocumentManager {
 		try{
 			motor = ClassFactory.getProcess(engineP);
 			String contextDocxml = motor.p4bObtenerDocumento(0, 1, -1);
-			logger.info("folder de  obtenerDocumento1 "+contextDocxml);
+			//logger.info("folder de  obtenerDocumento1 "+contextDocxml);
 			
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
@@ -412,7 +412,7 @@ public class SimpleDocumentManager implements DocumentManager {
 			}	
 			
 			String dataDocXml = motor.p4bObtenerDocumento(frmn, 0, -1);
-			logger.info("forma de  obtenerDocumento1 "+dataDocXml);
+			//logger.info("forma de  obtenerDocumento1 "+dataDocXml);
 			document = builder.parse(new InputSource(new StringReader(dataDocXml)));
 			
 			JAXBContext jc = JAXBContextFactory.createContext(new Class[] {Forma.class}, null);
@@ -461,7 +461,7 @@ public class SimpleDocumentManager implements DocumentManager {
 		try{
 			motor = ClassFactory.getProcess(engineP);
 			String contextDocxml = motor.p4bObtenerDocumento(0, 1, -1);
-			logger.info(contextDocxml);
+			//logger.info(contextDocxml);
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document document = builder.parse(new InputSource(new StringReader(contextDocxml)));
@@ -541,7 +541,7 @@ public class SimpleDocumentManager implements DocumentManager {
 				frmn = Integer.valueOf(xpath.compile("/FOLDER/FORMAS/FORMA[@default='S']/@frmn").evaluate(document, XPathConstants.STRING).toString());
 			}
 			String dataDocXml = motor.p4bObtenerDocumento(frmn, 0, -1);
-			logger.info(dataDocXml);
+			//logger.info(dataDocXml);
 			document = builder.parse(new InputSource(new StringReader(dataDocXml)));
 			
 			Form frm = new Form();
@@ -1387,7 +1387,7 @@ public class SimpleDocumentManager implements DocumentManager {
 			if (result == -1) {
 				sendMsg.setSendError(false);
 				String resultadoXML =  motor.resultadoXML(); 
-				logger.info("avanzarDocumento: xml "+ resultadoXML);
+				//logger.info("avanzarDocumento: xml "+ resultadoXML);
 				
 				if (!resultadoXML.equals("")){					
 					DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -1498,7 +1498,7 @@ public class SimpleDocumentManager implements DocumentManager {
 			Integer result = motor.p4bEjecutarEventoCampo(campo, fila);
 			if (result == -1) {//load xml list
 				String xmlList = motor.resultadoXML();
-				logger.info("ejecutarEventoCampo "+xmlList);
+				//logger.info("ejecutarEventoCampo "+xmlList);
 				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 				DocumentBuilder builder = factory.newDocumentBuilder();
 				Document document;				
@@ -1526,7 +1526,7 @@ public class SimpleDocumentManager implements DocumentManager {
 				eventAgent.setMsgError(false);	
 				
 				String xmlMessages =  motor.p4bStatusAll();
-				logger.info("result == -1 "+xmlMessages);
+				//logger.info("result == -1 "+xmlMessages);
 				document = builder.parse(new InputSource(new StringReader(xmlMessages)));					
 				NodeList nodesMsg = document.getElementsByTagName("StatusMessage");
 				for(int i=0;i < nodesMsg.getLength(); i++){
@@ -1535,7 +1535,7 @@ public class SimpleDocumentManager implements DocumentManager {
 			}else{//error
 				eventAgent.setMsgError(true);
 				String xmlMessages =  motor.p4bStatusAll(); 
-				logger.info("result <> -1 "+xmlMessages);
+				//logger.info("result <> -1 "+xmlMessages);
 				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 				DocumentBuilder builder = factory.newDocumentBuilder();
 				Document document = builder.parse(new InputSource(new StringReader(xmlMessages)));
@@ -1749,7 +1749,7 @@ public class SimpleDocumentManager implements DocumentManager {
 					String obligatoriosXml = motor.resultadoXML();
 					document = builder.parse(new InputSource(new StringReader(obligatoriosXml)));
 					String formXml = motor.p4bObtenerDocumento(0,2,-1);
-					logger.info("formxml "+formXml);
+					//logger.info("formxml "+formXml);
 					Document documentForm = builder.parse(new InputSource(new StringReader(formXml)));
 					
 					Node nodesFather = document.getElementsByTagName("obligatorios").item(0);
@@ -1957,7 +1957,7 @@ public class SimpleDocumentManager implements DocumentManager {
 				try {
 		        	 if (null != con) {
 		        		 con.close();
-		        		 logger.info("cierra conexion");
+		        		 //logger.info("cierra conexion");
 		        		 }
 				} catch (SQLException e) {
 					logger.error("Error dataServices close ",e);
@@ -2014,15 +2014,15 @@ public class SimpleDocumentManager implements DocumentManager {
 					}
 					
 					result = motor.p4bAvanzar("", "", "", observacion, 0, 0, 0, "", "", 0);
-					logger.info("Resultado de avanzar "+result);
+					//logger.info("Resultado de avanzar "+result);
 					String xmlMessages =  motor.p4bStatusAll();
-					logger.info("Estatus de avanzar "+xmlMessages);					
+					//logger.info("Estatus de avanzar "+xmlMessages);					
 				}
 				
 				
 				
 			}else {
-				logger.info("error creado document");
+				//logger.info("error creado document");
 			}
 		}catch (Exception e) {
 			logger.error("Error createDocumentExterno",e);
@@ -2031,7 +2031,7 @@ public class SimpleDocumentManager implements DocumentManager {
 			try{
 				//Se cierra documento
 				//motor.p4bCerrarDocumento();		
-				logger.info("Cerrar sesion "+motor.p4bStatus());
+				//logger.info("Cerrar sesion "+motor.p4bStatus());
 			}catch(Exception e){
 				logger.error("cerrarSesion:", e);
 			}

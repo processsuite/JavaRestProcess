@@ -66,7 +66,7 @@ public class SimpleCestaManager implements CestaManager  {
 		try{
 			motor = ClassFactory.getProcess(engineP);
 			String resultXml = motor.p4bObtenerCesta(tipo, desde, nuDoc, wfp, wfa, feIni, feFin, detalle);
-			logger.info("obtenerCesta : "+resultXml);
+			//logger.info("obtenerCesta : "+resultXml);
 
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
@@ -141,7 +141,7 @@ public class SimpleCestaManager implements CestaManager  {
 		try{
 			motor = ClassFactory.getProcess(engineP);
 			String resultXml = motor.p4bObtenerCesta(tipo, desde, nuDoc, wfp, wfa, feIni, feFin, detalle);
-			logger.info("obtenerCesta : "+resultXml);
+			//logger.info("obtenerCesta : "+resultXml);
 
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();

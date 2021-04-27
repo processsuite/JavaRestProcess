@@ -50,7 +50,7 @@ public class SimpleServicioManager implements ServicioManager {
 		try{
 			motor = ClassFactory.getProcess(engineP);
 			String resultXml = motor.p4bObtenerServicios();
-			logger.info("obtenerServicios :"+resultXml);
+			//logger.info("obtenerServicios :"+resultXml);
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document document = builder.parse(new InputSource(new StringReader(resultXml)));

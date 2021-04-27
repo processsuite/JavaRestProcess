@@ -93,7 +93,7 @@ public class SimpleGeneradorIreport implements GeneradorIreportManager{
 		//map = jsonToJasper(nombreForm, wfa, plantilla.getPathArch(), xmlDatosDoc);
 		if(plantilla.getpConsultabool().equals("1")) {
 			map = jrxmlToPAram(plantilla);
-			logger.info(map);
+			//logger.info(map);
 		}else {
 			json = jsonToJasper(nombreForm, wfa, plantilla.getPathArch(), xmlDatosDoc);
 		}
@@ -127,7 +127,7 @@ public class SimpleGeneradorIreport implements GeneradorIreportManager{
 			     if(plantilla.getpAnexar() == 1) {
 					
 					String anexosv = motor.p4bObtenerDocumento(0, 1, 0);
-					logger.info("anexos datos "+anexosv);
+					//logger.info("anexos datos "+anexosv);
 					/*Obtener anexos creados para eliminarlos*/
 					DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			        DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
@@ -140,7 +140,7 @@ public class SimpleGeneradorIreport implements GeneradorIreportManager{
 					if(folder.getAnexos() != null) {
 						for(int x=0; x < folder.getAnexos().getAnexo().size();x++) {
 							if(folder.getAnexos().getAnexo().get(x).getDescripcion().toUpperCase().equals(plantilla.getpDescripcion().toUpperCase())){
-								logger.info("cantidad "+folder.getAnexos().getAnexo().size()+" descripcion "+x+" "+folder.getAnexos().getAnexo().get(x).getDescripcion());
+								//logger.info("cantidad "+folder.getAnexos().getAnexo().size()+" descripcion "+x+" "+folder.getAnexos().getAnexo().get(x).getDescripcion());
 								motor.p4bMarcarAnexoDocumento(0, folder.getAnexos().getAnexo().get(x).getNumero(), -1);
 							}
 						}
@@ -159,19 +159,19 @@ public class SimpleGeneradorIreport implements GeneradorIreportManager{
 							}
 						}
 					 
-					 logger.info("respuesta p4bAnexar "+rutaTemp);
+					 //logger.info("respuesta p4bAnexar "+rutaTemp);
 					 
 					 /*Eliminar archivo*/
 					 File archivoDel = new File(plantilla.getPathArch()+plantilla.getpNombreArch()+plantilla.getpExtArch());
 					 if(archivoDel.delete()) {
-						 logger.info("Se elimino el archivo exitosamente");
+						 //logger.info("Se elimino el archivo exitosamente");
 					 }
 				}else {
-					logger.info("No se anexa archivo");
+					//logger.info("No se anexa archivo");
 				}		    
-				logger.info("xml archivos 2 "+motor.p4bObtenerDocumento(0, 1, 0));
+				//logger.info("xml archivos 2 "+motor.p4bObtenerDocumento(0, 1, 0));
 			}else {
-				logger.info("El archivo JRXML No ha sido creado");
+				logger.error("El archivo JRXML No ha sido creado");
 			}
 			motor.p4bAsignarValorCampoDocumento(plantilla.getpCampoInd(), "X", 0, 0);
 			
@@ -258,7 +258,7 @@ public class SimpleGeneradorIreport implements GeneradorIreportManager{
 			
 			
 			
-	        logger.info("Json "+json.build().toString());
+	        //logger.info("Json "+json.build().toString());
 	       // jsonToFile(json, nombreArchivoJson, ruta);
 		}catch(Exception e){
 			logger.error("mapeoVariablesJrxml error ",e);
@@ -307,7 +307,7 @@ public class SimpleGeneradorIreport implements GeneradorIreportManager{
 	        for(int x = 0; x < listServ.getLength();x++) {
 	        	Node nodo = listServ.item(x);
 	        	Element element = (Element) nodo;
-	        	logger.info(element.getAttribute("name").toString()+" "+motor.p4bObtenerValorCampoDocumento(element.getAttribute("name").toString(),0,0,0));
+	        	//logger.info(element.getAttribute("name").toString()+" "+motor.p4bObtenerValorCampoDocumento(element.getAttribute("name").toString(),0,0,0));
 	        	map.put( element.getAttribute("name").toString(),motor.p4bObtenerValorCampoDocumento(element.getAttribute("name").toString(), 0, 0, 0)); 
 	        }
 	        
@@ -335,12 +335,12 @@ public class SimpleGeneradorIreport implements GeneradorIreportManager{
 		SimpleEnvironmentManager am = new SimpleEnvironmentManager();
 		String repAnexos =am.getDatoAmbiente(ambiente, "RepAnexosVirtual");
 		String finalArchivo = repAnexos+"\\"+engineP+"_"+wfHijo+ext;
-		logger.info("finalArchivo "+finalArchivo);
+		//logger.info("finalArchivo "+finalArchivo);
 		SimpleReportManager rm = new SimpleReportManager();
 		JsonObjectBuilder json = Json.createObjectBuilder();
 		try{
 			String resultXml = motor.p4bEjecutarConsulta(wfPadre, wfHijo, tipoOpcion, desde,  rm.getXmlParam(camposBuscar), campoOrden);
-			logger.info("filtros "+camposBuscar.size());
+			//logger.info("filtros "+camposBuscar.size());
 				for(int x=0; x<camposBuscar.size(); x++ ) {
 					//String f = "filtro"+Integer.toString(x+1);
 					json.add(camposBuscar.get(x).getCampoBd(), camposBuscar.get(x).getValor());
@@ -371,7 +371,7 @@ public class SimpleGeneradorIreport implements GeneradorIreportManager{
 					jsonMatriz.add(jsonFila);
 				}
 				json.add("reporte", jsonMatriz);
-				logger.info("json "+json.build().toString());
+				//logger.info("json "+json.build().toString());
 				HashMap<String, Object>	map = new HashMap<String, Object>();
 				File archivoJrxml = new File(archivo);
 					if(archivoJrxml.exists()) {
@@ -397,13 +397,13 @@ public class SimpleGeneradorIreport implements GeneradorIreportManager{
 						     configuration.setMetadataAuthor("BPMProcess");
 						     exporter.setConfiguration(configuration);
 						     exporter.exportReport();
-						     logger.info("impresion xls");
+						     //logger.info("impresion xls");
 						     
 						}
 						ruta =engineP+"_"+wfHijo+ext;
 					 
 				}else {
-					logger.info("El archivo JRXML No ha sido creado, [No posee plantilla]");
+					logger.error("El archivo JRXML No ha sido creado, [No posee plantilla]");
 				}
 			
 		}catch(Exception e){
@@ -448,7 +448,7 @@ public class SimpleGeneradorIreport implements GeneradorIreportManager{
 			    exporter.exportReport();
 				resp = email.getRutaPdf()+name+".pdf";
 			}else {
-				logger.info("El archivo JRXML No ha sido creado, [No posee plantilla]");
+				//logger.info("El archivo JRXML No ha sido creado, [No posee plantilla]");
 				resp = "Plantilla no existe";
 			}
 			

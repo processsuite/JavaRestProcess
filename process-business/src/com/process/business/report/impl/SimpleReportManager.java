@@ -99,7 +99,7 @@ public class SimpleReportManager implements ReportManager {
 		try{
 			motor = ClassFactory.getProcess(engineP);
 			String resultXml = motor.p4bObtenerParametrosConsulta(wfPadre, wfHijo);
-			logger.info("Parametros de consulta "+resultXml);
+			//logger.info("Parametros de consulta "+resultXml);
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document document = builder.parse(new InputSource(new StringReader(resultXml)));
@@ -227,7 +227,7 @@ public class SimpleReportManager implements ReportManager {
 			String archivo2 = rutaAgentes+"\\"+wfHijo+".htm";
 			File archivoJrxml = new File(archivo);
 			File archivoHtm = new File(archivo2);
-			logger.info("ruta "+archivo+" validacion "+archivoJrxml.exists());
+			//logger.info("ruta "+archivo+" validacion "+archivoJrxml.exists());
 			if(archivoJrxml.exists() ) {
 				resultReport.setArchReport(2);
 			}else if(archivoHtm.exists()){

@@ -56,7 +56,7 @@ private static final Logger logger = Logger.getLogger(SimpleComponentIreportMana
 			    exporter.exportReport();
 				resp = name;
 			}else {
-				logger.info("El archivo JRXML No ha sido creado, [No posee plantilla]");
+				logger.error("El archivo JRXML No ha sido creado, [No posee plantilla]");
 				resp = "Plantilla no existe";
 			}
 			

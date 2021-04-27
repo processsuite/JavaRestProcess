@@ -63,8 +63,8 @@ public class InterceptorAuthorizationMule extends AbstractEnvelopeInterceptor {
 				}else{
 					arg0.getMessage().setOutboundProperty("engineId", result);
 				}
-				logger.info("servicio llamado: "+arg0.getMessage().getInboundProperty("http.relative.path").toString());
-				logger.info("Ticket de entrada para el servicio:( " + arg0.getMessage().getInboundProperty("authorization").toString() + ")");
+				//logger.info("servicio llamado: "+arg0.getMessage().getInboundProperty("http.relative.path").toString()+" "+arg0.getMessage().getInboundProperty("authorization").toString() );
+				//logger.info("Ticket de entrada para el servicio:( " + arg0.getMessage().getInboundProperty("authorization").toString() + ")");
 			}else{
 				if(arg0.getMessage().getInboundProperty("authorization").toString().length() < 125) {
 					ProcessEngine process = new ProcessEngine();				
@@ -73,11 +73,11 @@ public class InterceptorAuthorizationMule extends AbstractEnvelopeInterceptor {
 					varTicket = BasicAuth.decodeParameter(arg0.getMessage().getInboundProperty("authorization").toString());
 					process.setTicket(varTicket);
 					ClassFactory.getListProcess().add(process);//add engine to list
-					logger.info("Create session engineId para inicio de sesion to list:(" + motor.hashCode() + ")");
+					//logger.info("Create session engineId para inicio de sesion to list:(" + motor.hashCode() + ")");
 					arg0.getMessage().setOutboundProperty("engineId", motor.hashCode());
 				}else {
 					ClassFactory.setErrorCode(406);
-					logger.info("Autorizacion excede cantidad de caracteres permitida");
+					//logger.info("Autorizacion excede cantidad de caracteres permitida");
 					
 				}
 				
@@ -100,18 +100,18 @@ public class InterceptorAuthorizationMule extends AbstractEnvelopeInterceptor {
 		process.setTicket(ticket);//
 		if (ClassFactory.isTicketList(ticket)){//Verifica que el ticket Exista en el arreglo de ticket abiertos
 			result = motor.p4bObtenerSesionUnica(ticket,0);//Si el ticket existe genera uno
-			logger.info("ObtenerSesionUnica "+result);
+			//logger.info("ObtenerSesionUnica "+result);
 		}else{
 			result = motor.p4bObtenerSesion(ticket,0);//No entiendo porq no deberia existir un  ticket
 			//result = motor.p4bObtenerSesionUnica(ticket,0);
-			logger.info("ObtenerSesion "+result);
+			//logger.info("ObtenerSesion "+result);
 		}
 		if (result!=0){
 			ClassFactory.getListProcess().add(process);//add engine to list
 			result = motor.hashCode();
 			//logger.info("Get session engine to list:(" + result + ")");		
 		}
-		logger.info("Get session engineId to list:(" + result + ")");
+		//logger.info("Get session engineId to list:(" + result + ")");
 		return result;		
 	}
 	
@@ -128,7 +128,15 @@ public class InterceptorAuthorizationMule extends AbstractEnvelopeInterceptor {
 				}else if (errorCode!=0){
 					arg0.getMessage().setOutboundProperty("http.status", errorCode);//se informa el codigo de error
 				}
-				logger.info("respuesta de servicio: "+arg0.getMessage().getInboundProperty("http.relative.path").toString());
+				//logger.info("respuesta de servicio: "+arg0.getMessage().getInboundProperty("http.relative.path").toString()+" "+arg0.getMessage().getInboundProperty("authorization").toString());
+				if(arg0.getMessage().getInboundProperty("http.relative.path").toString().indexOf("abrir1")>0 || arg0.getMessage().getInboundProperty("http.relative.path").toString().indexOf("crearDocumento")>0) {
+					try {
+						logger.info("respuesta de servicio: "+arg0.getMessage().getInboundProperty("http.relative.path").toString()+" Parametros de servicio "+arg0.getMessage().getInboundProperty("http.query.params").toString()+" Respúesta "+arg0.getMessage().getPayloadAsString()+" Token: "+arg0.getMessage().getInboundProperty("authorization").toString());
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 				//validar que estamos cerrando session para no llamar al guardar session.
 				if ((arg0.getMessage().getInboundProperty("http.method")=="DELETE") && (arg0.getMessage().getInboundProperty("http.relative.path").toString().equals("/process/api/sessions"))){
 					//logger.info("End session:"+arg0.getMessage().getOutboundProperty("engineId").toString());	
