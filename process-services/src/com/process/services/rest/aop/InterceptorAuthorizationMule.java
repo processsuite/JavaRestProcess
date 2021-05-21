@@ -51,6 +51,9 @@ public class InterceptorAuthorizationMule extends AbstractEnvelopeInterceptor {
 				throw new NotAuthorizedException("Wrong Sheme.", Response.Status.UNAUTHORIZED);
 			}else if (arg0.getMessage().getInboundProperty("authorization").toString().startsWith("Bearer ")){//validacion si es para validar ticket o para iniciar sesion
 				Integer result = 0;
+				if(arg0.getMessage().getInboundProperty("nu_doc") != null) {
+					ClassFactory.setNudoc(arg0.getMessage().getInboundProperty("nu_doc").toString());
+				}
 				
 				try{
 					varTicket = BasicAuth.decodeParameter(arg0.getMessage().getInboundProperty("authorization").toString());

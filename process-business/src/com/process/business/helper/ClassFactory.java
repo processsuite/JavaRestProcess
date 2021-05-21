@@ -13,6 +13,7 @@ public abstract class ClassFactory {
   private ClassFactory() {} // instanciation is not allowed
   private static List<ProcessEngine> listProcess;
   private static Integer errorCode = 0;
+  private static String nudoc = "";
   
   public static c_Process getProcess(Integer hash) {
 	  c_Process process = null;
@@ -78,6 +79,14 @@ public abstract class ClassFactory {
 
   public static _cDiag createcDiag() {
     return COM4J.createInstance( _cDiag.class, "{E242701B-B0A5-43D7-B501-447A99C11277}" );
-  }  
+  } 
+  
+ public static void setNudoc(String nudoc) {
+	 ClassFactory.nudoc = nudoc;
+ }
+ 
+ public static String getNuDoc() {
+	 return ClassFactory.nudoc;
+ }
   
 }

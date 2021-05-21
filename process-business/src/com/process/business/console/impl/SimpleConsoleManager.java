@@ -263,7 +263,7 @@ public class SimpleConsoleManager implements ConsoleManager {
 				}
 			}
 		}else{
-			logger.error("Error no existe ambientes XML");
+			//logger.error("Error no existe ambientes XML");
 		}
 		return list;
 	}

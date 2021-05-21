@@ -447,7 +447,7 @@ public class SimpleDocumentManager implements DocumentManager {
 			}
 			doc.setForma(forma);
 		}catch(Exception e){
-			logger.error("obtenerDocumento1:", e);
+			logger.error("obtenerDocumento1: "+ClassFactory.getNuDoc(), e);
 		}
 		return doc;
 	}
@@ -903,7 +903,7 @@ public class SimpleDocumentManager implements DocumentManager {
 				}
 			}
 		}catch(Exception e){
-			logger.error("guardarform:", e);
+			logger.error("guardarform: "+ClassFactory.getNuDoc() , e);
 		}	
 	}
 
@@ -1449,7 +1449,7 @@ public class SimpleDocumentManager implements DocumentManager {
 				}				
 			}
 		}catch(Exception e){
-			logger.error("avanzarDocumento:", e);
+			logger.error("avanzarDocumento: "+ClassFactory.getNuDoc(), e);
 		}
 		return sendMsg;
 	}
@@ -1546,7 +1546,7 @@ public class SimpleDocumentManager implements DocumentManager {
 				}				
 			}			
 		}catch(Exception e){
-			logger.error("ejecutarEventoCampo:", e);
+			logger.error("ejecutarEventoCampo: "+ClassFactory.getNuDoc(), e);
 		}	
 		return eventAgent;
 	}
