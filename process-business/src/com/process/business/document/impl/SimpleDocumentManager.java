@@ -1979,15 +1979,16 @@ public class SimpleDocumentManager implements DocumentManager {
 			//Se crea el documento
 			Integer result =   motor.p4bCrearDocumento(wfa);
 			
-			//Se obtiene el documento para sacar el numero
+		/*	//Se obtiene el documento para sacar el numero
 			String contextDocxml = motor.p4bObtenerDocumento(0, 1, -1);
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document document = builder.parse(new InputSource(new StringReader(contextDocxml)));
 			JAXBContext context = JAXBContextFactory.createContext(new Class[] {Doc2.class}, null);
 			Unmarshaller un = context.createUnmarshaller();
-			doc = (Doc2) un.unmarshal(document);
-			
+			doc = (Doc2) un.unmarshal(document);*/
+			doc.setNuDoc(motor.numDocumento());
+
 			if (result == -1){
 				if(param.length >0) {
 					for (int c = 0; c < param.length; c++) {
@@ -1995,6 +1996,7 @@ public class SimpleDocumentManager implements DocumentManager {
 						 String valor = (String) param[c][1];
 						 //Guardar campos enviados
 						 motor.p4bAsignarValorCampoDocumento(campo, valor, 0, 0); 
+						 //motor.p4bAsignarValorCampoDocumento(campo.getNombre(), "", indexFil, indexCol+1);
 				 		}
 				}
 				//Se guarda el documento
@@ -2016,7 +2018,7 @@ public class SimpleDocumentManager implements DocumentManager {
 					result = motor.p4bAvanzar("", "", "", observacion, 0, 0, 0, "", "", 0);
 					//logger.info("Resultado de avanzar "+result);
 					String xmlMessages =  motor.p4bStatusAll();
-					//logger.info("Estatus de avanzar "+xmlMessages);					
+					logger.info("Estatus de avanzar "+doc.getNuDoc()+": "+xmlMessages);					
 				}
 				
 				
