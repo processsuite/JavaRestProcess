@@ -10,7 +10,7 @@ import com4j.Optional;
 import com4j.ReturnValue;
 import com4j.VTID;
 
-@IID("{47CB9550-4210-4328-9F90-CE22FAEF683B}")
+@IID("{CBCDCE27-BB2A-4D59-9BC5-94FD87082314}")
 public interface c_Process extends Com4jObject {
 	  // Methods:
 	  /**

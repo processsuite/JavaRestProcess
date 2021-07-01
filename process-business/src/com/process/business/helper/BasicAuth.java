@@ -12,7 +12,7 @@ import javax.xml.bind.DatatypeConverter;
  */
 public class BasicAuth {
 
-    public static String[] decode(String auth) {
+    public synchronized static String[] decode(String auth) {
         //Replacing "Basic THE_BASE_64" to "THE_BASE_64" directly
         auth = auth.replaceFirst("[B|b]asic ", "");
  
@@ -30,7 +30,7 @@ public class BasicAuth {
         return new String(decodedBytes).split(":", 2);
     }
 
-    public static String decodeParameter(String auth) {
+    public synchronized static String decodeParameter(String auth) {
         //Replacing "Basic THE_BASE_64" to "THE_BASE_64" directly
         auth = auth.replaceFirst("[B|b]earer ", "");
  
@@ -42,7 +42,7 @@ public class BasicAuth {
         return new String(auth);
     }    
     
-    public static String decodeString(String auth) {
+    public synchronized static String decodeString(String auth) {
  
         //Decode the Base64 into byte[]
         byte[] decodedBytes = DatatypeConverter.parseBase64Binary(auth);

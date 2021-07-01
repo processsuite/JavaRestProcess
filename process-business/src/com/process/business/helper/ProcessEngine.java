@@ -40,7 +40,7 @@ public class ProcessEngine implements Serializable {
 
 	@Override
 	public String toString() {
-		return "ProcessEngine [ticket=" + ticket + ", engine=" + engine + "]";
+		return "ProcessEngine [ticket=" + ticket + ", engine=" + engine.hashCode() + "]";
 	}
 
 }

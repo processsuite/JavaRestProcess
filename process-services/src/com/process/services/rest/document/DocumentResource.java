@@ -35,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.process.business.document.DocumentManager;
 import com.process.business.helper.ClassFactory;
 import com.process.business.helper._Ambientes;
+import com.process.business.helper.c_Process;
 import com.process.domain.document.Agent;
 import com.process.domain.document.Anexo;
 import com.process.domain.document.Destino;
@@ -64,26 +65,8 @@ public class DocumentResource {
 	 * @return Doc Object
 	 */
 	@POST
-	public Response crearDocumento(@QueryParam("wfp") Integer wfp,
-								   @QueryParam("frmn") Integer frmn,
-								   @QueryParam("env") String environment) {
-		Response response = null;
-		try {			
-			documentManager.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));
-			Doc responseService = documentManager.crearDocumento(wfp, frmn, environment);			
-			GenericEntity<Doc> entity = new GenericEntity<Doc>(responseService) {};			
-			response = Response.ok(entity).build();
-		} catch (Exception e) {
-		    logger.error("crearDocumento", e);
-		    return Response.serverError().build();
-		}
-		return response;
-	}
-	
-	
-	@POST
 	@Path("/crearDocumento")
-	public Response crearDocumento1(@QueryParam("wfp") Integer wfp,
+	public synchronized Response crearDocumento1(@QueryParam("wfp") Integer wfp,
 								   @QueryParam("frmn") Integer frmn,
 								   @QueryParam("env") String environment) {
 		Response response = null;
@@ -113,33 +96,15 @@ public class DocumentResource {
 	 * @return Doc Object
 	 */
 	@GET
-	@Path("/abrir")	
-	public Response abrirDocumento(@QueryParam("nudoc") Integer nuDoc,
-								   @QueryParam("nuinst") Integer nuInst,
-								   @QueryParam("wfa") Integer wfa,
-								   @QueryParam("env") String environment) {
-		Response response = null;
-		try {		
-			documentManager.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));
-			Doc responseService = documentManager.abrirDocumento(nuDoc, nuInst, wfa, environment);			
-			GenericEntity<Doc> entity = new GenericEntity<Doc>(responseService) {};			
-			response = Response.ok(entity).build();
-		} catch (Exception e) {
-		    logger.error("abrirDocumento", e);
-		    return Response.serverError().build();
-		}
-		return response;
-	}	
-	
-	@GET
 	@Path("/abrir1")	
-	public Response abrirDocumento1(@QueryParam("nudoc") Integer nuDoc,
+	public synchronized Response abrirDocumento1(@QueryParam("nudoc") Integer nuDoc,
 								   @QueryParam("nuinst") Integer nuInst,
 								   @QueryParam("wfa") Integer wfa,
 								   @QueryParam("env") String environment) {
 		Response response = null;
 		try {		
-			documentManager.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));
+			String cod = org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString();
+			documentManager.setEngineId(Integer.valueOf(cod));
 			Doc2 responseService = documentManager.abrirDocumento1(nuDoc, nuInst, wfa, environment);			
 			GenericEntity<Doc2> entity = new GenericEntity<Doc2>(responseService) {};			
 			response = Response.ok(entity).build();
@@ -223,7 +188,7 @@ public class DocumentResource {
 	
 	@GET
 	@Path("/obtenerDocumento1")
-	public Response obtenerDocumento1(@QueryParam("frmn") Integer frmn) {
+	public synchronized Response obtenerDocumento1(@QueryParam("frmn") Integer frmn) {
 		Response response = null;
 		try {		
 			documentManager.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));
@@ -347,7 +312,7 @@ public class DocumentResource {
 	 * @return 200 ok
 	 */
 	@PUT
-	public Response guardarDocumento(@QueryParam("observacion") String observacion) {
+	public synchronized Response guardarDocumento(@QueryParam("observacion") String observacion) {
 		Response response = null;
 		try {			
 			documentManager.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));
@@ -537,7 +502,7 @@ public class DocumentResource {
 	 */
 	@PUT
 	@Path("/avanzar")	
-	public Response avanzarDocumento(@QueryParam("firma") String  firma,
+	public synchronized Response avanzarDocumento(@QueryParam("firma") String  firma,
 									 @QueryParam("pregunta") String  pregunta,
 									 @QueryParam("respuesta") String  respuesta,									 
 			 						 @QueryParam("observacion") String  observacion,
@@ -773,7 +738,7 @@ public class DocumentResource {
 	 */
 	@POST
 	@Path("/ejecutarevento")	
-	public Response ejecutarEventoCampo(@QueryParam("campo") String  campo,
+	public synchronized Response ejecutarEventoCampo(@QueryParam("campo") String  campo,
 			 						    @QueryParam("fila") Integer fila) {
 		Response response = null;
 		try {		
@@ -859,7 +824,7 @@ public class DocumentResource {
 	 */
 	@GET
 	@Path("/destinos")	
-	public Response calcularProximosDestinos() {
+	public synchronized Response calcularProximosDestinos() {
 		Response response = null;
 		try {	
 			documentManager.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));			

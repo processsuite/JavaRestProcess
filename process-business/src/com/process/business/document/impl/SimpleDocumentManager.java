@@ -123,13 +123,68 @@ public class SimpleDocumentManager implements DocumentManager {
 	}
 	
 	@Override
-	public Doc2 crearDocumento1(Integer wfp, Integer frmn, String environment){
+	public synchronized Doc2 crearDocumento1(Integer wfp, Integer frmn, String environment){
 		Doc2 doc = new Doc2();
 		try {
 			motor = ClassFactory.getProcess(engineP);
 			Integer result =   motor.p4bCrearDocumento(wfp);
+			//logger.info(" crearDocumento1"+motor.hashCode());
 			if (result == -1){
-				doc = obtenerDocumento1(frmn);	
+				String contextDocxml = motor.p4bObtenerDocumento(0, 1, -1);
+				//logger.info("Folder de  obtenerDocumento1 code "+motor.hashCode()+" "+contextDocxml);
+				
+				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+				DocumentBuilder builder = factory.newDocumentBuilder();
+				Document document = builder.parse(new InputSource(new StringReader(contextDocxml)));
+				
+				JAXBContext context = JAXBContextFactory.createContext(new Class[] {Doc2.class}, null);
+				//JAXBContext context = JAXBContext.newInstance(Doc2.class);
+				Unmarshaller un = context.createUnmarshaller();
+				doc = (Doc2) un.unmarshal(document);
+				
+				if (frmn==0){
+					for(int x = 0; x<doc.getFormas().getFormas().size();x++){
+						if(doc.getFormas().getFormas().get(x).getDefult()== true){
+							frmn = doc.getFormas().getFormas().get(x).getFrmn();
+						}
+					}
+				}	
+				
+				String dataDocXml = motor.p4bObtenerDocumento(frmn, 0, -1);
+				//logger.info("forma de  obtenerDocumento1 code "+motor.hashCode()+" "+dataDocXml);
+				document = builder.parse(new InputSource(new StringReader(dataDocXml)));
+				
+				JAXBContext jc = JAXBContextFactory.createContext(new Class[] {Forma.class}, null);
+				un = jc.createUnmarshaller();
+				
+				Forma forma = new Forma();
+				forma = (Forma) un.unmarshal(document);
+				
+				for(int i=0;i < forma.getListGrupoCampos().size(); i++){					
+					Boolean visible = false;
+					for(int j=0;j < forma.getListGrupoCampos().get(i).getCampo().size(); j++){
+						if (forma.getListGrupoCampos().get(i).getCampo().get(j).getLectura() != null && forma.getListGrupoCampos().get(i).getCampo().get(j).getLectura()){
+							visible = true;
+						}
+						if (forma.getListGrupoCampos().get(i).getCampo().get(j).getTipo().equals("M") || forma.getListGrupoCampos().get(i).getCampo().get(j).getTipo().equals("S")){
+							for(int y=0;y < forma.getListGrupoCampos().get(i).getCampo().get(j).getCampos().size(); y++){
+								if(forma.getListGrupoCampos().get(i).getCampo().get(j).getCampos().get(y).getLectura()){
+									visible = true;
+								}
+							}			
+						}
+						if(visible == true){
+							break;
+						}
+					}
+					//validar visibilidad del grupo
+					if (visible && forma.getListGrupoCampos().get(i).getNombre()!=""){
+						forma.getListGrupoCampos().get(i).setVisible(true);
+					}else{
+						forma.getListGrupoCampos().get(i).setVisible(false);
+					}
+				}
+				doc.setForma(forma);
 				
 				Environment env = environmentManager.getEnvironment(environment);
 				doc.setRepAgentes(env.getMatriz().getRepAgentes());
@@ -169,13 +224,69 @@ public class SimpleDocumentManager implements DocumentManager {
 		return doc;
 	}	
 	
-	public Doc2 abrirDocumento1(Integer nuDoc, Integer nuInst, Integer wfa, String environment) {
+	public synchronized Doc2 abrirDocumento1(Integer nuDoc, Integer nuInst, Integer wfa, String environment) {
 		Doc2 doc = new Doc2();
+		Integer frmn = 0;
 		try{
-			motor = ClassFactory.getProcess(engineP);
+			motor = ClassFactory.getProcess(engineP); 
 			Integer result = motor.p4bAbrirDocumento(nuDoc, nuInst, wfa);	
+			//logger.info("abrirDocumento1 code "+motor.hashCode()+" = "+engineP+" nu_doc "+nuDoc);
 			if (result == -1){
-				doc = obtenerDocumento1(0);
+				String contextDocxml = motor.p4bObtenerDocumento(0, 1, -1);
+				//logger.info("Folder de  obtenerDocumento1 code "+motor.hashCode()+" "+contextDocxml);
+				
+				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+				DocumentBuilder builder = factory.newDocumentBuilder();
+				Document document = builder.parse(new InputSource(new StringReader(contextDocxml)));
+				
+				JAXBContext context = JAXBContextFactory.createContext(new Class[] {Doc2.class}, null);
+				//JAXBContext context = JAXBContext.newInstance(Doc2.class);
+				Unmarshaller un = context.createUnmarshaller();
+				doc = (Doc2) un.unmarshal(document);
+				
+				if (frmn==0){
+					for(int x = 0; x<doc.getFormas().getFormas().size();x++){
+						if(doc.getFormas().getFormas().get(x).getDefult()== true){
+							frmn = doc.getFormas().getFormas().get(x).getFrmn();
+						}
+					}
+				}	
+				
+				String dataDocXml = motor.p4bObtenerDocumento(frmn, 0, -1);
+				//logger.info("forma de  obtenerDocumento1 code "+motor.hashCode()+" "+dataDocXml);
+				document = builder.parse(new InputSource(new StringReader(dataDocXml)));
+				
+				JAXBContext jc = JAXBContextFactory.createContext(new Class[] {Forma.class}, null);
+				un = jc.createUnmarshaller();
+				
+				Forma forma = new Forma();
+				forma = (Forma) un.unmarshal(document);
+				
+				for(int i=0;i < forma.getListGrupoCampos().size(); i++){					
+					Boolean visible = false;
+					for(int j=0;j < forma.getListGrupoCampos().get(i).getCampo().size(); j++){
+						if (forma.getListGrupoCampos().get(i).getCampo().get(j).getLectura() != null && forma.getListGrupoCampos().get(i).getCampo().get(j).getLectura()){
+							visible = true;
+						}
+						if (forma.getListGrupoCampos().get(i).getCampo().get(j).getTipo().equals("M") || forma.getListGrupoCampos().get(i).getCampo().get(j).getTipo().equals("S")){
+							for(int y=0;y < forma.getListGrupoCampos().get(i).getCampo().get(j).getCampos().size(); y++){
+								if(forma.getListGrupoCampos().get(i).getCampo().get(j).getCampos().get(y).getLectura()){
+									visible = true;
+								}
+							}			
+						}
+						if(visible == true){
+							break;
+						}
+					}
+					//validar visibilidad del grupo
+					if (visible && forma.getListGrupoCampos().get(i).getNombre()!=""){
+						forma.getListGrupoCampos().get(i).setVisible(true);
+					}else{
+						forma.getListGrupoCampos().get(i).setVisible(false);
+					}
+				}
+				doc.setForma(forma);
 			}
 		}catch(Exception e){
 			logger.error("abrirDocumento:", e);
@@ -387,12 +498,12 @@ public class SimpleDocumentManager implements DocumentManager {
 	}
 	
 	@Override
-	public Doc2 obtenerDocumento1(Integer frmn) {
+	public synchronized Doc2 obtenerDocumento1(Integer frmn) {
 		Doc2 doc = new Doc2();
 		try{
 			motor = ClassFactory.getProcess(engineP);
 			String contextDocxml = motor.p4bObtenerDocumento(0, 1, -1);
-			//logger.info("folder de  obtenerDocumento1 "+contextDocxml);
+			//logger.info("Folder de  obtenerDocumento1 code "+motor.hashCode()+" "+contextDocxml);
 			
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
@@ -412,7 +523,7 @@ public class SimpleDocumentManager implements DocumentManager {
 			}	
 			
 			String dataDocXml = motor.p4bObtenerDocumento(frmn, 0, -1);
-			//logger.info("forma de  obtenerDocumento1 "+dataDocXml);
+			//logger.info("forma de  obtenerDocumento1 code "+motor.hashCode()+" "+dataDocXml);
 			document = builder.parse(new InputSource(new StringReader(dataDocXml)));
 			
 			JAXBContext jc = JAXBContextFactory.createContext(new Class[] {Forma.class}, null);
@@ -447,7 +558,7 @@ public class SimpleDocumentManager implements DocumentManager {
 			}
 			doc.setForma(forma);
 		}catch(Exception e){
-			logger.error("obtenerDocumento1: "+ClassFactory.getNuDoc(), e);
+			logger.error("obtenerDocumento1: HAsh Motor "+engineP, e);
 		}
 		return doc;
 	}
@@ -846,7 +957,7 @@ public class SimpleDocumentManager implements DocumentManager {
 	}
 	
 	@Override
-	public void guardarForm1(Integer frmn, Forma forma){
+	public synchronized void guardarForm1(Integer frmn, Forma forma){
 		try{
 			motor = ClassFactory.getProcess(engineP);
 			for(GrupoCampos gc:forma.getListGrupoCampos()){
@@ -903,7 +1014,7 @@ public class SimpleDocumentManager implements DocumentManager {
 				}
 			}
 		}catch(Exception e){
-			logger.error("guardarform: "+ClassFactory.getNuDoc() , e);
+			logger.error("guardarform: " , e);
 		}	
 	}
 
@@ -969,7 +1080,7 @@ public class SimpleDocumentManager implements DocumentManager {
 	}
 
 	@Override
-	public void guardarDocumento(String observacion) {
+	public synchronized void guardarDocumento(String observacion) {
 		try{
 			motor = ClassFactory.getProcess(engineP);
 			motor.p4bGuardarDocumento(observacion);		
@@ -1358,7 +1469,7 @@ public class SimpleDocumentManager implements DocumentManager {
 	}
 
 	@Override
-	public SendMsg avanzarDocumento(String firma, String pregunta,
+	public synchronized SendMsg avanzarDocumento(String firma, String pregunta,
 			String respuesta, String observacion, Boolean urgente,
 			Boolean email, Integer gradoSatisfaccion,
 			String seleccionResultadoXml, String conCopiaEmailA,
@@ -1449,7 +1560,7 @@ public class SimpleDocumentManager implements DocumentManager {
 				}				
 			}
 		}catch(Exception e){
-			logger.error("avanzarDocumento: "+ClassFactory.getNuDoc(), e);
+			logger.error("avanzarDocumento: ", e);
 		}
 		return sendMsg;
 	}
@@ -1491,7 +1602,7 @@ public class SimpleDocumentManager implements DocumentManager {
 	}
 
 	@Override
-	public EventAgent ejecutarEventoCampo(String campo, Integer fila) {
+	public synchronized EventAgent ejecutarEventoCampo(String campo, Integer fila) {
 		EventAgent eventAgent = new EventAgent();
 		try{
 			motor = ClassFactory.getProcess(engineP);	
@@ -1546,7 +1657,7 @@ public class SimpleDocumentManager implements DocumentManager {
 				}				
 			}			
 		}catch(Exception e){
-			logger.error("ejecutarEventoCampo: "+ClassFactory.getNuDoc(), e);
+			logger.error("ejecutarEventoCampo: ", e);
 		}	
 		return eventAgent;
 	}
@@ -1656,7 +1767,7 @@ public class SimpleDocumentManager implements DocumentManager {
 	}
 
 	@Override
-	public Destino calcularProximosDestinos() {
+	public synchronized Destino calcularProximosDestinos() {
 		Destino destino = new Destino();		
 		try{
 			motor = ClassFactory.getProcess(engineP);
@@ -1970,7 +2081,7 @@ public class SimpleDocumentManager implements DocumentManager {
 	}
 	
 	@Override
-	public Integer crearDocumentExterno(String ambiente, Integer wfa,Object[][] param, String observacion, Boolean envio){
+	public synchronized Integer crearDocumentExterno(String ambiente, Integer wfa,Object[][] param, String observacion, Boolean envio){
 		motor = ClassFactory.getProcess(engineP);
 		Doc2 doc = new Doc2();
 		try{

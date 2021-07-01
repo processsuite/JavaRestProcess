@@ -48,7 +48,7 @@ public class AuthResource {
 	 */
 	@POST
 	@Path("{ambiente}")
-	public Response establecerSesion(@HeaderParam("authorization") String auth,
+	public synchronized Response establecerSesion(@HeaderParam("authorization") String auth,
 									 @HeaderParam("http.remote.address") String ip,
 									 @PathParam("ambiente") String ambiente) {
 		Response response = null;
@@ -65,6 +65,7 @@ public class AuthResource {
 				login.setValidaExt(0);
 				login.setSesionCaida(0);
 				authManager.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));
+				//logger.info("Establecer session resource "+varData[0]+" hash "+org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString());
 				Session responseService = authManager.establecerSesion(login);			
 				GenericEntity<Session> entity = new GenericEntity<Session>(responseService) {};			
 				response = Response.ok(entity).build();

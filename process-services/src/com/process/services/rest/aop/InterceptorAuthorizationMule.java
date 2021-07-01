@@ -51,10 +51,7 @@ public class InterceptorAuthorizationMule extends AbstractEnvelopeInterceptor {
 				throw new NotAuthorizedException("Wrong Sheme.", Response.Status.UNAUTHORIZED);
 			}else if (arg0.getMessage().getInboundProperty("authorization").toString().startsWith("Bearer ")){//validacion si es para validar ticket o para iniciar sesion
 				Integer result = 0;
-				if(arg0.getMessage().getInboundProperty("nu_doc") != null) {
-					ClassFactory.setNudoc(arg0.getMessage().getInboundProperty("nu_doc").toString());
-				}
-				
+			
 				try{
 					varTicket = BasicAuth.decodeParameter(arg0.getMessage().getInboundProperty("authorization").toString());
 					result = obtenerSession(varTicket);
@@ -76,7 +73,7 @@ public class InterceptorAuthorizationMule extends AbstractEnvelopeInterceptor {
 					varTicket = BasicAuth.decodeParameter(arg0.getMessage().getInboundProperty("authorization").toString());
 					process.setTicket(varTicket);
 					ClassFactory.getListProcess().add(process);//add engine to list
-					//logger.info("Create session engineId para inicio de sesion to list:(" + motor.hashCode() + ")");
+					//logger.info("Inicio de sesion "+BasicAuth.decode(varTicket)[0] +" hash "+motor.hashCode() );
 					arg0.getMessage().setOutboundProperty("engineId", motor.hashCode());
 				}else {
 					ClassFactory.setErrorCode(406);
@@ -97,17 +94,16 @@ public class InterceptorAuthorizationMule extends AbstractEnvelopeInterceptor {
 	
 	private synchronized Integer obtenerSession(String ticket) throws InterruptedException{
 		Integer result = 0;
-		ProcessEngine process = new ProcessEngine();
-		c_Process motor = ClassFactory.createProcess();
-		process.setEngine(motor);//Inici instancia en el motor
-		process.setTicket(ticket);//
+		ProcessEngine process = new ProcessEngine(); //Objeto que relaciona motor con token
+		c_Process motor = ClassFactory.createProcess(); //Objeto para inicar motor
+		process.setEngine(motor);//Guarda el objeto inicializado del motor
+		process.setTicket(ticket);//Guarda la relacion del token con el motor iniciado
 		if (ClassFactory.isTicketList(ticket)){//Verifica que el ticket Exista en el arreglo de ticket abiertos
-			result = motor.p4bObtenerSesionUnica(ticket,0);//Si el ticket existe genera uno
-			//logger.info("ObtenerSesionUnica "+result);
+			result = motor.p4bObtenerSesionUnica(ticket,0);
 		}else{
-			result = motor.p4bObtenerSesion(ticket,0);//No entiendo porq no deberia existir un  ticket
+			result = motor.p4bObtenerSesion(ticket,0);
 			//result = motor.p4bObtenerSesionUnica(ticket,0);
-			//logger.info("ObtenerSesion "+result);
+			//logger.info("No existe token "+ticket+" hash "+motor.hashCode());
 		}
 		if (result!=0){
 			ClassFactory.getListProcess().add(process);//add engine to list
@@ -131,15 +127,14 @@ public class InterceptorAuthorizationMule extends AbstractEnvelopeInterceptor {
 				}else if (errorCode!=0){
 					arg0.getMessage().setOutboundProperty("http.status", errorCode);//se informa el codigo de error
 				}
-				//logger.info("respuesta de servicio: "+arg0.getMessage().getInboundProperty("http.relative.path").toString()+" "+arg0.getMessage().getInboundProperty("authorization").toString());
-				if(arg0.getMessage().getInboundProperty("http.relative.path").toString().indexOf("abrir1")>0 || arg0.getMessage().getInboundProperty("http.relative.path").toString().indexOf("crearDocumento")>0) {
+				/*if(arg0.getMessage().getInboundProperty("http.relative.path").toString().indexOf("abrir1")>0 || arg0.getMessage().getInboundProperty("http.relative.path").toString().indexOf("crearDocumento")>0 || arg0.getMessage().getInboundProperty("http.relative.path").toString().indexOf("destinos")>0 || arg0.getMessage().getInboundProperty("http.relative.path").toString().indexOf("document")>0) {
 					try {
-						logger.info("respuesta de servicio: "+arg0.getMessage().getInboundProperty("http.relative.path").toString()+" Parametros de servicio "+arg0.getMessage().getInboundProperty("http.query.params").toString()+" Respúesta "+arg0.getMessage().getPayloadAsString()+" Token: "+arg0.getMessage().getInboundProperty("authorization").toString());
+						logger.info("respuesta de servicio: "+arg0.getMessage().getInboundProperty("http.relative.path").toString()+" Parametros de servicio "+arg0.getMessage().getInboundProperty("http.query.params").toString()+" Respúesta "+arg0.getMessage().getPayloadAsString()+" hash: "+motor.hashCode() +" Token "+arg0.getMessage().getInboundProperty("authorization").toString()+" status "+ arg0.getMessage().getOutboundProperty("http.status").toString());
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						logger.error("Error path ",e);
 					}
-				}
+				}*/
 				//validar que estamos cerrando session para no llamar al guardar session.
 				if ((arg0.getMessage().getInboundProperty("http.method")=="DELETE") && (arg0.getMessage().getInboundProperty("http.relative.path").toString().equals("/process/api/sessions"))){
 					//logger.info("End session:"+arg0.getMessage().getOutboundProperty("engineId").toString());	
@@ -148,18 +143,15 @@ public class InterceptorAuthorizationMule extends AbstractEnvelopeInterceptor {
 						//String ticket = motor.p4bGuardarSesion(0);
 						String ticket = motor.p4bGuardarSesionUnica(0);
 						arg0.getMessage().setOutboundProperty("Ticket", ticket);
-						//logger.info("Ticket de respuestas " + ticket);
-						//logger.info("Save session Bearer: " + arg0.getMessage().getOutboundProperty("engineId").toString());
 					}else if (arg0.getMessage().getInboundProperty("authorization").toString().startsWith("Basic ")){
 						//String ticket = motor.p4bGuardarSesion(0);
 						String ticket = motor.p4bGuardarSesionUnica(0);
 						arg0.getMessage().setOutboundProperty("Ticket", ticket);
-						//logger.info("Ticket session basic " + ticket);
-						//logger.info("Save session Basic: " + arg0.getMessage().getOutboundProperty("engineId").toString());
 					}													
 				}
 				//delete from list engine
-				ClassFactory.deleteProcesList(Integer.valueOf(arg0.getMessage().getOutboundProperty("engineId").toString()));			
+				ClassFactory.deleteProcesList(Integer.valueOf(arg0.getMessage().getOutboundProperty("engineId").toString()));	
+				//logger.info("Motor a eliminar "+motor.hashCode() );
 				motor.dispose();//elimina la instancia del motor creada
 			}else if(errorCode!=0){
 				arg0.getMessage().setOutboundProperty("http.status", errorCode);//se informa el codigo de error

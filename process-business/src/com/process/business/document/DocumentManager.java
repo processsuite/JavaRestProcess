@@ -6,6 +6,7 @@ package com.process.business.document;
 
 import java.util.List;
 
+import com.process.business.helper.c_Process;
 import com.process.domain.auth.Engine;
 import com.process.domain.document.Agent;
 import com.process.domain.document.Anexo;
@@ -76,7 +77,7 @@ public interface DocumentManager extends Engine {
 	 * @param frmn 
 	 * @return Doc
 	 */
-	public Doc2 obtenerDocumento1(Integer frmn);	
+	public  Doc2 obtenerDocumento1(Integer frmn);	
 	
 	
 	
@@ -252,5 +253,7 @@ public interface DocumentManager extends Engine {
 	 * @return Integer nuDoc
 	 */
 	public Integer crearDocumentExterno(String ambiente, Integer wfa, Object[][] param, String observacion, Boolean envio);
+
+	
 
 }

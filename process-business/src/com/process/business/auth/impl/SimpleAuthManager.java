@@ -14,6 +14,7 @@ import com.process.business.helper.ClassFactory;
 import com.process.business.helper.c_Process;
 import com.process.domain.auth.Login;
 import com.process.domain.auth.Session;
+import com.sun.swing.internal.plaf.synth.resources.synth;
 
 @Service("authManager")
 public class SimpleAuthManager implements AuthManager {
@@ -33,10 +34,11 @@ public class SimpleAuthManager implements AuthManager {
 	private EnvironmentManager environmentManager;	
 
 	@Override
-	public Session establecerSesion(Login login) {
+	public  synchronized Session establecerSesion(Login login) {
 		Session session = new Session();
 		try{
 			motor = ClassFactory.getProcess(engineP);
+			//logger.info("session Implementacion "+login.getUsuario()+" hash "+motor.hashCode()+" = "+ engineP+" engineP" );
 			Integer result = motor.p4bEstablecerSesion(login.getUsuario(), login.getClave(), login.getAmbiente(), login.getSessionId(), login.getIp(), login.getValidaExt(), login.getSesionCaida());
 			if (result == -1) {
 				//session.setTicket(motor.p4bGuardarSesion(0));
@@ -47,6 +49,7 @@ public class SimpleAuthManager implements AuthManager {
 				session.setSessionCaida(motor.sesionCaida());
 			}
 		}catch(Exception e){
+			logger.error("establecerSesion: Hash "+ engineP+" user "+login.getUsuario());
 			logger.error("establecerSesion:", e);
 		}
 		//logger.info("establecer session");
@@ -54,7 +57,7 @@ public class SimpleAuthManager implements AuthManager {
 	}
 	
 	@Override
-	public Session establecerSesionImpersonal(Login login) {
+	public  Session establecerSesionImpersonal(Login login) {
 		Session session = new Session();
 		try{
 			motor = ClassFactory.getProcess(engineP);
@@ -75,7 +78,7 @@ public class SimpleAuthManager implements AuthManager {
 	}
 
 	@Override
-	public Session recuperarSesion(Login login) {
+	public  Session recuperarSesion(Login login) {
 		Session session = new Session();
 		try{
 			motor = ClassFactory.getProcess(engineP);
@@ -96,7 +99,7 @@ public class SimpleAuthManager implements AuthManager {
 	}
 
 	@Override
-	public Session eliminarSesion(Login login) {
+	public  Session eliminarSesion(Login login) {
 		Session session = new Session();
 		//login.setValidaExt(Integer.valueOf(environmentManager.getEnvironment(login.getAmbiente()).getMatriz().getWebtipoConexion()));
 		try{
@@ -118,7 +121,7 @@ public class SimpleAuthManager implements AuthManager {
 	}
 
 	@Override
-	public Session cerrarSesion() {
+	public  Session cerrarSesion() {
 		Session session = new Session();
 		try{
 			motor = ClassFactory.getProcess(engineP);

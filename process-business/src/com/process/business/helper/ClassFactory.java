@@ -3,6 +3,12 @@ package com.process.business.helper;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObjectBuilder;
+
+import org.apache.log4j.Logger;
+
 import com4j.COM4J;
 
 
@@ -15,6 +21,8 @@ public abstract class ClassFactory {
   private static Integer errorCode = 0;
   private static String nudoc = "";
   
+  private static final Logger logger = Logger.getLogger(ClassFactory.class);
+  
   public static c_Process getProcess(Integer hash) {
 	  c_Process process = null;
 	  for(ProcessEngine p:getListProcess()){
@@ -23,9 +31,12 @@ public abstract class ClassFactory {
 			  break;
 		  }
 	  }
+	  //logger.info("getProcess "+hash +" = "+process.hashCode()+" "+(hash==process.hashCode()));
+	  //logger.info("getProcess "+getListProcess().size());
 	  return process;
   }
   
+
   public static c_Process createProcess() {
 	  c_Process process = COM4J.createInstance( c_Process.class, "{4E97C91F-0FC7-4694-A8AC-C6C92587DC4B}" );
 	  return process;
@@ -71,6 +82,20 @@ public abstract class ClassFactory {
 		  }
 	  }
   }
+  
+  public static void imprimirArreglo(String a, String codigo) {
+	  JsonObjectBuilder json = Json.createObjectBuilder();
+	  JsonArrayBuilder jsonMatriz = Json.createArrayBuilder();
+	  for(ProcessEngine p:getListProcess()){
+		logger.info("Documento "+a+" hash "+codigo +" = "+p.getEngine().hashCode()+" "+(Integer.valueOf(codigo)==p.getEngine().hashCode()));
+		JsonObjectBuilder jsonFila = Json.createObjectBuilder();
+		jsonFila.add("token", p.getTicket());
+		jsonFila.add("Hash", p.getEngine().hashCode());
+		jsonMatriz.add(jsonFila);
+	  }
+	  json.add("ProcessEngine",jsonMatriz);
+	  logger.info(a+" "+json.build());
+  }
 
   //Ambientes
   public static _Ambientes createAmbientes() {
@@ -80,13 +105,6 @@ public abstract class ClassFactory {
   public static _cDiag createcDiag() {
     return COM4J.createInstance( _cDiag.class, "{E242701B-B0A5-43D7-B501-447A99C11277}" );
   } 
-  
- public static void setNudoc(String nudoc) {
-	 ClassFactory.nudoc = nudoc;
- }
  
- public static String getNuDoc() {
-	 return ClassFactory.nudoc;
- }
   
 }
