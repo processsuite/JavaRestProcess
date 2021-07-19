@@ -40,7 +40,7 @@ public class FileResource {
 	 * @return List<Report> Object
 	 */
 	@GET
-	public Response obtenerConsultasArchivos() {
+	public synchronized Response obtenerConsultasArchivos() {
 		Response response = null;
 		try {
 			List<String> tipos = new ArrayList<String>();

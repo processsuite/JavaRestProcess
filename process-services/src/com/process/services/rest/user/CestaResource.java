@@ -54,7 +54,7 @@ public class CestaResource {
 	 * @return Cesta Object
 	 */
 	@GET
-	public Response obtenerCesta(@QueryParam("tipo") Integer tipo,
+	public synchronized Response obtenerCesta(@QueryParam("tipo") Integer tipo,
 								 @QueryParam("desde") Integer desde,
 								 @QueryParam("nudoc") Integer nuDoc,
 								 @QueryParam("wfp") Integer wfp,
@@ -100,7 +100,7 @@ public class CestaResource {
 	 */
 	@GET
 	@Path("/vencidos")
-	public Response obtenerCestaVencidos(@QueryParam("tipo") Integer tipo,
+	public synchronized Response obtenerCestaVencidos(@QueryParam("tipo") Integer tipo,
 								 @QueryParam("desde") Integer desde,
 								 @QueryParam("nudoc") Integer nuDoc,
 								 @QueryParam("wfp") Integer wfp,
@@ -153,7 +153,7 @@ public class CestaResource {
 	 */
 	@GET
 	@Path("/riesgo")
-	public Response obtenerCestaRiesgo(@QueryParam("tipo") Integer tipo,
+	public synchronized Response obtenerCestaRiesgo(@QueryParam("tipo") Integer tipo,
 								 @QueryParam("desde") Integer desde,
 								 @QueryParam("nudoc") Integer nuDoc,
 								 @QueryParam("wfp") Integer wfp,
@@ -206,7 +206,7 @@ public class CestaResource {
 	 */
 	@GET
 	@Path("/vigente")
-	public Response obtenerCestaVigente(@QueryParam("tipo") Integer tipo,
+	public synchronized Response obtenerCestaVigente(@QueryParam("tipo") Integer tipo,
 								 @QueryParam("desde") Integer desde,
 								 @QueryParam("nudoc") Integer nuDoc,
 								 @QueryParam("wfp") Integer wfp,
@@ -259,7 +259,7 @@ public class CestaResource {
 	 */
 	@GET
 	@Path("/borrador")
-	public Response obtenerCestaBorrador(@QueryParam("tipo") Integer tipo,
+	public synchronized Response obtenerCestaBorrador(@QueryParam("tipo") Integer tipo,
 								 @QueryParam("desde") Integer desde,
 								 @QueryParam("nudoc") Integer nuDoc,
 								 @QueryParam("wfp") Integer wfp,
@@ -306,7 +306,7 @@ public class CestaResource {
 	 */
 	@GET
 	@Path("/seguimiento")	
-	public Response obtenerSeguimiento(@QueryParam("tipo") Integer tipo,
+	public synchronized Response obtenerSeguimiento(@QueryParam("tipo") Integer tipo,
 			 					       @QueryParam("nudoc") Integer nuDoc){
 		Response response = null;
 		try {
@@ -334,7 +334,7 @@ public class CestaResource {
 	 */
 	@GET
 	@Path("/seguimientogantt")	
-	public Response obtenerSeguimientoGantt(@QueryParam("tipo") Integer tipo,
+	public synchronized Response obtenerSeguimientoGantt(@QueryParam("tipo") Integer tipo,
 			 					            @QueryParam("nudoc") Integer nuDoc){
 		Response response = null;
 		try {
@@ -362,7 +362,7 @@ public class CestaResource {
 	 */
 	@GET
 	@Path("/seguimiento/porejecutar")	
-	public Response obtenerActividadesPorEjecutar(@QueryParam("wfp") Integer wfp,
+	public synchronized Response obtenerActividadesPorEjecutar(@QueryParam("wfp") Integer wfp,
 								                  @QueryParam("nudoc") Integer nuDoc) {
 		Response response = null;
 		try {
@@ -389,7 +389,7 @@ public class CestaResource {
 	 */
 	@GET
 	@Path("/seguimiento/anexos")	
-	public Response obtenerAnexos(@QueryParam("nudoc") Integer nuDoc) {
+	public synchronized Response obtenerAnexos(@QueryParam("nudoc") Integer nuDoc) {
 		Response response = null;
 		try {
 			if (nuDoc==null) nuDoc = 0;
@@ -414,7 +414,7 @@ public class CestaResource {
 	 */
 	@GET
 	@Path("/clasificacion")	
-	public Response obtenerClasificacion(@QueryParam("numcla") Integer numCla) {
+	public synchronized Response obtenerClasificacion(@QueryParam("numcla") Integer numCla) {
 		Response response = null;
 		try {
 			if (numCla==null) numCla = 0;
@@ -439,7 +439,7 @@ public class CestaResource {
 	 */
 	@GET
 	@Path("/seguimiento/relacionados")	
-	public Response obtenerDocumentosRelacionados(@QueryParam("nudoc") Integer nuDoc) {
+	public synchronized Response obtenerDocumentosRelacionados(@QueryParam("nudoc") Integer nuDoc) {
 		Response response = null;
 		try {
 			if (nuDoc==null) nuDoc = 0;

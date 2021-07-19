@@ -41,7 +41,7 @@ public class EmailResource {
 	 * @return List<Email> Object
 	 */
 	@GET
-	public Response obtenerTodosCorreos() {
+	public synchronized Response obtenerTodosCorreos() {
 		Response response = null;
 		try {
 			emailManager.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));
@@ -64,7 +64,7 @@ public class EmailResource {
 	 */
 	@GET
 	@Path("/{nuMessage}/content")
-	public Response obtenerContenidoCorreo(@PathParam("nuMessage") Integer nuMessage) {
+	public synchronized Response obtenerContenidoCorreo(@PathParam("nuMessage") Integer nuMessage) {
 		Response response = null;
 		try {
 			emailManager.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));
@@ -87,7 +87,7 @@ public class EmailResource {
 	 */
 	@GET
 	@Path("/seg")
-	public Response obtenerSegCorreos(@QueryParam("nudoc") Integer nuDoc,
+	public synchronized Response obtenerSegCorreos(@QueryParam("nudoc") Integer nuDoc,
 			  						  @QueryParam("desde") Integer desde,
 			  						  @QueryParam("opc") Integer opcPropios) {
 		Response response = null;

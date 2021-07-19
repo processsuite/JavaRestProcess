@@ -61,7 +61,7 @@ public class SimpleCestaManager implements CestaManager  {
 	}	
 	
 	@Override
-	public Cesta obtenerCesta(Integer tipo, Integer desde, Integer nuDoc, Integer wfp, Integer wfa, String feIni, String feFin, String detalle) {
+	public synchronized Cesta obtenerCesta(Integer tipo, Integer desde, Integer nuDoc, Integer wfp, Integer wfa, String feIni, String feFin, String detalle) {
 		Cesta cesta = new Cesta();
 		try{
 			motor = ClassFactory.getProcess(engineP);
@@ -161,7 +161,7 @@ public class SimpleCestaManager implements CestaManager  {
 
 
 	@Override
-	public Seguimiento obtenerSeguimiento(Integer tipo, Integer nuDoc) {
+	public synchronized Seguimiento obtenerSeguimiento(Integer tipo, Integer nuDoc) {
 		Seguimiento seg = new Seguimiento();
 		try{
 			motor = ClassFactory.getProcess(engineP);
@@ -243,7 +243,7 @@ public class SimpleCestaManager implements CestaManager  {
 	}
 
 	@Override
-	public Seguimiento obtenerSeguimientoGantt(Integer tipo, Integer nuDoc) {
+	public synchronized Seguimiento obtenerSeguimientoGantt(Integer tipo, Integer nuDoc) {
 		Seguimiento seg = new Seguimiento();
 		try{
 			motor = ClassFactory.getProcess(engineP);
@@ -326,7 +326,7 @@ public class SimpleCestaManager implements CestaManager  {
 
 
 	@Override
-	public List<String> obtenerActividadesPorEjecutar(Integer wfp, Integer nudoc) {
+	public synchronized List<String> obtenerActividadesPorEjecutar(Integer wfp, Integer nudoc) {
 		List<String> list = new ArrayList<String>();
 		try{
 			motor = ClassFactory.getProcess(engineP);
@@ -350,7 +350,7 @@ public class SimpleCestaManager implements CestaManager  {
 
 
 	@Override
-	public List<CestaAnexo> obtenerAnexos(Integer nuDoc) {
+	public synchronized List<CestaAnexo> obtenerAnexos(Integer nuDoc) {
 		List<CestaAnexo> cesta = new ArrayList<CestaAnexo>();		
 		try{
 			motor = ClassFactory.getProcess(engineP);
@@ -422,7 +422,7 @@ public class SimpleCestaManager implements CestaManager  {
 	}
 
 	@Override
-	public List<Proceso> obtenerClasificacion(Integer numCla) {
+	public synchronized List<Proceso> obtenerClasificacion(Integer numCla) {
 		List<Proceso> list = new ArrayList<Proceso>();
 		try{
 			motor = ClassFactory.getProcess(engineP);
@@ -481,7 +481,7 @@ public class SimpleCestaManager implements CestaManager  {
 	}
 
 	@Override
-	public RelatedSeg obtenerDocumentosRelacionados(Integer nuDoc) {
+	public synchronized RelatedSeg obtenerDocumentosRelacionados(Integer nuDoc) {
 		RelatedSeg relatedSeg = new RelatedSeg();
 		try{
 			motor = ClassFactory.getProcess(engineP);

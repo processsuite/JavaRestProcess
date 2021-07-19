@@ -45,7 +45,7 @@ public class SimpleUserManager implements UserManager {
 	}
 
 	@Override
-	public User obtenerDatosUsuario() {
+	public synchronized User obtenerDatosUsuario() {
 		User user = new User();
 		try{
 			motor = ClassFactory.getProcess(engineP);
@@ -167,10 +167,9 @@ public class SimpleUserManager implements UserManager {
 	}
 
 	@Override
-	public User actualizarDatosUsuario(String name, String apellido,String email) {
+	public synchronized User actualizarDatosUsuario(String name, String apellido,String email) {
 		User user = new User();
 		try{
-			logger.info("actualizarDatosUsuario "+apellido);
 			motor = ClassFactory.getProcess(engineP);
 			motor.p4bActualizarDatosUsuario(name, email, apellido);		
 			Integer result = motor.p4bStatus();
@@ -187,7 +186,7 @@ public class SimpleUserManager implements UserManager {
 	}
 
 	@Override
-	public void actualizarSeguridadUsuario(Integer contexto, String clave1, String clave2, String clave3) {
+	public synchronized void actualizarSeguridadUsuario(Integer contexto, String clave1, String clave2, String clave3) {
 		try{
 			motor = ClassFactory.getProcess(engineP);
 			motor.p4bActualizarSeguridadUsuario(contexto, clave1, clave2, clave3);		
@@ -197,7 +196,7 @@ public class SimpleUserManager implements UserManager {
 	}
 
 	@Override
-	public void recuperarClave(String email, String pregunta, String respuesta) {
+	public synchronized void recuperarClave(String email, String pregunta, String respuesta) {
 		try{
 			motor = ClassFactory.getProcess(engineP);
 			motor.p4bObtenerClave(email, pregunta, respuesta, 0);		
@@ -207,7 +206,7 @@ public class SimpleUserManager implements UserManager {
 	}
 	
 	@Override
-	public void validarRespuestaRecuperar(String email, String pregunta, String respuesta){
+	public synchronized void validarRespuestaRecuperar(String email, String pregunta, String respuesta){
 		
 		try{
 			motor = ClassFactory.getProcess(engineP);

@@ -40,7 +40,7 @@ public class ColaborarResource {
 	 * @return List<Report> Object
 	 */
 	@GET
-	public Response obtenerConsultasColaborar() {
+	public synchronized Response obtenerConsultasColaborar() {
 		Response response = null;
 		try {
 			List<String> tipos = new ArrayList<String>();

@@ -45,7 +45,7 @@ public class SimpleEmailManager implements EmailManager {
 	}	
 	
 	@Override
-	public List<Email> obtenerCorreos(Integer nuDoc, Integer desde, Integer opcPropios) {
+	public synchronized List<Email> obtenerCorreos(Integer nuDoc, Integer desde, Integer opcPropios) {
 		List<Email> listEmail = new ArrayList<Email>();
 		try{
 			motor = ClassFactory.getProcess(engineP);
@@ -78,7 +78,7 @@ public class SimpleEmailManager implements EmailManager {
 	}
 
 	@Override
-	public String obtenerContenidoCorreo(Integer nuMessage) {
+	public synchronized String obtenerContenidoCorreo(Integer nuMessage) {
 		String result = "";
 		try{
 			motor = ClassFactory.getProcess(engineP);

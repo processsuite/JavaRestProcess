@@ -39,7 +39,7 @@ public class ServicioResource {
 	 * @return List<Servicio> Object
 	 */
 	@GET
-	public Response obtenerServicios() {
+	public synchronized Response obtenerServicios() {
 		Response response = null;
 		try {			
 			servicioManager.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));

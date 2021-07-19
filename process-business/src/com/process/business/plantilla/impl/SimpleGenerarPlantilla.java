@@ -34,7 +34,7 @@ public class SimpleGenerarPlantilla implements GenerarPlantilla {
 	}
 	
 	@Override
-	public String generarArchivoDoc(Plantilla plantillaPj){
+	public synchronized String generarArchivoDoc(Plantilla plantillaPj){
 
 		String resp = "";
 		try{
@@ -47,7 +47,7 @@ public class SimpleGenerarPlantilla implements GenerarPlantilla {
 	}
 	
 	@Override
-	public String generarArchivoConsulta(Integer wfPadre, Integer wfHijo, Integer tipo, Integer desde, String campoOrden, List<FieldReport> camposBuscar, String rutaAgentes){
+	public synchronized String generarArchivoConsulta(Integer wfPadre, Integer wfHijo, Integer tipo, Integer desde, String campoOrden, List<FieldReport> camposBuscar, String rutaAgentes){
 		
 		String respuesta = "";
 		

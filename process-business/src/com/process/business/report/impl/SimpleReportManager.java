@@ -49,7 +49,7 @@ public class SimpleReportManager implements ReportManager {
 	}	
 	
 	@Override
-	public List<Report> obtenerConsultas(List<String> tipos) {
+	public synchronized List<Report> obtenerConsultas(List<String> tipos) {
 		List<Report> list = new ArrayList<Report>();
 		try{
 			motor = ClassFactory.getProcess(engineP);
@@ -94,7 +94,7 @@ public class SimpleReportManager implements ReportManager {
 	}
 
 	@Override
-	public List<ParamReport> obtenerParametrosConsulta(Integer wfPadre, Integer wfHijo) {
+	public synchronized List<ParamReport> obtenerParametrosConsulta(Integer wfPadre, Integer wfHijo) {
 		List<ParamReport> list = new ArrayList<ParamReport>();
 		try{
 			motor = ClassFactory.getProcess(engineP);
@@ -148,7 +148,7 @@ public class SimpleReportManager implements ReportManager {
 	}
 
 	@Override
-	public ResultReport ejecutarConsulta(Integer wfPadre, Integer wfHijo, Integer tipoOpcion, Integer desde, List<FieldReport> camposBuscar, String campoOrden, String ambiente) {
+	public synchronized ResultReport ejecutarConsulta(Integer wfPadre, Integer wfHijo, Integer tipoOpcion, Integer desde, List<FieldReport> camposBuscar, String campoOrden, String ambiente) {
 		ResultReport resultReport = new ResultReport();
 		try{
 			motor = ClassFactory.getProcess(engineP);

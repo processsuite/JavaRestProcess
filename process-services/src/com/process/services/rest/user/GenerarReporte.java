@@ -32,7 +32,7 @@ public class GenerarReporte {
 	 */
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	public Response generarArchivo(Plantilla plantilla){
+	public synchronized Response generarArchivo(Plantilla plantilla){
 		Response response = null;
 		try {
 			gePlantilla.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));
@@ -49,7 +49,7 @@ public class GenerarReporte {
 	@POST
 	@Path("/consulta")
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	public Response generarArchivoReporte(@QueryParam("wfp") Integer wfPadre,
+	public synchronized Response generarArchivoReporte(@QueryParam("wfp") Integer wfPadre,
 										 @QueryParam("wfh") Integer wfHijo,
 										 @QueryParam("tipo") Integer tipo,
 										 @QueryParam("desde") Integer desde,
@@ -72,7 +72,7 @@ public class GenerarReporte {
 	
 	@POST
 	@Path("/ireport")
-	public Response prueba(@QueryParam("nombreForm") String nombreForm, @QueryParam("wfa") String wfa, @QueryParam("ambiente") String ambiente,Plantilla plantilla){
+	public synchronized Response prueba(@QueryParam("nombreForm") String nombreForm, @QueryParam("wfa") String wfa, @QueryParam("ambiente") String ambiente,Plantilla plantilla){
 		Response response = null;
 		try{
 			gi.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));
@@ -87,7 +87,7 @@ public class GenerarReporte {
 	
 	@POST
 	@Path("/ireportConsulta")
-	public Response prueba(@QueryParam("wfp") Integer wfPadre,
+	public synchronized Response prueba(@QueryParam("wfp") Integer wfPadre,
 			 @QueryParam("wfh") Integer wfHijo,
 			 @QueryParam("tipo") Integer tipo,
 			 @QueryParam("desde") Integer desde,

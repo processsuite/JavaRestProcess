@@ -37,7 +37,7 @@ public class UserResource {
 	 * @return User Object
 	 * 	 */
 	@GET
-	public Response obtenerDatosUsuario() {
+	public synchronized Response obtenerDatosUsuario() {
 		Response response = null;
 		try {
 			userManager.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));
@@ -62,7 +62,7 @@ public class UserResource {
 	 */
 	@PUT
 	@Path("/updatedata")
-	public Response actualizarDatosUsuario(@QueryParam("name") String name,
+	public synchronized Response actualizarDatosUsuario(@QueryParam("name") String name,
 										   @QueryParam("apellido") String apellido,
 									       @QueryParam("email") String email) {
 		Response response = null;
@@ -94,7 +94,7 @@ public class UserResource {
 	 */
 	@PUT
 	@Path("/updatesecurity")
-	public Response actualizarSeguridadUsuario(@QueryParam("ctx") Integer contexto,
+	public synchronized Response actualizarSeguridadUsuario(@QueryParam("ctx") Integer contexto,
 									           @QueryParam("clave1") String clave1,
 									           @QueryParam("clave2") String clave2,
 									           @QueryParam("clave3") String clave3) {
@@ -126,7 +126,7 @@ public class UserResource {
 	 */
 	@POST
 	@Path("/rc")
-	public Response recuperarClave(@QueryParam("email") String email,
+	public synchronized Response recuperarClave(@QueryParam("email") String email,
 								   @QueryParam("prg") String prg,
 								   @QueryParam("resp") String resp) {
 		Response response = null;
@@ -155,7 +155,7 @@ public class UserResource {
 	 */
 	@POST
 	@Path("/vpe")
-	public Response validarPreguntaEmail(@QueryParam("email") String email,
+	public synchronized Response validarPreguntaEmail(@QueryParam("email") String email,
 								   @QueryParam("prg") String prg,
 								   @QueryParam("resp") String resp) {
 		Response response = null;

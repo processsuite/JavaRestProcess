@@ -128,7 +128,7 @@ public class DocumentResource {
 	 */
 	@GET
 	@Path("/abrirlectura")	
-	public Response abrirDocumentoLectura(@QueryParam("nudoc") Integer nuDoc,
+	public synchronized Response abrirDocumentoLectura(@QueryParam("nudoc") Integer nuDoc,
 								   		  @QueryParam("nuinst") Integer nuInst,
 								   	      @QueryParam("env") String environment) {
 		Response response = null;
@@ -146,7 +146,7 @@ public class DocumentResource {
 	
 	@GET
 	@Path("/abrirlectura1")	
-	public Response abrirDocumentoLectura1(@QueryParam("nudoc") Integer nuDoc,
+	public synchronized Response abrirDocumentoLectura1(@QueryParam("nudoc") Integer nuDoc,
 								   		  @QueryParam("nuinst") Integer nuInst,
 								   	      @QueryParam("env") String environment) {
 		Response response = null;
@@ -172,7 +172,7 @@ public class DocumentResource {
 	 * @return Doc Object
 	 */
 	@GET
-	public Response obtenerDocumento(@QueryParam("frmn") Integer frmn) {
+	public synchronized Response obtenerDocumento(@QueryParam("frmn") Integer frmn) {
 		Response response = null;
 		try {		
 			documentManager.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));
@@ -213,7 +213,7 @@ public class DocumentResource {
 	 */
 	@GET
 	@Path("/lectura")	
-	public Response obtenerDocumentoLectura(@QueryParam("frmn") Integer frmn) {
+	public synchronized Response obtenerDocumentoLectura(@QueryParam("frmn") Integer frmn) {
 		Response response = null;
 		try {		
 			documentManager.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));
@@ -241,7 +241,7 @@ public class DocumentResource {
 	 */
 	@PUT
 	@Path("/asignar")	
-	public Response asignarValorCampoDocumento(@QueryParam("campo") String campo,
+	public synchronized Response asignarValorCampoDocumento(@QueryParam("campo") String campo,
 											   @QueryParam("valor") String valor,
 											   @QueryParam("fila") Integer fila,
 											   @QueryParam("columna") Integer columna) {
@@ -272,7 +272,7 @@ public class DocumentResource {
 	@PUT
 	@Path("/saveform")	
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	public Response guardarform(@QueryParam("frmn") Integer frmn, Form form) {
+	public synchronized Response guardarform(@QueryParam("frmn") Integer frmn, Form form) {
 		Response response = null;
 		try {			
 			documentManager.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));			
@@ -289,7 +289,7 @@ public class DocumentResource {
 	@PUT
 	@Path("/saveform2")	
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	public Response guardarform2(@QueryParam("frmn") Integer frmn, Forma forma) {
+	public synchronized Response guardarform2(@QueryParam("frmn") Integer frmn, Forma forma) {
 		Response response = null;
 		try {
 			documentManager.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));			
@@ -335,7 +335,7 @@ public class DocumentResource {
 	 * @return 200 ok
 	 */
 	@DELETE
-	public Response cerrarDocumento() {
+	public synchronized Response cerrarDocumento() {
 		Response response = null;
 		try {		
 			documentManager.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));			
@@ -358,7 +358,7 @@ public class DocumentResource {
 	 */
 	@DELETE
 	@Path("/lectura")	
-	public Response cerrarDocumentoLectura() {
+	public synchronized Response cerrarDocumentoLectura() {
 		Response response = null;
 		try {		
 			documentManager.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));			
@@ -384,7 +384,7 @@ public class DocumentResource {
 	 */
 	@GET
 	@Path("/adquirir")	
-	public Response adquirirDocumento(@QueryParam("observacion") String  observacion,
+	public synchronized Response adquirirDocumento(@QueryParam("observacion") String  observacion,
 								      @QueryParam("email") Boolean email) {
 		Response response = null;
 		try {			
@@ -409,7 +409,7 @@ public class DocumentResource {
 	 */
 	@GET
 	@Path("/recuperar")	
-	public Response recuperarDocumento() {
+	public synchronized Response recuperarDocumento() {
 		Response response = null;
 		try {		
 			documentManager.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));			
@@ -434,7 +434,7 @@ public class DocumentResource {
 	 */
 	@PUT
 	@Path("/anular")	
-	public Response anularDocumento(@QueryParam("observacion") String  observacion,
+	public synchronized Response anularDocumento(@QueryParam("observacion") String  observacion,
 								    @QueryParam("email") Boolean email) {
 		Response response = null;
 		try {		
@@ -464,7 +464,7 @@ public class DocumentResource {
 	 */
 	@PUT
 	@Path("/objetar")	
-	public Response objetarDocumento(@QueryParam("observacion") String  observacion,
+	public synchronized Response objetarDocumento(@QueryParam("observacion") String  observacion,
 			 						 @QueryParam("urgente") Boolean urgente,
 								     @QueryParam("email") Boolean email,
 								     @QueryParam("copiaemail") String conCopiaEmailA,
@@ -711,7 +711,7 @@ public class DocumentResource {
 	 */
 	@PUT
 	@Path("/marcaranexo")	
-	public Response marcarAnexosDocumento(List<Anexo> anexos,
+	public synchronized Response marcarAnexosDocumento(List<Anexo> anexos,
 			 						     @QueryParam("borrado") Boolean borrado) {
 		Response response = null;
 		try {			
@@ -766,7 +766,7 @@ public class DocumentResource {
 	 */
 	@POST
 	@Path("/ejecutaragente")	
-	public Response ejecutarAgente(@QueryParam("codigo") String codigo,
+	public synchronized Response ejecutarAgente(@QueryParam("codigo") String codigo,
 			 					   @QueryParam("ctx") String contexto) {
 		Response response = null;
 		try {	
@@ -794,7 +794,7 @@ public class DocumentResource {
 	 */
 	@POST
 	@Path("/resolverlista")	
-	public Response resolverResultadoListaSQL(@QueryParam("campo") String  campo,
+	public synchronized Response resolverResultadoListaSQL(@QueryParam("campo") String  campo,
 			 						          @QueryParam("fila") Integer fila,			 						          
 			 						          @QueryParam("sel") Integer seleccion,
 			 						          @QueryParam("ctx") String contexto,
@@ -851,7 +851,7 @@ public class DocumentResource {
 	 */
 	@POST
 	@Path("/agregadestino")	
-	public Response agregarProximoDestino(@QueryParam("wfa") Integer wfa,
+	public synchronized Response agregarProximoDestino(@QueryParam("wfa") Integer wfa,
 			 						      @QueryParam("e") String e,			 						          
 			 						      @QueryParam("puesto") String puesto) {
 		Response response = null;
@@ -876,7 +876,7 @@ public class DocumentResource {
 	 */
 	@GET
 	@Path("/anexos")	
-	public Response obtenerAnexos() {
+	public synchronized Response obtenerAnexos() {
 		Response response = null;
 		try {	
 			documentManager.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));			
@@ -900,7 +900,7 @@ public class DocumentResource {
 	 */
 	@GET
 	@Path("/agentesgenerales")	
-	public Response obtenerAgentesGenerales() {
+	public synchronized Response obtenerAgentesGenerales() {
 		Response response = null;
 		try {	
 			documentManager.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));			
@@ -924,7 +924,7 @@ public class DocumentResource {
 	 */
 	@POST
 	@Path("/crearDocumentoExterno")
-	public Response crearDocumentoExterno(@QueryParam("wfa") Integer wfa,
+	public synchronized Response crearDocumentoExterno(@QueryParam("wfa") Integer wfa,
 								   @QueryParam("observacion") String observacion,
 								   @QueryParam("env") String ambiente,
 								   @QueryParam("envio") Boolean envio, 

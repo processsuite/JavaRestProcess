@@ -45,7 +45,7 @@ public class SimpleServicioManager implements ServicioManager {
 	}	
 	
 	@Override
-	public List<Servicio> obtenerServicios() {
+	public synchronized List<Servicio> obtenerServicios() {
 		List<Servicio> list = new ArrayList<Servicio>();
 		try{
 			motor = ClassFactory.getProcess(engineP);

@@ -90,7 +90,7 @@ public class AuthResource {
 	 */
 	@POST
 	@Path("impersonal/{ambiente}")
-	public Response establecerSesionImpersonal(@HeaderParam("authorization") String auth,
+	public synchronized Response establecerSesionImpersonal(@HeaderParam("authorization") String auth,
 									 @HeaderParam("http.remote.address") String ip,
 									 @PathParam("ambiente") String ambiente) {
 		Response response = null;
@@ -129,7 +129,7 @@ public class AuthResource {
 	 */
 	@GET
 	@Path("{ambiente}/sc/{session}")
-	public Response recuperarSesion(@HeaderParam("authorization") String auth,
+	public synchronized Response recuperarSesion(@HeaderParam("authorization") String auth,
 									@HeaderParam("http.remote.address") String ip,
 									@PathParam("ambiente") String ambiente,
 									@PathParam("session") String session,
@@ -168,7 +168,7 @@ public class AuthResource {
 	 */
 	@PUT
 	@Path("{ambiente}/sc/{session}")
-	public Response eliminarSesion(@HeaderParam("authorization") String auth,
+	public synchronized Response eliminarSesion(@HeaderParam("authorization") String auth,
 									@HeaderParam("http.remote.address") String ip,
 									@PathParam("ambiente") String ambiente,
 									@PathParam("session") String session,
@@ -202,7 +202,7 @@ public class AuthResource {
 	 * @return Session Object
 	 */
 	@DELETE
-	public Response cerrarSesion(@HeaderParam("engineId") Integer engineId) {
+	public synchronized Response cerrarSesion(@HeaderParam("engineId") Integer engineId) {
 		Response response = null;
 		try {			
 			authManager.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));
@@ -228,7 +228,7 @@ public class AuthResource {
 	 */
 	@POST
 	@Path("/rc/{ambiente}")
-	public Response establecerSesionRc(@HeaderParam("authorization") String auth,
+	public synchronized Response establecerSesionRc(@HeaderParam("authorization") String auth,
 									   @HeaderParam("http.remote.address") String ip,
 									   @PathParam("ambiente") String ambiente,
 									   @HeaderParam("engineId") Integer engineId) {

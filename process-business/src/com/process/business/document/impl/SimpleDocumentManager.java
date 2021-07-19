@@ -295,7 +295,7 @@ public class SimpleDocumentManager implements DocumentManager {
 	}
 	
 	@Override
-	public Doc abrirDocumentoLectura(Integer nuDoc, Integer nuInst, String environment) {
+	public synchronized Doc abrirDocumentoLectura(Integer nuDoc, Integer nuInst, String environment) {
 		Doc doc = new Doc();		
 		try{
 			motor = ClassFactory.getProcess(engineP);
@@ -325,7 +325,7 @@ public class SimpleDocumentManager implements DocumentManager {
 	}
 	
 	@Override
-	public Doc2 abrirDocumentoLectura1(Integer nuDoc, Integer nuInst, String environment) {
+	public synchronized Doc2 abrirDocumentoLectura1(Integer nuDoc, Integer nuInst, String environment) {
 		Doc2 doc = new Doc2();
 		try{
 			motor = ClassFactory.getProcess(engineP);
@@ -409,7 +409,7 @@ public class SimpleDocumentManager implements DocumentManager {
 	}
 	
 	@Override
-	public Doc obtenerDocumentoLectura(Integer frmn) {
+	public synchronized Doc obtenerDocumentoLectura(Integer frmn) {
 		Doc doc = new Doc();		
 		try{
 			motor = ClassFactory.getProcess(engineP);
@@ -947,7 +947,7 @@ public class SimpleDocumentManager implements DocumentManager {
 	}
 	
 	@Override
-	public void asignarValorCampoDocumento(String campo, String valor, Integer fila, Integer columna) {
+	public synchronized void asignarValorCampoDocumento(String campo, String valor, Integer fila, Integer columna) {
 		try{
 			motor = ClassFactory.getProcess(engineP);
 			motor.p4bAsignarValorCampoDocumento(campo, valor, fila, columna);		
@@ -1019,7 +1019,7 @@ public class SimpleDocumentManager implements DocumentManager {
 	}
 
 	@Override
-	public void guardarform(Integer frmn, Form form) {
+	public synchronized void guardarform(Integer frmn, Form form) {
 		try{
 			motor = ClassFactory.getProcess(engineP);
 			for(Group gr:form.getGroups()){
@@ -1090,7 +1090,7 @@ public class SimpleDocumentManager implements DocumentManager {
 	}
 
 	@Override
-	public void cerrarDocumento() {
+	public synchronized void cerrarDocumento() {
 		try{
 			motor = ClassFactory.getProcess(engineP);
 			motor.p4bCerrarDocumento();		
@@ -1100,7 +1100,7 @@ public class SimpleDocumentManager implements DocumentManager {
 	}
 
 	@Override
-	public void cerrarDocumentoLectura() {
+	public synchronized void cerrarDocumentoLectura() {
 		try{
 			motor = ClassFactory.getProcess(engineP);
 			motor.p4bCerrarDocumentoLectura();		
@@ -1110,7 +1110,7 @@ public class SimpleDocumentManager implements DocumentManager {
 	}
 
 	@Override
-	public SendMsg adquirirDocumento(String observacion, Boolean email) {
+	public synchronized SendMsg adquirirDocumento(String observacion, Boolean email) {
 		SendMsg sendMsg = new SendMsg();
 		try{
 			motor = ClassFactory.getProcess(engineP);
@@ -1225,7 +1225,7 @@ public class SimpleDocumentManager implements DocumentManager {
 	}
 
 	@Override
-	public void recuperarDocumento() {
+	public synchronized void recuperarDocumento() {
 		try{
 			motor = ClassFactory.getProcess(engineP);
 			motor.p4bDeshacerEnvio();		
@@ -1235,7 +1235,7 @@ public class SimpleDocumentManager implements DocumentManager {
 	}
 
 	@Override
-	public SendMsg anularDocumento(String observacion, Boolean email) {
+	public synchronized SendMsg anularDocumento(String observacion, Boolean email) {
 		SendMsg sendMsg = new SendMsg();		
 		try{
 			motor = ClassFactory.getProcess(engineP);
@@ -1350,7 +1350,7 @@ public class SimpleDocumentManager implements DocumentManager {
 	}
 
 	@Override
-	public SendMsg objetarDocumento(String observacion, Boolean urgente, Boolean email, String conCopiaEmailA, Integer frmnCopia) {
+	public synchronized SendMsg objetarDocumento(String observacion, Boolean urgente, Boolean email, String conCopiaEmailA, Integer frmnCopia) {
 		SendMsg sendMsg = new SendMsg();
 		try{
 			motor = ClassFactory.getProcess(engineP);
@@ -1584,7 +1584,7 @@ public class SimpleDocumentManager implements DocumentManager {
 	}	
 
 	@Override
-	public void marcarAnexosDocumento(List<Anexo> anexos, Boolean borrado) {
+	public synchronized void marcarAnexosDocumento(List<Anexo> anexos, Boolean borrado) {
 		try{
 			motor = ClassFactory.getProcess(engineP);
 			Integer borradoInt = 0;
@@ -1663,7 +1663,7 @@ public class SimpleDocumentManager implements DocumentManager {
 	}
 	
 	@Override
-	public EventAgent ejecutarAgente(String codigo, String contexto) {
+	public synchronized EventAgent ejecutarAgente(String codigo, String contexto) {
 		EventAgent eventAgent = new EventAgent();
 		try{
 			motor = ClassFactory.getProcess(engineP);	
@@ -1721,7 +1721,7 @@ public class SimpleDocumentManager implements DocumentManager {
 	}
 
 	@Override
-	public EventAgent resolverResultadoListaSQL(String campo, Integer fila, String resultadoXml, Integer seleccion, String contexto, String listaSelect) {
+	public synchronized EventAgent resolverResultadoListaSQL(String campo, Integer fila, String resultadoXml, Integer seleccion, String contexto, String listaSelect) {
 		EventAgent eventAgent = new EventAgent();
 		try{
 			motor = ClassFactory.getProcess(engineP);
@@ -1899,7 +1899,7 @@ public class SimpleDocumentManager implements DocumentManager {
 	}
 
 	@Override
-	public void agregarProximoDestino(Integer wfa, String e, String puesto) {
+	public synchronized void agregarProximoDestino(Integer wfa, String e, String puesto) {
 		try{
 			motor = ClassFactory.getProcess(engineP);
 			motor.p4bAgregarProximoDestino(wfa, e, puesto);	
@@ -1909,7 +1909,7 @@ public class SimpleDocumentManager implements DocumentManager {
 	}
 
 	@Override
-	public List<Anexo> obtenerAnexos() {
+	public synchronized List<Anexo> obtenerAnexos() {
 		List<Anexo> listAnexos = new ArrayList<Anexo>();
 		try{
 			motor = ClassFactory.getProcess(engineP);
@@ -1941,7 +1941,7 @@ public class SimpleDocumentManager implements DocumentManager {
 	}
 
 	@Override
-	public List<Agent> obtenerAgentesGenerales() {
+	public synchronized List<Agent> obtenerAgentesGenerales() {
 		List<Agent> result = new ArrayList<Agent>();
 		try{
 			motor = ClassFactory.getProcess(engineP);

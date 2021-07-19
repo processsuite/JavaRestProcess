@@ -43,7 +43,7 @@ public class ReportResource {
 	 * 	 * @return List<Report> Object
 	 */
 	@GET
-	public Response obtenerConsultas() {
+	public synchronized Response obtenerConsultas() {
 		Response response = null;
 		try {
 			List<String> tipos = new ArrayList<String>();
@@ -70,7 +70,7 @@ public class ReportResource {
 	 */
 	@GET
 	@Path("/param")
-	public Response obtenerParametrosConsulta(@QueryParam("wfp") Integer wfPadre,
+	public synchronized Response obtenerParametrosConsulta(@QueryParam("wfp") Integer wfPadre,
 											  @QueryParam("wfh") Integer wfHijo) {
 		Response response = null;
 		try {
@@ -95,7 +95,7 @@ public class ReportResource {
 	@POST
 	@Path("/exe")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public Response ejecutarConsulta(@QueryParam("wfp") Integer wfPadre,
+	public synchronized Response ejecutarConsulta(@QueryParam("wfp") Integer wfPadre,
 									 @QueryParam("wfh") Integer wfHijo,
 									 @QueryParam("tipo") Integer tipo,
 									 @QueryParam("desde") Integer desde,
