@@ -60,6 +60,7 @@ public class SimpleUserManager implements UserManager {
 		
 			user.setNombre(xpath.compile("/usr/nb_usr_act").evaluate(document, XPathConstants.STRING).toString());
 			user.setApellido(xpath.compile("/usr/ap_usr_act").evaluate(document, XPathConstants.STRING).toString());
+			user.setPuesto(xpath.compile("/usr/puesto").evaluate(document, XPathConstants.STRING).toString());
 			user.setEmail(xpath.compile("/usr/email").evaluate(document, XPathConstants.STRING).toString());
 			user.setFchultconex(xpath.compile("/usr/fchultconex").evaluate(document, XPathConstants.STRING).toString());
 			

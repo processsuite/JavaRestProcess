@@ -26,5 +26,8 @@
 	<classpathentry kind="lib" path="C:/BPMprocess/mule-standalone-3.7.0/lib/opt/commons-digester-2.1.jar"/>
 	<classpathentry kind="lib" path="C:/BPMprocess/mule-standalone-3.7.0/lib/opt/commons-pool-2.6.0.jar"/>
 	<classpathentry kind="lib" path="C:/BPMprocess/mule-standalone-3.7.0/lib/opt/commons-collections-4-4.2.jar"/>
+	<classpathentry kind="lib" path="C:/BPMprocess/mule-standalone-3.7.0/lib/opt/commons-math3-3.6.1.jar"/>
+	<classpathentry kind="lib" path="C:/BPMprocess/mule-standalone-3.7.0/lib/opt/poi-5.0.0.jar"/>
+	<classpathentry kind="lib" path="C:/BPMprocess/mule-standalone-3.7.0/lib/opt/poi-ooxml-5.0.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

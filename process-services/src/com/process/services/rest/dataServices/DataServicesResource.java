@@ -41,4 +41,27 @@ public class DataServicesResource {
 		return response;
 	}
 	
+	/**
+	 * Consulme servicio de datos desde ajax, consulta a un dataSourse
+	 * <p>
+	 * 
+	 * url: GET http://localhost:9090/process/api/document/dataServices
+	 * 
+	 * @return List<Agent>
+	 */
+	@Path("/uploadExcel")
+	@POST
+	public Response uploadExcel(@QueryParam("ambiente") String ambiente,@QueryParam("nombreArchivo") String nombreArchivo, @QueryParam("idConfig") String idConfig, Object[][] param ) {
+		Response response = null;
+		try {			
+			RespDataService responseService = documentManager.uploadDataFileExcel(ambiente, nombreArchivo, idConfig, param);		
+			GenericEntity<RespDataService> entity = new GenericEntity<RespDataService>(responseService) {};			
+			response = Response.ok(entity).build();
+		} catch (Exception e) {
+		    logger.error("dataServicesAjax", e);
+		    return Response.serverError().build();
+		}
+		return response;
+	}
+	
 }

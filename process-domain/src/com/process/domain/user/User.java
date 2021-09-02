@@ -74,7 +74,17 @@ public class User implements Serializable {
 	
 	private String fchultconex;
 	
+	private String puesto;
 	
+	
+	public String getPuesto() {
+		return puesto;
+	}
+
+	public void setPuesto(String puesto) {
+		this.puesto = puesto;
+	}
+
 	public String getApellido() {
 		return apellido;
 	}

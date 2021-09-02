@@ -255,5 +255,8 @@ public interface DocumentManager extends Engine {
 	public Integer crearDocumentExterno(String ambiente, Integer wfa, Object[][] param, String observacion, Boolean envio);
 
 	
+	public RespDataService uploadDataFileExcel(String ambiente, String nombreArchivo, String idConfig, Object[][] param);
+
+	
 
 }

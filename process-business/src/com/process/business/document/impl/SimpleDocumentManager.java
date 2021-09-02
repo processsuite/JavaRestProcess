@@ -5,7 +5,9 @@
 package com.process.business.document.impl;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.net.URL;
 import java.nio.file.Files;
@@ -15,6 +17,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -30,6 +33,12 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -2152,4 +2161,171 @@ public class SimpleDocumentManager implements DocumentManager {
 		return doc.getNuDoc();
 	}
 	
+	@Override
+	public RespDataService uploadDataFileExcel(String ambiente, String nombreArchivo, String idConfig, Object[][] param){
+		String sql = "";
+		String fileOrigen = "";
+		String hoja ="";
+		String filIni =  null;
+		String filFin = null;
+		String columnas = null;
+		URL fileLocation = getClass().getClassLoader().getResource("UploadMasivoProcess.xml");
+		File archivo = new File(fileLocation.getFile());
+		 Object[][] arrayResult = null;
+		 RespDataService resp = new RespDataService();
+		 //logger.info("localizacion ambiente "+fileLocation.getFile());
+		try{
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+	        DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
+	        //logger.info("Nodo ambiente existe archivo "+archivo.exists());
+	        Document document = documentBuilder.parse(archivo);
+	        document.getDocumentElement().normalize();
+			 NodeList listServ = document.getElementsByTagName(ambiente.toUpperCase());
+			 //logger.info("Nodo ambiente "+listServ.getLength());
+			 Node nodo = listServ.item(0);
+			 //logger.info("Nodo ambiente "+nodo.toString());
+			 Element elemtServi = (Element) nodo;
+			 
+			 NodeList listQuery = elemtServi.getElementsByTagName("archivo");
+	
+			 for (int temp = 0; temp < listQuery.getLength(); temp++) {
+				 Node nodo1 = listQuery.item(temp);
+				 if(nodo1.getNodeType() == Node.ELEMENT_NODE){
+					 Element elemQuery = (Element) nodo1;
+					 if(elemQuery.getAttribute("id").equals(idConfig)){
+						 	fileOrigen = elemQuery.getElementsByTagName("ruta").item(0).getTextContent()+"\\"+nombreArchivo;
+						 	hoja = elemQuery.getElementsByTagName("hoja").item(0).getTextContent();
+							filIni = elemQuery.getElementsByTagName("filaInicial").item(0).getTextContent();
+							filFin = elemQuery.getElementsByTagName("filaFinal").item(0).getTextContent();
+							columnas = elemQuery.getElementsByTagName("columnas").item(0).getTextContent();
+							sql = elemQuery.getElementsByTagName("sql").item(0).getTextContent();
+						 break;
+					 }
+				 }
+			 }
+		}catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			logger.error("Error archivo ParserConfigurationException dataServices "+e.getMessage()+" causa "+e.getLocalizedMessage());
+			resp.setCodError("700");
+			resp.setMsgError("Error archivo "+e.getMessage());
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			logger.error("Error archivo SAXException dataServices "+e.getMessage()+" causa "+e.getLocalizedMessage());
+			resp.setCodError("700");
+			resp.setMsgError("Error archivo "+e.getMessage());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			logger.error("Error archivo IOException dataServices "+e.getMessage()+" causa "+e.getLocalizedMessage());
+			resp.setCodError("700");
+			resp.setMsgError("Error archivo "+e.getMessage());
+		}
+		logger.info("archivo de origen "+fileOrigen);
+		
+		
+		if(!fileOrigen.equals("")) {
+			/*Preparar SQL */
+			 String regex = "\\{([^\\{}]*[^\\{}]*)\\}";
+			 final Pattern pattern = Pattern.compile(regex);
+			 final Matcher matcher = pattern.matcher(sql);
+			 
+			 while (matcher.find()) {
+				 	//matcher.group(1)
+				 	 for (int c = 0; c < param.length; c++) {
+				 		 String campo = (String) param[c][0];
+						 String valor = (String) param[c][1];
+						 //logger.info("Full match: " + matcher.group(1)+" = "+campo);
+				 		 if(matcher.group(1).equals(campo)){
+				 			 sql = sql.replace(matcher.group(0), "'"+valor+"'");
+				 			 break;
+				 		 }
+				 	 }
+				}
+			
+			
+			File f = new File(fileOrigen);
+			 InputStream inp;
+			 ConexionBD bd = new ConexionBD(ambiente.toUpperCase());
+			 Connection con = null;
+				try {
+					inp = new FileInputStream(f);
+				     Workbook wb = WorkbookFactory.create(inp);
+				     Sheet sheet = wb.getSheet(hoja);
+				     logger.info("Hoja de excel "+ sheet.getSheetName());   
+				     
+				     /*Base de datos*/
+				     con =  bd.getDataSource().getConnection();
+					 Statement stmt = con.createStatement();
+				     con.setAutoCommit(false);
+				     
+				     int iRow = Integer.valueOf(filIni);//inicia desde la fila 2
+				     //int col = 2;
+				     String[] col = columnas.split(",");
+				     Row fila = sheet.getRow(iRow);		     
+				     while((fila!=null && Integer.valueOf(filFin) == 0) || (fila!=null && Integer.valueOf(filFin) >= iRow) ) 
+				      {
+				    	 String sqlTemp = sql;
+				         for(int i=0;i<col.length;i++) {
+				        	 Cell cell = fila.getCell(Integer.valueOf(col[i]));
+				        	 Object value;
+				        	 //logger.info(" tipo de celda "+cell.getCellType());
+					         //String value = cell.getStringCellValue();
+				        	 switch (cell.getCellType()) {
+							case NUMERIC:
+								if (DateUtil.isCellDateFormatted(cell)) {
+						            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+						            //logger.info("Valor de la celda es " +dateFormat.format(cell.getDateCellValue()));
+						            value = "'"+dateFormat.format(cell.getDateCellValue())+"'";
+						            sqlTemp = sqlTemp.replace("{"+col[i]+"}", (String) value);
+						        } else {
+						        	//logger.info("Valor de la celda es " +cell.getNumericCellValue() );
+						        	value = cell.getNumericCellValue();
+						        	sqlTemp = sqlTemp.replace("{"+col[i]+"}", value+"");
+						        }
+								break;
+							case STRING:
+									//logger.info("Valor de la celda es " + cell.getStringCellValue());
+									value = "'"+cell.getStringCellValue()+"'";
+									sqlTemp = sqlTemp.replace("{"+col[i]+"}", (String) value);
+								break;
+							}
+				         }
+				         //logger.info("fila "+fila.getRowNum()+" sql: "+sqlTemp);
+				    	    
+				          iRow++;  
+				          fila = sheet.getRow(iRow);
+				          stmt.addBatch(sqlTemp);
+				      }
+				     int[] result = stmt.executeBatch();
+				     con.commit();
+				     resp.setCodError("200");
+				     resp.setMsgError("Carga completa "+(iRow-1));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					logger.error("Error archivo IOException dataServices "+e);
+					resp.setCodError("900");
+					resp.setMsgError("Error cargando excel "+e.getMessage());
+					try {
+			        	 if (null != con) {
+			        		 con.rollback();
+			        		 }
+					} catch (SQLException eb) {
+						logger.error("Error rollback "+eb.getMessage()+" causa "+eb.getLocalizedMessage());
+					}
+				}finally{
+					try {
+			        	 if (null != con) {
+			        		 con.close();
+			        		 //logger.info("cierra conexion");
+			        		 }
+					} catch (SQLException e) {
+						logger.error("Error dataServices close ",e);
+						resp.setCodError("801");
+						resp.setMsgError("Cerrar cadena de conexión "+e.getMessage());
+					}
+				}
+			
+		}
+		return resp;
+	}
+
 }
