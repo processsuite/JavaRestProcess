@@ -123,9 +123,15 @@ public class InterceptorAuthorizationMule extends AbstractEnvelopeInterceptor {
 				//validar si hay Error Process se informa
 				Integer result = motor.p4bStatus();
 				if (result!=0){
-					arg0.getMessage().setOutboundProperty("http.status", result);//se informa el codigo de error
+					logger.info("result "+result);
+					//arg0.getMessage().setOutboundProperty("http.status", result);//se informa el codigo de error
+					arg0.getMessage().setOutboundProperty("http.status", 400);//se informa el codigo de error
+					arg0.getMessage().setOutboundProperty("codError", result);
 				}else if (errorCode!=0){
-					arg0.getMessage().setOutboundProperty("http.status", errorCode);//se informa el codigo de error
+					//arg0.getMessage().setOutboundProperty("http.status", errorCode);
+					logger.info("errorCode "+errorCode);
+					arg0.getMessage().setOutboundProperty("http.status", 400);//se informa el codigo de error
+					arg0.getMessage().setOutboundProperty("codError", errorCode);
 				}
 				/*if(arg0.getMessage().getInboundProperty("http.relative.path").toString().indexOf("abrir1")>0 || arg0.getMessage().getInboundProperty("http.relative.path").toString().indexOf("crearDocumento")>0 || arg0.getMessage().getInboundProperty("http.relative.path").toString().indexOf("destinos")>0 || arg0.getMessage().getInboundProperty("http.relative.path").toString().indexOf("document")>0) {
 					try {
@@ -152,9 +158,12 @@ public class InterceptorAuthorizationMule extends AbstractEnvelopeInterceptor {
 				//delete from list engine
 				ClassFactory.deleteProcesList(Integer.valueOf(arg0.getMessage().getOutboundProperty("engineId").toString()));	
 				//logger.info("Motor a eliminar "+motor.hashCode() );
+				
 				motor.dispose();//elimina la instancia del motor creada
 			}else if(errorCode!=0){
-				arg0.getMessage().setOutboundProperty("http.status", errorCode);//se informa el codigo de error
+				//arg0.getMessage().setOutboundProperty("http.status", errorCode);
+				arg0.getMessage().setOutboundProperty("http.status", 400);//se informa el codigo de error
+				arg0.getMessage().setOutboundProperty("codError", errorCode);
 			}			
 			
 			
