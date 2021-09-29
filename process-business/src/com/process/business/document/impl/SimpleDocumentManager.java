@@ -2246,59 +2246,129 @@ public class SimpleDocumentManager implements DocumentManager {
 			 InputStream inp;
 			 ConexionBD bd = new ConexionBD(ambiente.toUpperCase());
 			 Connection con = null;
+			 int contador = 0;
 				try {
 					inp = new FileInputStream(f);
 				     Workbook wb = WorkbookFactory.create(inp);
-				     Sheet sheet = wb.getSheet(hoja);
-				     logger.info("Hoja de excel "+ sheet.getSheetName());   
+				     if(!hoja.equals("*")){ //verifica si debe ingresar en una hoja en especifico
+				    	 Sheet sheet = wb.getSheet(hoja);
+					     logger.info("Hoja de excel "+ sheet.getSheetName()); 
+					     /*Base de datos*/
+						    con =  bd.getDataSource().getConnection();
+							 Statement stmt = con.createStatement();
+						     con.setAutoCommit(false);
+						     
+						     int iRow = Integer.valueOf(filIni);//inicia desde la fila 2
+						     //int col = 2;
+						     String[] col = columnas.split(",");
+						     Row fila = sheet.getRow(iRow);		     
+						     while((fila!=null && Integer.valueOf(filFin) == 0) || (fila!=null && Integer.valueOf(filFin) >= iRow) ) 
+						      {
+						    	 String sqlTemp = sql;
+						         for(int i=0;i<col.length;i++) {
+						        	 Cell cell = fila.getCell(Integer.valueOf(col[i]));
+						        	 Object value;
+						        	 //logger.info(" tipo de celda "+cell.getCellType());
+							         //String value = cell.getStringCellValue();
+						        	 switch (cell.getCellType()) {
+									case NUMERIC:
+										if (DateUtil.isCellDateFormatted(cell)) {
+								            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+								            //logger.info("Valor de la celda es " +dateFormat.format(cell.getDateCellValue()));
+								            value = "'"+dateFormat.format(cell.getDateCellValue())+"'";
+								            sqlTemp = sqlTemp.replace("{"+col[i]+"}", (String) value);
+								        } else {
+								        	//logger.info("Valor de la celda es " +cell.getNumericCellValue() );
+								        	value = cell.getNumericCellValue();
+								        	sqlTemp = sqlTemp.replace("{"+col[i]+"}", value+"");
+								        }
+										break;
+									case STRING:
+											//logger.info("Valor de la celda es " + cell.getStringCellValue());
+											value = "'"+cell.getStringCellValue()+"'";
+											sqlTemp = sqlTemp.replace("{"+col[i]+"}", (String) value);
+										break;
+									}
+						         }
+						         //logger.info("fila "+fila.getRowNum()+" sql: "+sqlTemp);
+						    	    
+						          iRow++;  
+						          fila = sheet.getRow(iRow);
+						          stmt.addBatch(sqlTemp);
+						      }
+						     int[] result = stmt.executeBatch();
+						     
+						     contador = iRow;
+				     }else{ //debe recorrer todas las hojas que poseen el mismo formato
+				    	
+				    	int cantidad = wb.getNumberOfSheets();
+				    	int iRow = 0;
+				    	 /*Base de datos*/
+					    con =  bd.getDataSource().getConnection();
+						Statement stmt = con.createStatement();
+						int[] result;
+					    con.setAutoCommit(false);
+					    
+				    	for(int y=0;y<cantidad;y++){
+				    		 Sheet sheet = wb.getSheetAt(y);
+				    		 logger.info("nombre de hojas "+ sheet.getSheetName());     
+							     iRow = Integer.valueOf(filIni);//inicia desde la fila 2
+							     //int col = 2;
+							     String[] col = columnas.split(",");
+							     Row fila = sheet.getRow(iRow);		     
+							     while((fila!=null && Integer.valueOf(filFin) == 0) || (fila!=null && Integer.valueOf(filFin) >= iRow) ) 
+							      {
+							    	 String sqlTemp = sql;
+							         for(int i=0;i<col.length;i++) {
+							        	 Cell cell = fila.getCell(Integer.valueOf(col[i]));
+							        	 Object value;
+							        	// logger.info(" Valor de celda "+(cell==null) );
+							        	 if(!(cell==null)) {//cuando la celda este nula se le asigna vacio
+							        								        		 
+							        		 switch (cell.getCellType()) {
+												case NUMERIC:
+													if (DateUtil.isCellDateFormatted(cell)) {
+											            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+											           // logger.info("Valor de la celda es " +dateFormat.format(cell.getDateCellValue()));
+											            value = "'"+dateFormat.format(cell.getDateCellValue())+"'";
+											            sqlTemp = sqlTemp.replace("{"+col[i]+"}", (String) value);
+											        } else {
+											        	//logger.info("Valor de la celda es " +cell.getNumericCellValue() );
+											        	value = cell.getNumericCellValue();
+											        	sqlTemp = sqlTemp.replace("{"+col[i]+"}", value+"");
+											        }
+													break;
+												case STRING:
+														//logger.info("Valor de la celda es " + cell.getStringCellValue());
+														value = "'"+cell.getStringCellValue()+"'";
+														sqlTemp = sqlTemp.replace("{"+col[i]+"}", (String) value);
+													break;
+											}
+							        	 }else {
+							        		 //logger.info(" Ingreso en validacion " );
+							        		// value = null;
+							        		 sqlTemp = sqlTemp.replace("{"+col[i]+"}", "null");
+							        	 }
+								         //String value = cell.getStringCellValue();
+							        	
+							         }
+							         
+							         sqlTemp = sqlTemp.replace("{hoja}", "'"+sheet.getSheetName()+"'");
+							        // logger.info("fila "+fila.getRowNum()+" sql: "+sqlTemp);
+							    	    
+							          iRow++;  
+							          fila = sheet.getRow(iRow);
+							          stmt.addBatch(sqlTemp);
+							          result = stmt.executeBatch();
+							      }
+							     contador += iRow-1;
+				    		}
+				     }
+				      
 				     
-				     /*Base de datos*/
-				     con =  bd.getDataSource().getConnection();
-					 Statement stmt = con.createStatement();
-				     con.setAutoCommit(false);
-				     
-				     int iRow = Integer.valueOf(filIni);//inicia desde la fila 2
-				     //int col = 2;
-				     String[] col = columnas.split(",");
-				     Row fila = sheet.getRow(iRow);		     
-				     while((fila!=null && Integer.valueOf(filFin) == 0) || (fila!=null && Integer.valueOf(filFin) >= iRow) ) 
-				      {
-				    	 String sqlTemp = sql;
-				         for(int i=0;i<col.length;i++) {
-				        	 Cell cell = fila.getCell(Integer.valueOf(col[i]));
-				        	 Object value;
-				        	 //logger.info(" tipo de celda "+cell.getCellType());
-					         //String value = cell.getStringCellValue();
-				        	 switch (cell.getCellType()) {
-							case NUMERIC:
-								if (DateUtil.isCellDateFormatted(cell)) {
-						            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-						            //logger.info("Valor de la celda es " +dateFormat.format(cell.getDateCellValue()));
-						            value = "'"+dateFormat.format(cell.getDateCellValue())+"'";
-						            sqlTemp = sqlTemp.replace("{"+col[i]+"}", (String) value);
-						        } else {
-						        	//logger.info("Valor de la celda es " +cell.getNumericCellValue() );
-						        	value = cell.getNumericCellValue();
-						        	sqlTemp = sqlTemp.replace("{"+col[i]+"}", value+"");
-						        }
-								break;
-							case STRING:
-									//logger.info("Valor de la celda es " + cell.getStringCellValue());
-									value = "'"+cell.getStringCellValue()+"'";
-									sqlTemp = sqlTemp.replace("{"+col[i]+"}", (String) value);
-								break;
-							}
-				         }
-				         //logger.info("fila "+fila.getRowNum()+" sql: "+sqlTemp);
-				    	    
-				          iRow++;  
-				          fila = sheet.getRow(iRow);
-				          stmt.addBatch(sqlTemp);
-				      }
-				     int[] result = stmt.executeBatch();
 				     con.commit();
 				     resp.setCodError("200");
-				     resp.setMsgError("Carga completa "+(iRow-1));
+				     resp.setMsgError("Carga completa "+(contador-1));
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					logger.error("Error archivo IOException dataServices "+e);
