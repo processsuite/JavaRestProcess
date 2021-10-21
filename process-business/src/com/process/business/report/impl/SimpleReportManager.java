@@ -153,73 +153,77 @@ public class SimpleReportManager implements ReportManager {
 		try{
 			motor = ClassFactory.getProcess(engineP);
 			String resultXml = motor.p4bEjecutarConsulta(wfPadre, wfHijo, tipoOpcion, desde, getXmlParam(camposBuscar), campoOrden);
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			Document document = builder.parse(new InputSource(new StringReader(resultXml)));
-			
-			XPathFactory xPathfactory = XPathFactory.newInstance();
-			XPath xpath = xPathfactory.newXPath();	
-			
-			resultReport.setWfa(Integer.valueOf(xpath.compile("/consulta/@wfa").evaluate(document, XPathConstants.STRING).toString()));
-			resultReport.setTipo(Integer.valueOf(xpath.compile("/consulta/@tipo").evaluate(document, XPathConstants.STRING).toString()));
-			resultReport.setPagina(Integer.valueOf(xpath.compile("/consulta/@pagina").evaluate(document, XPathConstants.STRING).toString()));
-			resultReport.setDesde(Integer.valueOf(xpath.compile("/consulta/@desde").evaluate(document, XPathConstants.STRING).toString()));
-			resultReport.setTotal(Integer.valueOf(xpath.compile("/consulta/@total").evaluate(document, XPathConstants.STRING).toString()));
-			//validar si es grafica 
-			if (resultReport.getTipo()>7){
-				resultReport.setTipoGrafico(Integer.valueOf(xpath.compile("/consulta/@tipografico").evaluate(document, XPathConstants.STRING).toString()));
-				resultReport.setTotalserie(Integer.valueOf(xpath.compile("/consulta/@totalserie").evaluate(document, XPathConstants.STRING).toString()));
+			logger.info("xml result "+motor.p4bStatus()+" "+resultXml);
+			if(motor.p4bStatus() == 0) {
+				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+				DocumentBuilder builder = factory.newDocumentBuilder();
+				Document document = builder.parse(new InputSource(new StringReader(resultXml)));
 				
-				XPathExpression expr = xpath.compile("//inst");
-				Object result = expr.evaluate(document, XPathConstants.NODESET);
-				NodeList nodes = (NodeList) result;					
-				for(int j=0;j < nodes.getLength(); j++){
-					InstReport inst = new InstReport();
+				XPathFactory xPathfactory = XPathFactory.newInstance();
+				XPath xpath = xPathfactory.newXPath();	
+				
+				resultReport.setWfa(Integer.valueOf(xpath.compile("/consulta/@wfa").evaluate(document, XPathConstants.STRING).toString()));
+				resultReport.setTipo(Integer.valueOf(xpath.compile("/consulta/@tipo").evaluate(document, XPathConstants.STRING).toString()));
+				resultReport.setPagina(Integer.valueOf(xpath.compile("/consulta/@pagina").evaluate(document, XPathConstants.STRING).toString()));
+				resultReport.setDesde(Integer.valueOf(xpath.compile("/consulta/@desde").evaluate(document, XPathConstants.STRING).toString()));
+				resultReport.setTotal(Integer.valueOf(xpath.compile("/consulta/@total").evaluate(document, XPathConstants.STRING).toString()));
+				//validar si es grafica 
+				if (resultReport.getTipo()>7){
+					resultReport.setTipoGrafico(Integer.valueOf(xpath.compile("/consulta/@tipografico").evaluate(document, XPathConstants.STRING).toString()));
+					resultReport.setTotalserie(Integer.valueOf(xpath.compile("/consulta/@totalserie").evaluate(document, XPathConstants.STRING).toString()));
 					
-					FieldReport campo = new FieldReport();					
-					campo.setValor(xpath.compile("etiqueta").evaluate(nodes.item(j), XPathConstants.STRING).toString());
-					campo.setDescripcion(xpath.compile("/consulta/series/ejex").evaluate(document, XPathConstants.STRING).toString());
-					inst.getCamposMostrar().add(campo);
-					
-					for(int i=0;i < resultReport.getTotalserie(); i++){
-						FieldReport campoS = new FieldReport();					
-						campoS.setValor(xpath.compile("data["+ (i+1) +"]").evaluate(nodes.item(j), XPathConstants.STRING).toString());
-						campoS.setDescripcion(xpath.compile("/consulta/series/serie["+ (i+1) +"]").evaluate(document, XPathConstants.STRING).toString());
-						campoS.setColor(xpath.compile("/consulta/series/serie["+ (i+1) +"]/@color").evaluate(document, XPathConstants.STRING).toString());
-						inst.getCamposMostrar().add(campoS);						
-					}
-					resultReport.getInstReports().add(inst);
-				}
-				
-			}else{
-				XPathExpression expr = xpath.compile("//inst");
-				Object result = expr.evaluate(document, XPathConstants.NODESET);
-				NodeList nodes = (NodeList) result;				
-				
-				for(int i=0;i < nodes.getLength(); i++){
-					InstReport inst = new InstReport();
-					XPathExpression exprOcultos = xpath.compile("//inst[" + (i+1) + "]/camposOcultos/campo");
-					Object resultOcultos = exprOcultos.evaluate(document, XPathConstants.NODESET);
-					NodeList nodesOcultos = (NodeList) resultOcultos;	
-					for(int j=0;j < nodesOcultos.getLength(); j++){
-						FieldReport campo = new FieldReport();				
-						campo.setCampoBd(xpath.compile("campoBD").evaluate(nodesOcultos.item(j), XPathConstants.STRING).toString());
-						campo.setValor(xpath.compile("valor").evaluate(nodesOcultos.item(j), XPathConstants.STRING).toString());
-						inst.getCamposOcultos().add(campo);
-					}
-					XPathExpression exprMostrar = xpath.compile("//inst[" + (i+1) + "]/camposMostrar/campo");
-					Object resultMostrar = exprMostrar.evaluate(document, XPathConstants.NODESET);
-					NodeList nodesMostrar = (NodeList) resultMostrar;				
-					for(int j=0;j < nodesMostrar.getLength(); j++){
-						FieldReport campo = new FieldReport();				
-						campo.setCampoBd(xpath.compile("campoBD").evaluate(nodesMostrar.item(j), XPathConstants.STRING).toString());
-						campo.setValor(xpath.compile("valor").evaluate(nodesMostrar.item(j), XPathConstants.STRING).toString());
-						campo.setDescripcion(xpath.compile("descripcion").evaluate(nodesMostrar.item(j), XPathConstants.STRING).toString());
+					XPathExpression expr = xpath.compile("//inst");
+					Object result = expr.evaluate(document, XPathConstants.NODESET);
+					NodeList nodes = (NodeList) result;					
+					for(int j=0;j < nodes.getLength(); j++){
+						InstReport inst = new InstReport();
+						
+						FieldReport campo = new FieldReport();					
+						campo.setValor(xpath.compile("etiqueta").evaluate(nodes.item(j), XPathConstants.STRING).toString());
+						campo.setDescripcion(xpath.compile("/consulta/series/ejex").evaluate(document, XPathConstants.STRING).toString());
 						inst.getCamposMostrar().add(campo);
-					}				
-					resultReport.getInstReports().add(inst);
-				}					
+						
+						for(int i=0;i < resultReport.getTotalserie(); i++){
+							FieldReport campoS = new FieldReport();					
+							campoS.setValor(xpath.compile("data["+ (i+1) +"]").evaluate(nodes.item(j), XPathConstants.STRING).toString());
+							campoS.setDescripcion(xpath.compile("/consulta/series/serie["+ (i+1) +"]").evaluate(document, XPathConstants.STRING).toString());
+							campoS.setColor(xpath.compile("/consulta/series/serie["+ (i+1) +"]/@color").evaluate(document, XPathConstants.STRING).toString());
+							inst.getCamposMostrar().add(campoS);						
+						}
+						resultReport.getInstReports().add(inst);
+					}
+					
+				}else{
+					XPathExpression expr = xpath.compile("//inst");
+					Object result = expr.evaluate(document, XPathConstants.NODESET);
+					NodeList nodes = (NodeList) result;				
+					
+					for(int i=0;i < nodes.getLength(); i++){
+						InstReport inst = new InstReport();
+						XPathExpression exprOcultos = xpath.compile("//inst[" + (i+1) + "]/camposOcultos/campo");
+						Object resultOcultos = exprOcultos.evaluate(document, XPathConstants.NODESET);
+						NodeList nodesOcultos = (NodeList) resultOcultos;	
+						for(int j=0;j < nodesOcultos.getLength(); j++){
+							FieldReport campo = new FieldReport();				
+							campo.setCampoBd(xpath.compile("campoBD").evaluate(nodesOcultos.item(j), XPathConstants.STRING).toString());
+							campo.setValor(xpath.compile("valor").evaluate(nodesOcultos.item(j), XPathConstants.STRING).toString());
+							inst.getCamposOcultos().add(campo);
+						}
+						XPathExpression exprMostrar = xpath.compile("//inst[" + (i+1) + "]/camposMostrar/campo");
+						Object resultMostrar = exprMostrar.evaluate(document, XPathConstants.NODESET);
+						NodeList nodesMostrar = (NodeList) resultMostrar;				
+						for(int j=0;j < nodesMostrar.getLength(); j++){
+							FieldReport campo = new FieldReport();				
+							campo.setCampoBd(xpath.compile("campoBD").evaluate(nodesMostrar.item(j), XPathConstants.STRING).toString());
+							campo.setValor(xpath.compile("valor").evaluate(nodesMostrar.item(j), XPathConstants.STRING).toString());
+							campo.setDescripcion(xpath.compile("descripcion").evaluate(nodesMostrar.item(j), XPathConstants.STRING).toString());
+							inst.getCamposMostrar().add(campo);
+						}				
+						resultReport.getInstReports().add(inst);
+					}					
+				}
 			}
+			
 			
 			SimpleEnvironmentManager am = new SimpleEnvironmentManager();
 			String rutaAgentes =am.getDatoAmbiente(ambiente, "RepAgentes");

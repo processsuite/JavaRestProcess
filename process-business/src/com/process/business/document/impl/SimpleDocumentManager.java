@@ -262,7 +262,7 @@ public class SimpleDocumentManager implements DocumentManager {
 				}	
 				
 				String dataDocXml = motor.p4bObtenerDocumento(frmn, 0, -1);
-				//logger.info("forma de  obtenerDocumento1 code "+motor.hashCode()+" "+dataDocXml);
+				logger.info("forma de  obtenerDocumento1 code "+motor.hashCode()+" "+dataDocXml);
 				document = builder.parse(new InputSource(new StringReader(dataDocXml)));
 				
 				JAXBContext jc = JAXBContextFactory.createContext(new Class[] {Forma.class}, null);
