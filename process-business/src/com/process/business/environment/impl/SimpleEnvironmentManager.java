@@ -135,7 +135,7 @@ public class SimpleEnvironmentManager implements EnvironmentManager {
 		}
 		return env;
 	}
-	
+	@Override
 	public String getDatoAmbiente(String amb, String variable){
 		SimpleConsoleManager ambientesXml = new SimpleConsoleManager();
 		String valor;

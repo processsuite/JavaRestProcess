@@ -14,18 +14,15 @@ import java.util.Map;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonReader;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathFactory;
-
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -329,6 +326,8 @@ public class SimpleGeneradorIreport implements GeneradorIreportManager{
 	
 	@Override
 	public String ejecutarConsultaReport(Integer wfPadre, Integer wfHijo, Integer tipoOpcion, Integer desde, List<FieldReport> camposBuscar, String campoOrden, String rutaAgentes, String ext, String ambiente) {
+		long inicio = System.currentTimeMillis(); //verificar duracion de metodo
+		
 		String archivo = rutaAgentes+wfHijo+".jrxml";
 		String ruta= "";
 		motor = ClassFactory.getProcess(engineP);
@@ -338,16 +337,21 @@ public class SimpleGeneradorIreport implements GeneradorIreportManager{
 		//logger.info("finalArchivo "+finalArchivo);
 		SimpleReportManager rm = new SimpleReportManager();
 		JsonObjectBuilder json = Json.createObjectBuilder();
+		
 		try{
 			String resultXml = motor.p4bEjecutarConsulta(wfPadre, wfHijo, tipoOpcion, desde,  rm.getXmlParam(camposBuscar), campoOrden);
-			//logger.info("filtros "+camposBuscar.size());
+			//logger.info("TIEMPO p4bEjecutarConsulta "+(System.currentTimeMillis() - inicio));
+			//logger.info("Respuesta p4bEjecutarConsulta "+resultXml);
+			resultXml = resultXml.replaceAll("\r?\n", "");
+			JsonReader jsonReader = Json.createReader(new StringReader(resultXml));
+			JsonObject jsonReporte  = jsonReader.readObject();
 				for(int x=0; x<camposBuscar.size(); x++ ) {
 					//String f = "filtro"+Integer.toString(x+1);
 					json.add(camposBuscar.get(x).getCampoBd(), camposBuscar.get(x).getValor());
 					
 				}
 			
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			/*DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document document = builder.parse(new InputSource(new StringReader(resultXml)));
 			
@@ -369,9 +373,11 @@ public class SimpleGeneradorIreport implements GeneradorIreportManager{
 						jsonFila.add(xpath.compile("campoBD").evaluate(nodesMostrar.item(j), XPathConstants.STRING).toString(), xpath.compile("valor").evaluate(nodesMostrar.item(j), XPathConstants.STRING).toString());
 					}		
 					jsonMatriz.add(jsonFila);
-				}
-				json.add("reporte", jsonMatriz);
+				}*/
+				json.add("reporte", jsonReporte.getJsonArray("reporte"));
+				//logger.info("xml "+resultXml);
 				//logger.info("json "+json.build().toString());
+				logger.info("TIEMPO EN INTERPRETAR JSON "+(System.currentTimeMillis() - inicio));
 				HashMap<String, Object>	map = new HashMap<String, Object>();
 				File archivoJrxml = new File(archivo);
 					if(archivoJrxml.exists()) {
@@ -405,7 +411,7 @@ public class SimpleGeneradorIreport implements GeneradorIreportManager{
 				}else {
 					logger.error("El archivo JRXML No ha sido creado, [No posee plantilla]");
 				}
-			
+					logger.info("TIEMPO EN GENERAR REPORTE "+(System.currentTimeMillis() - inicio));
 		}catch(Exception e){
 			logger.error("ejecutarConsulta:", e);
 		}

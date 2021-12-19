@@ -9,6 +9,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -34,6 +35,7 @@ import javax.xml.xpath.XPathFactory;
 
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -262,7 +264,7 @@ public class SimpleDocumentManager implements DocumentManager {
 				}	
 				
 				String dataDocXml = motor.p4bObtenerDocumento(frmn, 0, -1);
-				logger.info("forma de  obtenerDocumento1 code "+motor.hashCode()+" "+dataDocXml);
+				//logger.info("forma de  obtenerDocumento1 code "+motor.hashCode()+" "+dataDocXml);
 				document = builder.parse(new InputSource(new StringReader(dataDocXml)));
 				
 				JAXBContext jc = JAXBContextFactory.createContext(new Class[] {Forma.class}, null);
@@ -2114,8 +2116,17 @@ public class SimpleDocumentManager implements DocumentManager {
 					for (int c = 0; c < param.length; c++) {
 				 		 String campo = (String) param[c][0];
 						 String valor = (String) param[c][1];
+						 int fil = 0;
+						 int col = 0;
+						 logger.info("campo "+campo+" Conteo "+param[c].length);
+						 if(param[c].length >2) {
+							 fil = (int) param[c][2];
+							 col = (int) param[c][3];
+						 }
+						 
+						 //logger.info("fila "+fil+" Columna "+col);
 						 //Guardar campos enviados
-						 motor.p4bAsignarValorCampoDocumento(campo, valor, 0, 0); 
+						 motor.p4bAsignarValorCampoDocumento(campo, valor, fil, col); 
 						 //motor.p4bAsignarValorCampoDocumento(campo.getNombre(), "", indexFil, indexCol+1);
 				 		}
 				}
@@ -2161,6 +2172,22 @@ public class SimpleDocumentManager implements DocumentManager {
 		return doc.getNuDoc();
 	}
 	
+	private boolean checkIfRowIsEmpty(Row row) {
+	    if (row == null) {
+	        return true;
+	    }
+	    if (row.getLastCellNum() <= 0) {
+	        return true;
+	    }
+	    for (int cellNum = row.getFirstCellNum(); cellNum < row.getLastCellNum(); cellNum++) {
+	        Cell cell = row.getCell(cellNum);
+	        if (cell != null && cell.getCellType() != CellType.BLANK && !StringUtils.isEmpty(cell.toString())) {
+	            return false;
+	        }
+	    }
+	    return true;
+	}
+	
 	@Override
 	public RespDataService uploadDataFileExcel(String ambiente, String nombreArchivo, String idConfig, Object[][] param){
 		String sql = "";
@@ -2181,9 +2208,9 @@ public class SimpleDocumentManager implements DocumentManager {
 	        Document document = documentBuilder.parse(archivo);
 	        document.getDocumentElement().normalize();
 			 NodeList listServ = document.getElementsByTagName(ambiente.toUpperCase());
-			 //logger.info("Nodo ambiente "+listServ.getLength());
+			 logger.info("Nodo ambiente "+listServ.getLength());
 			 Node nodo = listServ.item(0);
-			 //logger.info("Nodo ambiente "+nodo.toString());
+			 logger.info("Nodo ambiente "+nodo.toString());
 			 Element elemtServi = (Element) nodo;
 			 
 			 NodeList listQuery = elemtServi.getElementsByTagName("archivo");
@@ -2205,17 +2232,17 @@ public class SimpleDocumentManager implements DocumentManager {
 			 }
 		}catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block
-			logger.error("Error archivo ParserConfigurationException dataServices "+e.getMessage()+" causa "+e.getLocalizedMessage());
+			logger.error("Error archivo ParserConfigurationException uploadDataFileExcel "+e.getMessage()+" causa "+e.getLocalizedMessage(), e);
 			resp.setCodError("700");
 			resp.setMsgError("Error archivo "+e.getMessage());
 		} catch (SAXException e) {
 			// TODO Auto-generated catch block
-			logger.error("Error archivo SAXException dataServices "+e.getMessage()+" causa "+e.getLocalizedMessage());
+			logger.error("Error archivo SAXException uploadDataFileExcel "+e.getMessage()+" causa "+e.getLocalizedMessage(), e);
 			resp.setCodError("700");
 			resp.setMsgError("Error archivo "+e.getMessage());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			logger.error("Error archivo IOException dataServices "+e.getMessage()+" causa "+e.getLocalizedMessage());
+			logger.error("Error archivo IOException uploadDataFileExcel "+e.getMessage()+" causa "+e.getLocalizedMessage(), e);
 			resp.setCodError("700");
 			resp.setMsgError("Error archivo "+e.getMessage());
 		}
@@ -2265,76 +2292,26 @@ public class SimpleDocumentManager implements DocumentManager {
 						     while((fila!=null && Integer.valueOf(filFin) == 0) || (fila!=null && Integer.valueOf(filFin) >= iRow) ) 
 						      {
 						    	 String sqlTemp = sql;
-						         for(int i=0;i<col.length;i++) {
-						        	 Cell cell = fila.getCell(Integer.valueOf(col[i]));
-						        	 Object value;
-						        	 //logger.info(" tipo de celda "+cell.getCellType());
-							         //String value = cell.getStringCellValue();
-						        	 switch (cell.getCellType()) {
-									case NUMERIC:
-										if (DateUtil.isCellDateFormatted(cell)) {
-								            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-								            //logger.info("Valor de la celda es " +dateFormat.format(cell.getDateCellValue()));
-								            value = "'"+dateFormat.format(cell.getDateCellValue())+"'";
-								            sqlTemp = sqlTemp.replace("{"+col[i]+"}", (String) value);
-								        } else {
-								        	//logger.info("Valor de la celda es " +cell.getNumericCellValue() );
-								        	value = cell.getNumericCellValue();
-								        	sqlTemp = sqlTemp.replace("{"+col[i]+"}", value+"");
-								        }
-										break;
-									case STRING:
-											//logger.info("Valor de la celda es " + cell.getStringCellValue());
-											value = "'"+cell.getStringCellValue()+"'";
-											sqlTemp = sqlTemp.replace("{"+col[i]+"}", (String) value);
-										break;
-									}
-						         }
-						         //logger.info("fila "+fila.getRowNum()+" sql: "+sqlTemp);
-						    	    
-						          iRow++;  
-						          fila = sheet.getRow(iRow);
-						          stmt.addBatch(sqlTemp);
-						      }
-						     int[] result = stmt.executeBatch();
-						     
-						     contador = iRow;
-				     }else{ //debe recorrer todas las hojas que poseen el mismo formato
-				    	
-				    	int cantidad = wb.getNumberOfSheets();
-				    	int iRow = 0;
-				    	 /*Base de datos*/
-					    con =  bd.getDataSource().getConnection();
-						Statement stmt = con.createStatement();
-						int[] result;
-					    con.setAutoCommit(false);
-					    
-				    	for(int y=0;y<cantidad;y++){
-				    		 Sheet sheet = wb.getSheetAt(y);
-				    		 logger.info("nombre de hojas "+ sheet.getSheetName());     
-							     iRow = Integer.valueOf(filIni);//inicia desde la fila 2
-							     //int col = 2;
-							     String[] col = columnas.split(",");
-							     Row fila = sheet.getRow(iRow);		     
-							     while((fila!=null && Integer.valueOf(filFin) == 0) || (fila!=null && Integer.valueOf(filFin) >= iRow) ) 
-							      {
-							    	 String sqlTemp = sql;
-							         for(int i=0;i<col.length;i++) {
+						    	 if(!checkIfRowIsEmpty(fila)) {
+						    		 for(int i=0;i<col.length;i++) {
 							        	 Cell cell = fila.getCell(Integer.valueOf(col[i]));
 							        	 Object value;
-							        	// logger.info(" Valor de celda "+(cell==null) );
+							        	 //logger.info(" valor "+cell.toString());
+							        	 //logger.info(" tipo de celda "+cell.getCellType());
+								         //String value = cell.getStringCellValue();
 							        	 if(!(cell==null)) {//cuando la celda este nula se le asigna vacio
-							        								        		 
-							        		 switch (cell.getCellType()) {
+							        	 	switch (cell.getCellType()) {
 												case NUMERIC:
 													if (DateUtil.isCellDateFormatted(cell)) {
 											            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-											           // logger.info("Valor de la celda es " +dateFormat.format(cell.getDateCellValue()));
+											            //logger.info("Valor de la celda es " +dateFormat.format(cell.getDateCellValue()));
 											            value = "'"+dateFormat.format(cell.getDateCellValue())+"'";
 											            sqlTemp = sqlTemp.replace("{"+col[i]+"}", (String) value);
 											        } else {
+											        	value = BigDecimal.valueOf((long) cell.getNumericCellValue()) ;
 											        	//logger.info("Valor de la celda es " +cell.getNumericCellValue() );
-											        	value = cell.getNumericCellValue();
+											        	//logger.info("Valor de la celda es " +BigDecimal.valueOf((long) cell.getNumericCellValue()) );
+											        	
 											        	sqlTemp = sqlTemp.replace("{"+col[i]+"}", value+"");
 											        }
 													break;
@@ -2344,34 +2321,101 @@ public class SimpleDocumentManager implements DocumentManager {
 														sqlTemp = sqlTemp.replace("{"+col[i]+"}", (String) value);
 													break;
 											}
-							        	 }else {
-							        		 //logger.info(" Ingreso en validacion " );
-							        		// value = null;
+							        	 }else{
 							        		 sqlTemp = sqlTemp.replace("{"+col[i]+"}", "null");
 							        	 }
-								         //String value = cell.getStringCellValue();
-							        	
 							         }
-							         
-							         sqlTemp = sqlTemp.replace("{hoja}", "'"+sheet.getSheetName()+"'");
-							        // logger.info("fila "+fila.getRowNum()+" sql: "+sqlTemp);
+						    		 contador++;
+							         logger.info("fila "+fila.getRowNum()+" sql "+sqlTemp);
+							         stmt.addBatch(sqlTemp);
+						    	 }else {
+						    		 logger.info(" la fila"+fila.getRowNum()+" "+checkIfRowIsEmpty(fila));
+						    	 }
+						    	 iRow++;  
+						         fila = sheet.getRow(iRow);
+						      }//fin del while
+						     int[] result = stmt.executeBatch();
+						     
+						   
+				     }else{ //debe recorrer todas las hojas que poseen el mismo formato
+				    	
+				    	int cantidad = wb.getNumberOfSheets();
+				    	int iRow = 0;
+				    	int contSheet = 0;
+				    	 /*Base de datos*/
+					    con =  bd.getDataSource().getConnection();
+						Statement stmt = con.createStatement();
+						int[] result;
+					    con.setAutoCommit(false);
+					    
+				    	for(int y=0;y<cantidad;y++){
+				    		 Sheet sheet = wb.getSheetAt(y);
+				    		 contSheet = 0;
+				    		 logger.info("nombre de hojas "+ sheet.getSheetName());     
+							     iRow = Integer.valueOf(filIni);//inicia desde la fila 2
+							     //int col = 2;
+							     String[] col = columnas.split(",");
+							     Row fila = sheet.getRow(iRow);		     
+							     while((fila!=null && Integer.valueOf(filFin) == 0) || (fila!=null && Integer.valueOf(filFin) >= iRow) ) 
+							      {
+							    	 String sqlTemp = sql;
+							    	 /*Validar que la celda no este vacia*/
+							    	 if(!checkIfRowIsEmpty(fila)) {//valida que la fila no este vacia
+								         for(int i=0;i<col.length;i++) {
+								        	 Cell cell = fila.getCell(Integer.valueOf(col[i]));
+								        	 Object value;
+								        	// logger.info(" Valor de celda "+(cell==null) );
+								        	 if(!(cell==null)) {//cuando la celda este nula se le asigna vacio
+								        								        		 
+								        		 switch (cell.getCellType()) {
+													case NUMERIC:
+														if (DateUtil.isCellDateFormatted(cell)) {
+												            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+												           // logger.info("Valor de la celda es " +dateFormat.format(cell.getDateCellValue()));
+												            value = "'"+dateFormat.format(cell.getDateCellValue())+"'";
+												            sqlTemp = sqlTemp.replace("{"+col[i]+"}", (String) value);
+												        } else {
+												        	//logger.info("Valor de la celda es " +cell.getNumericCellValue() );
+												        	//value = BigDecimal.valueOf(cell.getNumericCellValue());
+												        	value = BigDecimal.valueOf((long) cell.getNumericCellValue()) ;
+												        	sqlTemp = sqlTemp.replace("{"+col[i]+"}", value+"");
+												        }
+														break;
+													case STRING:
+															//logger.info("Valor de la celda es " + cell.getStringCellValue());
+															value = "'"+cell.getStringCellValue()+"'";
+															sqlTemp = sqlTemp.replace("{"+col[i]+"}", (String) value);
+														break;
+												}
+								        	 }else {
+								        		 //logger.info(" Ingreso en validacion " );
+								        		// value = null;
+								        		 sqlTemp = sqlTemp.replace("{"+col[i]+"}", "null");
+								        	 }
+									         //String value = cell.getStringCellValue();
+								        	
+								         }
+								         contSheet++;
+								         sqlTemp = sqlTemp.replace("{hoja}", "'"+sheet.getSheetName()+"'");
+								        // logger.info("fila "+fila.getRowNum()+" sql: "+sqlTemp); 
+							    	 }//fin de valiar fila null
 							    	    
 							          iRow++;  
 							          fila = sheet.getRow(iRow);
 							          stmt.addBatch(sqlTemp);
 							          result = stmt.executeBatch();
 							      }
-							     contador += iRow-1;
+							     contador += contSheet;
 				    		}
 				     }
 				      
 				     
 				     con.commit();
 				     resp.setCodError("200");
-				     resp.setMsgError("Carga completa "+(contador-1));
+				     resp.setMsgError("Carga completa "+(contador));
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
-					logger.error("Error archivo IOException dataServices "+e);
+					logger.error("Error archivo IOException uploadDataFileExcel ", e);
 					resp.setCodError("900");
 					resp.setMsgError("Error cargando excel "+e.getMessage());
 					try {

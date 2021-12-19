@@ -123,13 +123,13 @@ public class InterceptorAuthorizationMule extends AbstractEnvelopeInterceptor {
 				//validar si hay Error Process se informa
 				Integer result = motor.p4bStatus();
 				if (result!=0){
-					logger.info("result "+result);
+					logger.info("result "+result+" "+arg0.getMessage().getInboundProperty("authorization").toString());
 					//arg0.getMessage().setOutboundProperty("http.status", result);//se informa el codigo de error
 					arg0.getMessage().setOutboundProperty("http.status", 400);//se informa el codigo de error
 					arg0.getMessage().setOutboundProperty("codError", result);
 				}else if (errorCode!=0){
 					//arg0.getMessage().setOutboundProperty("http.status", errorCode);
-					logger.info("errorCode "+errorCode);
+					logger.info("errorCode "+errorCode+" "+arg0.getMessage().getInboundProperty("authorization").toString());
 					arg0.getMessage().setOutboundProperty("http.status", 400);//se informa el codigo de error
 					arg0.getMessage().setOutboundProperty("codError", errorCode);
 				}

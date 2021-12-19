@@ -151,14 +151,17 @@ public class SimpleReportManager implements ReportManager {
 	public synchronized ResultReport ejecutarConsulta(Integer wfPadre, Integer wfHijo, Integer tipoOpcion, Integer desde, List<FieldReport> camposBuscar, String campoOrden, String ambiente) {
 		ResultReport resultReport = new ResultReport();
 		try{
+			long inicio = System.currentTimeMillis(); //verificar duracion de metodo
 			motor = ClassFactory.getProcess(engineP);
 			String resultXml = motor.p4bEjecutarConsulta(wfPadre, wfHijo, tipoOpcion, desde, getXmlParam(camposBuscar), campoOrden);
-			logger.info("xml result "+motor.p4bStatus()+" "+resultXml);
+			//logger.info("Tiempo de respuesta motor "+(System.currentTimeMillis() - inicio)+" xml result "+motor.p4bStatus()+" "+resultXml);
 			if(motor.p4bStatus() == 0) {
 				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 				DocumentBuilder builder = factory.newDocumentBuilder();
-				Document document = builder.parse(new InputSource(new StringReader(resultXml)));
 				
+				
+				Document document = builder.parse(new InputSource(new StringReader(resultXml)));
+				//logger.info("tiempo de carga xml a objeto buider "+(System.currentTimeMillis() - inicio));
 				XPathFactory xPathfactory = XPathFactory.newInstance();
 				XPath xpath = xPathfactory.newXPath();	
 				
@@ -167,6 +170,7 @@ public class SimpleReportManager implements ReportManager {
 				resultReport.setPagina(Integer.valueOf(xpath.compile("/consulta/@pagina").evaluate(document, XPathConstants.STRING).toString()));
 				resultReport.setDesde(Integer.valueOf(xpath.compile("/consulta/@desde").evaluate(document, XPathConstants.STRING).toString()));
 				resultReport.setTotal(Integer.valueOf(xpath.compile("/consulta/@total").evaluate(document, XPathConstants.STRING).toString()));
+				
 				//validar si es grafica 
 				if (resultReport.getTipo()>7){
 					resultReport.setTipoGrafico(Integer.valueOf(xpath.compile("/consulta/@tipografico").evaluate(document, XPathConstants.STRING).toString()));
@@ -194,6 +198,7 @@ public class SimpleReportManager implements ReportManager {
 					}
 					
 				}else{
+					
 					XPathExpression expr = xpath.compile("//inst");
 					Object result = expr.evaluate(document, XPathConstants.NODESET);
 					NodeList nodes = (NodeList) result;				
@@ -220,7 +225,9 @@ public class SimpleReportManager implements ReportManager {
 							inst.getCamposMostrar().add(campo);
 						}				
 						resultReport.getInstReports().add(inst);
-					}					
+					}
+					
+					//logger.info("tiempo en recorrer xml "+(System.currentTimeMillis() - inicio));
 				}
 			}
 			
@@ -239,6 +246,7 @@ public class SimpleReportManager implements ReportManager {
 			}else {
 				resultReport.setArchReport(0);
 			}
+			logger.info("Finalizacion de ejecucion "+(System.currentTimeMillis() - inicio));
 		}catch(Exception e){
 			logger.error("ejecutarConsulta:", e);
 		}

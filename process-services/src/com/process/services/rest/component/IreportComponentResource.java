@@ -34,4 +34,19 @@ public class IreportComponentResource {
 		}
 		return response;
 	}
+	
+	@POST
+	@Path("/generarIreportQuery")
+	public Response generarIreportQuery(@QueryParam("nomArch") String nomArch, @QueryParam("destino") String destino,@QueryParam("ambiente") String ambiente, Object[][] arreglo){
+		Response response = null;
+		try {			
+			String responseService = cim.pdfGenericoQuery(nomArch, destino, arreglo, ambiente);			
+			GenericEntity<String> entity = new GenericEntity<String>(responseService) {};			
+			response = Response.ok(entity).build();
+		} catch (Exception e) {
+		    logger.error("generarIreportQuery", e);
+		    return Response.serverError().build();
+		}
+		return response;
+	}
 }
