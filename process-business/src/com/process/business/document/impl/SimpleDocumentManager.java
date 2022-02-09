@@ -2092,9 +2092,10 @@ public class SimpleDocumentManager implements DocumentManager {
 	}
 	
 	@Override
-	public synchronized Integer crearDocumentExterno(String ambiente, Integer wfa,Object[][] param, String observacion, Boolean envio){
+	public synchronized String crearDocumentExterno(String ambiente, Integer wfa,Object[][] param, String observacion, Boolean envio){
 		motor = ClassFactory.getProcess(engineP);
 		Doc2 doc = new Doc2();
+		String r = "";
 		try{
 			//Se instancia el objeto del motor con la sesion creada
 			
@@ -2109,7 +2110,7 @@ public class SimpleDocumentManager implements DocumentManager {
 			JAXBContext context = JAXBContextFactory.createContext(new Class[] {Doc2.class}, null);
 			Unmarshaller un = context.createUnmarshaller();
 			doc = (Doc2) un.unmarshal(document);*/
-			doc.setNuDoc(motor.numDocumento());
+			r = Integer.toString(motor.numDocumento());
 
 			if (result == -1){
 				if(param.length >0) {
@@ -2149,7 +2150,8 @@ public class SimpleDocumentManager implements DocumentManager {
 					result = motor.p4bAvanzar("", "", "", observacion, 0, 0, 0, "", "", 0);
 					//logger.info("Resultado de avanzar "+result);
 					String xmlMessages =  motor.p4bStatusAll();
-					logger.info("Estatus de avanzar "+doc.getNuDoc()+": "+xmlMessages);					
+					logger.info("Estatus de avanzar "+wfa+" Documento: "+r+": "+xmlMessages);	
+					r +=":"+xmlMessages;
 				}
 				
 				
@@ -2159,6 +2161,7 @@ public class SimpleDocumentManager implements DocumentManager {
 			}
 		}catch (Exception e) {
 			logger.error("Error createDocumentExterno",e);
+			r = "Error creando el documento";
 		}finally {
 			//se cierra sesion
 			try{
@@ -2169,7 +2172,7 @@ public class SimpleDocumentManager implements DocumentManager {
 				logger.error("cerrarSesion:", e);
 			}
 		}
-		return doc.getNuDoc();
+		return r;
 	}
 	
 	private boolean checkIfRowIsEmpty(Row row) {
@@ -2375,15 +2378,17 @@ public class SimpleDocumentManager implements DocumentManager {
 												            value = "'"+dateFormat.format(cell.getDateCellValue())+"'";
 												            sqlTemp = sqlTemp.replace("{"+col[i]+"}", (String) value);
 												        } else {
-												        	//logger.info("Valor de la celda es " +cell.getNumericCellValue() );
-												        	//value = BigDecimal.valueOf(cell.getNumericCellValue());
-												        	value = BigDecimal.valueOf((long) cell.getNumericCellValue()) ;
+												        	logger.info("Valor de la celda excel " +cell.getNumericCellValue() );
+												        	//logger.info("Valor de la celda casteada long " +BigDecimal.valueOf((long) cell.getNumericCellValue()));
+												        	//logger.info("Valor de la celda casteada double " +BigDecimal.valueOf((double) cell.getNumericCellValue()));
+												        	//logger.info("Valor de la celda casteada float " +BigDecimal.valueOf((float) cell.getNumericCellValue()));
+												        	value = BigDecimal.valueOf((double) cell.getNumericCellValue()) ;
 												        	sqlTemp = sqlTemp.replace("{"+col[i]+"}", value+"");
 												        }
 														break;
 													case STRING:
 															//logger.info("Valor de la celda es " + cell.getStringCellValue());
-															value = "'"+cell.getStringCellValue()+"'";
+															value = "'"+cell.getStringCellValue().replace("'", " ")+"'";
 															sqlTemp = sqlTemp.replace("{"+col[i]+"}", (String) value);
 														break;
 												}
@@ -2397,7 +2402,7 @@ public class SimpleDocumentManager implements DocumentManager {
 								         }
 								         contSheet++;
 								         sqlTemp = sqlTemp.replace("{hoja}", "'"+sheet.getSheetName()+"'");
-								        // logger.info("fila "+fila.getRowNum()+" sql: "+sqlTemp); 
+								         //logger.info("fila "+fila.getRowNum()+" sql: "+sqlTemp); 
 							    	 }//fin de valiar fila null
 							    	    
 							          iRow++;  

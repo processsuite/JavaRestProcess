@@ -252,7 +252,7 @@ public interface DocumentManager extends Engine {
 	 * Crea un documento desde servicios externos al cliente comun
 	 * @return Integer nuDoc
 	 */
-	public Integer crearDocumentExterno(String ambiente, Integer wfa, Object[][] param, String observacion, Boolean envio);
+	public String crearDocumentExterno(String ambiente, Integer wfa, Object[][] param, String observacion, Boolean envio);
 
 	
 	public RespDataService uploadDataFileExcel(String ambiente, String nombreArchivo, String idConfig, Object[][] param);

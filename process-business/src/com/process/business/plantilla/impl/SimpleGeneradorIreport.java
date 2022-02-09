@@ -30,12 +30,19 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JsonDataSource;
+import net.sf.jasperreports.engine.export.JRCsvExporter;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
+import net.sf.jasperreports.export.CsvExporterConfiguration;
+import net.sf.jasperreports.export.CsvReportConfiguration;
+import net.sf.jasperreports.export.SimpleCsvExporterConfiguration;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import net.sf.jasperreports.export.SimplePdfExporterConfiguration;
+import net.sf.jasperreports.export.SimpleWriterExporterOutput;
 import net.sf.jasperreports.export.SimpleXlsxExporterConfiguration;
+import net.sf.jasperreports.export.WriterExporterOutput;
+import net.sf.jasperreports.export.XlsExporterConfiguration;
 
 import org.apache.log4j.Logger;
 import org.eclipse.persistence.jaxb.JAXBContextFactory;
@@ -405,6 +412,14 @@ public class SimpleGeneradorIreport implements GeneradorIreportManager{
 						     exporter.exportReport();
 						     //logger.info("impresion xls");
 						     
+						}else if(ext.equals(".csv")) {
+							JRCsvExporter exporter = new JRCsvExporter();
+							 exporter.setExporterInput(new SimpleExporterInput(print));
+						     exporter.setExporterOutput(new SimpleWriterExporterOutput(finalArchivo));
+						     SimpleCsvExporterConfiguration configuration = new SimpleCsvExporterConfiguration();
+						     //configuration.setMetadataAuthor("BPMProcess");
+						     exporter.setConfiguration(configuration);
+						     exporter.exportReport();
 						}
 						ruta =engineP+"_"+wfHijo+ext;
 					 

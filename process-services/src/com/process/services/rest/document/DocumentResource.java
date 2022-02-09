@@ -933,8 +933,8 @@ public class DocumentResource {
 		Response response = null;
 		try {			
 			documentManager.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));
-			Integer responseService = documentManager.crearDocumentExterno(ambiente, wfa, param, observacion, envio);		
-			GenericEntity<Integer> entity = new GenericEntity<Integer>(responseService) {};			
+			String responseService = documentManager.crearDocumentExterno(ambiente, wfa, param, observacion, envio);		
+			GenericEntity<String> entity = new GenericEntity<String>(responseService) {};			
 			response = Response.ok(entity).build();
 		} catch (Exception e) {
 		    logger.error("crearDocumento", e);
