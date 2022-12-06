@@ -545,7 +545,6 @@ public class DocumentResource {
     	      @FormDataParam("file") FormDataContentDisposition fileInputDetails,
     	      @QueryParam("amb") String ambiente,
     	      @QueryParam("descripcion") String descripcion) {
-    	  
     		_Ambientes motorAmb = null;
     		motorAmb = ClassFactory.createAmbientes();    		
     	    String fileLocation = motorAmb.leerVarAmbienteEx(ambiente, "RepAnexosVirtual") + "\\" + fileInputDetails.getFileName();
@@ -556,7 +555,6 @@ public class DocumentResource {
     	    NumberFormat myFormat = NumberFormat.getInstance();
     	    myFormat.setGroupingUsed(true);
     	   
-    	     
     	    // Save the file 
     	    try {
     	     OutputStream out = new FileOutputStream(new File(fileLocation));
@@ -575,7 +573,6 @@ public class DocumentResource {
     	     }
     	     out.flush();  
     	     out.close();
-    	     
     	  
     	     if(val){ //eliminar archivo que exede el espacio 
     	    	 File archivo = new File(fileLocation);
@@ -583,13 +580,13 @@ public class DocumentResource {
     	    	 status = "{\"tamanoAnexo\":\""+((tamanoAnexo/1024)/1024)+"\", \"error\":true}";
     	     }else{
         	     //llamar anexar documento.
+    	    	 logger.info("Buscando Error 3");
         	     documentManager.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));
         	     documentManager.anexarDocumento(0, fileLocation, "", descripcion, "", "");
-        	     
+        	     logger.info("Buscando Error 4");
         	    // logger.info("File has been uploaded to:" + fileLocation + ", size: " + myFormat.format(file_size) + " bytes");
         	     status = "{\"error\":false}";
     	     }
-    	     
 
 
     	    } catch (IOException ex) {
@@ -601,7 +598,6 @@ public class DocumentResource {
     				motorAmb.dispose();
     			}
     		}
-    	 
     	    return Response.status(200).entity(status).build();
 	}	
     
@@ -634,13 +630,21 @@ public class DocumentResource {
     	      @FormDataParam("nuDoc") String nudoc,
     	      @FormDataParam("sufijo") String sufijo,
     	      @FormDataParam("directorioVir") String directorioVir,
-    	      @FormDataParam("directorioFis") String directorioFis) {
+    	      @FormDataParam("directorioFis") String directorioFis,
+    	      @FormDataParam("sdoc") Integer sdoc) {
     	
     		_Ambientes motorAmb = null;
     		motorAmb = ClassFactory.createAmbientes();    		
     	    String fileLocation = directorioFis+ "\\" + fileInputDetails.getFileName();
     	    String ext =  FilenameUtils.getExtension(fileLocation);
+    	    
     	    String newNombre = nudoc+"_"+sufijo+"_"+secuencia+"."+ext;
+    	    
+    	    if(sdoc == 0){
+    	    	newNombre = nudoc+"_"+sufijo+"_"+secuencia+"."+ext;
+    	    }else {
+    	    	newNombre = sufijo+"_"+secuencia+"."+ext;
+    	    }
     	    Float tamanoAnexo = (Float.parseFloat((motorAmb.leerVarAmbienteEx(ambiente, "tamanoAnexo")).isEmpty()?"0":motorAmb.leerVarAmbienteEx(ambiente, "tamanoAnexo")) * 1024 * 1024);
     	    boolean val = false;
     	    

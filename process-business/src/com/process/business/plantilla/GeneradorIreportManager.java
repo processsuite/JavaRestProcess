@@ -12,7 +12,7 @@ public interface GeneradorIreportManager {
 
 
 	String ejecutarConsultaReport(Integer wfPadre, Integer wfHijo, Integer tipoOpcion, Integer desde,
-			List<FieldReport> camposBuscar, String campoOrden, String rutaAgentes, String ext, String ambiente);
+			List<FieldReport> camposBuscar, String campoOrden, String rutaAgentes, String ext, String ambiente, String puesto);
 
 	String ireportGenerator(String nombreForm, String wfa, Plantilla plantilla, String ambiente);
 

@@ -5,7 +5,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/process-domain"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Process"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Com4j"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre1.8.0_231"/>
 	<classpathentry kind="lib" path="C:/BPMprocess/mule-standalone-3.7.0/lib/user/com4j.jar"/>
 	<classpathentry kind="lib" path="C:/BPMprocess/mule-standalone-3.7.0/lib/user/jersey-media-multipart-2.11.jar"/>
 	<classpathentry kind="lib" path="C:/BPMprocess/mule-standalone-3.7.0/lib/boot/log4j-core-2.1.jar"/>

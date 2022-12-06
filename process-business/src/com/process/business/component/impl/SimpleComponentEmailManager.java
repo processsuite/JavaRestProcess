@@ -9,7 +9,6 @@ import javax.activation.FileDataSource;
 import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.Multipart;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -24,7 +23,6 @@ import com.process.business.component.ComponentEmailManager;
 import com.process.business.plantilla.impl.SimpleGeneradorIreport;
 import com.process.domain.component.Email;
 import com.process.domain.component.FileEmail;
-import com.sun.xml.internal.ws.api.model.SEIModel;
 
 
 @Service("componentEmailManager")

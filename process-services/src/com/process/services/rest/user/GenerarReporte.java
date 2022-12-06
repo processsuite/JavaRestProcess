@@ -72,7 +72,7 @@ public class GenerarReporte {
 	
 	@POST
 	@Path("/ireport")
-	public synchronized Response prueba(@QueryParam("nombreForm") String nombreForm, @QueryParam("wfa") String wfa, @QueryParam("ambiente") String ambiente,Plantilla plantilla){
+	public synchronized Response ireport(@QueryParam("nombreForm") String nombreForm, @QueryParam("wfa") String wfa, @QueryParam("ambiente") String ambiente,Plantilla plantilla){
 		Response response = null;
 		try{
 			gi.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));
@@ -87,18 +87,19 @@ public class GenerarReporte {
 	
 	@POST
 	@Path("/ireportConsulta")
-	public synchronized Response prueba(@QueryParam("wfp") Integer wfPadre,
+	public synchronized Response ireportConsulta(@QueryParam("wfp") Integer wfPadre,
 			 @QueryParam("wfh") Integer wfHijo,
 			 @QueryParam("tipo") Integer tipo,
 			 @QueryParam("desde") Integer desde,
 			 @QueryParam("order") String campoOrden,
 			 @QueryParam("ext") String ext,
 			 @QueryParam("ambiente") String ambiente,
+			 @QueryParam("puesto") String puesto,
 			 DataParamReport camposBuscar){
 		Response response = null;
 		try{
 			gi.setEngineId(Integer.valueOf(org.mule.RequestContext.getEvent().getMessage().getOutboundProperty("engineId").toString()));
-			String r = gi.ejecutarConsultaReport(wfPadre, wfHijo, tipo, desde, camposBuscar.getCamposBuscar(), campoOrden,camposBuscar.getRutaAgent(), ext, ambiente);
+			String r = gi.ejecutarConsultaReport(wfPadre, wfHijo, tipo, desde, camposBuscar.getCamposBuscar(), campoOrden,camposBuscar.getRutaAgent(), ext, ambiente, puesto);
 			GenericEntity<String> entity = new GenericEntity<String>(r) {};			
 			response = Response.ok(entity).build();
 		}catch (Exception e){

@@ -84,7 +84,7 @@ private static final Logger logger = Logger.getLogger(SimpleComponentIreportMana
 		
 		String ruta = sem.getDatoAmbiente(ambiente, "RepAgentes")+"\\";
 		String archivo = ruta+nomArch+".jrxml";		
-		
+		logger.info("archivo "+archivo);
 		String destinoArchivo = sem.getDatoAmbiente(ambiente, destino);
 
 		String resp = Integer.toString((int) (100000 * Math.random()))+".pdf";

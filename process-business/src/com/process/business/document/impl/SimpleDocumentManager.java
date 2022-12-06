@@ -78,6 +78,7 @@ import com.process.domain.document2.Doc2;
 import com.process.domain.document2.Fila;
 import com.process.domain.document2.Forma;
 import com.process.domain.document2.GrupoCampos;
+import com.process.domain.document2.Opcion;
 import com.process.domain.environment.Environment;
 
 import org.eclipse.persistence.jaxb.JAXBContextFactory;
@@ -971,6 +972,7 @@ public class SimpleDocumentManager implements DocumentManager {
 	public synchronized void guardarForm1(Integer frmn, Forma forma){
 		try{
 			motor = ClassFactory.getProcess(engineP);
+			logger.info("ingresa a funcion de guardar");
 			for(GrupoCampos gc:forma.getListGrupoCampos()){
 				for(Campo campo:gc.getCampo()){
 					if(!campo.getTipo().equals("M")){
@@ -989,8 +991,10 @@ public class SimpleDocumentManager implements DocumentManager {
 									}
 								}//finde alternativos exclusivos e inclusivos
 							}else if(campo.getTipo().equals("L") && campo.getOpciones().getMultiple()){
-								motor.p4bAsignarValorCampoDocumento(campo.getNombre(), StringUtils.collectionToDelimitedString(campo.getValueM(), ","), 0, 0); //se guarda campo multiselect	
+								//logger.info("coleccion "+campo.getNombre()+" "+collectionToString(campo.getValueM()));
+								motor.p4bAsignarValorCampoDocumento(campo.getNombre(), collectionToString(campo.getValueM()), 0, 0); //se guarda campo multiselect	
 							}else{
+								//logger.info("coleccion "+campo.getNombre()+" "+campo.getValue());
 								motor.p4bAsignarValorCampoDocumento(campo.getNombre(), campo.getValue(), 0, 0);//se guardan campos select y texto
 							}
 						}
@@ -1011,7 +1015,7 @@ public class SimpleDocumentManager implements DocumentManager {
 										}
 
 									}else if(col.getTipo().equals("A") && col.getOpciones().getMultiple()){
-										motor.p4bAsignarValorCampoDocumento(campo.getNombre(), StringUtils.collectionToDelimitedString(fila.getCampo().get(indexCol).getValueM(), ","), indexFil, indexCol+1); //se guarda campo multiselect
+										motor.p4bAsignarValorCampoDocumento(campo.getNombre(), collectionToString(fila.getCampo().get(indexCol).getValueM()), indexFil, indexCol+1); //se guarda campo multiselect
 									}else{
 										motor.p4bAsignarValorCampoDocumento(campo.getNombre(), fila.getCampo().get(indexCol).getValue(), indexFil, indexCol+1);
 									}
@@ -1027,6 +1031,15 @@ public class SimpleDocumentManager implements DocumentManager {
 		}catch(Exception e){
 			logger.error("guardarform: " , e);
 		}	
+	}
+	
+	private String collectionToString(List<Opcion> valueM) {
+		String coleccion = "";
+		for(int a= 0;a<valueM.size();a++) {
+			Opcion opt = valueM.get(a);
+			coleccion += opt.getCodigo()+",";
+		}
+		return coleccion.substring(0, coleccion.length()-1);
 	}
 
 	@Override
@@ -1050,6 +1063,7 @@ public class SimpleDocumentManager implements DocumentManager {
 									}
 								}
 							}else if (f.getTipo().equals("L") && f.getMultiple()){
+								logger.info("coleccion "+f.getNombre()+" "+StringUtils.collectionToDelimitedString(f.getValueM(), ","));
 								motor.p4bAsignarValorCampoDocumento(f.getNombre(), StringUtils.collectionToDelimitedString(f.getValueM(), ","), 0, 0);	
 							}else{
 								motor.p4bAsignarValorCampoDocumento(f.getNombre(), f.getValue(), 0, 0);
@@ -1497,13 +1511,13 @@ public class SimpleDocumentManager implements DocumentManager {
 				urgenteInt = 1;
 			}	
 			for(WfDest d:destinos){
-				String eDest = "";
+				/*String eDest = "";
 				if (d.getE()){
 					eDest = "S";
 				}else{
 					eDest = "N";
-				}
-				motor.p4bAgregarProximoDestino(d.getWfa(), eDest, d.getValueSelected());
+				}*/
+				motor.p4bAgregarProximoDestino(d.getWfa(),d.getE(), d.getValueSelected());
 			}
 			Integer result = motor.p4bAvanzar(firma, pregunta, respuesta, observacion, urgenteInt, emailInt, gradoSatisfaccion, seleccionResultadoXml, conCopiaEmailA, frmnCopia);
 			if (result == -1) {
@@ -1809,11 +1823,12 @@ public class SimpleDocumentManager implements DocumentManager {
 					wfDest.setNbProceso(xpath.compile("@nb_proceso").evaluate(nodesDest.item(i), XPathConstants.STRING).toString());
 					wfDest.setNbWf(xpath.compile("@nb_wf").evaluate(nodesDest.item(i), XPathConstants.STRING).toString());
 					wfDest.setWfa(Integer.valueOf(xpath.compile("@wfa").evaluate(nodesDest.item(i), XPathConstants.STRING).toString()));
-					if (xpath.compile("@e").evaluate(nodesDest.item(i), XPathConstants.STRING).toString().equals("N")){
+					wfDest.setE(xpath.compile("@e").evaluate(nodesDest.item(i), XPathConstants.STRING).toString());
+					/*if (xpath.compile("@e").evaluate(nodesDest.item(i), XPathConstants.STRING).toString().equals("N")){
 						wfDest.setE(false);
 					}else{
 						wfDest.setE(true);
-					}	
+					}*/
 					if (xpath.compile("@visible").evaluate(nodesDest.item(i), XPathConstants.STRING).toString().equals("S")){
 						wfDest.setVisible(true);
 					}else{
@@ -2138,13 +2153,13 @@ public class SimpleDocumentManager implements DocumentManager {
 				if(envio) {
 					Destino destinos = calcularProximosDestinos();
 					for(WfDest d:destinos.getDestinos()){
-						String eDest = "";
-						if (d.getE()){
+						//String eDest = "";
+						/*if (d.getE()){
 							eDest = "S";
 						}else{
 							eDest = "N";
-						}
-						motor.p4bAgregarProximoDestino(d.getWfa(), eDest, d.getValueSelected());
+						}*/
+						motor.p4bAgregarProximoDestino(d.getWfa(), d.getE(), d.getValueSelected());
 					}
 					
 					result = motor.p4bAvanzar("", "", "", observacion, 0, 0, 0, "", "", 0);

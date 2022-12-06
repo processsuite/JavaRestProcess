@@ -4,6 +4,8 @@
  */
 package com.process.business.helper;
 
+import java.io.UnsupportedEncodingException;
+
 import javax.xml.bind.DatatypeConverter;
 
 /**
@@ -28,6 +30,17 @@ public class BasicAuth {
         //  - the first one is login,
         //  - the second one password
         return new String(decodedBytes).split(":", 2);
+    }
+    
+    public synchronized static String encode(String auth) { 
+        byte[] message = null;
+        try {
+            message = auth.getBytes("UTF-8");
+            } catch (UnsupportedEncodingException e) {
+              e.printStackTrace();
+            }
+        String encode = DatatypeConverter.printBase64Binary(message);
+        return encode;
     }
 
     public synchronized static String decodeParameter(String auth) {

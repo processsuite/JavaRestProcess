@@ -26,7 +26,7 @@ public class WfDest implements Serializable {
 	
 	private Integer wfa;
 	
-	private Boolean e;
+	private String e;
 	
 	private Boolean visible;
 
@@ -66,11 +66,11 @@ public class WfDest implements Serializable {
 		this.wfa = wfa;
 	}
 
-	public Boolean getE() {
+	public String getE() {
 		return e;
 	}
 
-	public void setE(Boolean e) {
+	public void setE(String e) {
 		this.e = e;
 	}
 

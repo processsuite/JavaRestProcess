@@ -3,10 +3,6 @@ package com.process.business.helper;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObjectBuilder;
-
 import org.apache.log4j.Logger;
 
 import com4j.COM4J;
@@ -41,6 +37,10 @@ public abstract class ClassFactory {
 	  c_Process process = COM4J.createInstance( c_Process.class, "{4E97C91F-0FC7-4694-A8AC-C6C92587DC4B}" );
 	  return process;
   }  
+  
+  public static C_Bin createC_Bin() {
+	    return COM4J.createInstance( C_Bin.class, "{8A2CC26F-D4B3-11D3-B24F-0040333E041A}" );
+	}
   
   public static Integer getErrorCode() {
 	  Integer tmpCode = errorCode;
@@ -83,19 +83,7 @@ public abstract class ClassFactory {
 	  }
   }
   
-  public static void imprimirArreglo(String a, String codigo) {
-	  JsonObjectBuilder json = Json.createObjectBuilder();
-	  JsonArrayBuilder jsonMatriz = Json.createArrayBuilder();
-	  for(ProcessEngine p:getListProcess()){
-		logger.info("Documento "+a+" hash "+codigo +" = "+p.getEngine().hashCode()+" "+(Integer.valueOf(codigo)==p.getEngine().hashCode()));
-		JsonObjectBuilder jsonFila = Json.createObjectBuilder();
-		jsonFila.add("token", p.getTicket());
-		jsonFila.add("Hash", p.getEngine().hashCode());
-		jsonMatriz.add(jsonFila);
-	  }
-	  json.add("ProcessEngine",jsonMatriz);
-	  logger.info(a+" "+json.build());
-  }
+ 
 
   //Ambientes
   public static _Ambientes createAmbientes() {

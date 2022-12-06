@@ -28,14 +28,18 @@ public class ConexionBD {
 	
 	public ConexionBD(String ambiente){
 		URL fileLocation = getClass().getClassLoader().getResource("DataSourceServicesProcess.xml");
+		//logger.info("localizacion de archivo "+fileLocation.toString());
 		File archivo = new File(fileLocation.getFile());
+		//logger.info("archivo existe "+archivo.exists());
+		//logger.info("ambiente "+ambiente);
 		try{
 				DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		        DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
 		        Document document = documentBuilder.parse(archivo);
 		        document.getDocumentElement().normalize();
 		        
-				// Element element = document.getDocumentElement();
+				Element e = document.getDocumentElement();
+				logger.info("Elemento "+e.toString());
 				NodeList listServ = document.getElementsByTagName(ambiente);
 		        Node nodo = listServ.item(0);
 		        Element element = (Element) nodo;

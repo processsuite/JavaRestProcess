@@ -332,7 +332,7 @@ public class SimpleGeneradorIreport implements GeneradorIreportManager{
 	}
 	
 	@Override
-	public String ejecutarConsultaReport(Integer wfPadre, Integer wfHijo, Integer tipoOpcion, Integer desde, List<FieldReport> camposBuscar, String campoOrden, String rutaAgentes, String ext, String ambiente) {
+	public String ejecutarConsultaReport(Integer wfPadre, Integer wfHijo, Integer tipoOpcion, Integer desde, List<FieldReport> camposBuscar, String campoOrden, String rutaAgentes, String ext, String ambiente, String puesto) {
 		long inicio = System.currentTimeMillis(); //verificar duracion de metodo
 		
 		String archivo = rutaAgentes+wfHijo+".jrxml";

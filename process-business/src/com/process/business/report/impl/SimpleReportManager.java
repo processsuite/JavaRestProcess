@@ -154,7 +154,7 @@ public class SimpleReportManager implements ReportManager {
 			long inicio = System.currentTimeMillis(); //verificar duracion de metodo
 			motor = ClassFactory.getProcess(engineP);
 			String resultXml = motor.p4bEjecutarConsulta(wfPadre, wfHijo, tipoOpcion, desde, getXmlParam(camposBuscar), campoOrden);
-			//logger.info("Tiempo de respuesta motor "+(System.currentTimeMillis() - inicio)+" xml result "+motor.p4bStatus()+" "+resultXml);
+			logger.info("Tiempo de respuesta motor "+(System.currentTimeMillis() - inicio)+" xml result "+motor.p4bStatus()+" "+resultXml);
 			if(motor.p4bStatus() == 0) {
 				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 				DocumentBuilder builder = factory.newDocumentBuilder();

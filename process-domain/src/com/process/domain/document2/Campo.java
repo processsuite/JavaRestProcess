@@ -206,8 +206,8 @@ public class Campo {
 	@XmlAttribute(name="change")
 	private Boolean change;
 	
-	@XmlAttribute(name="valueM")
-	private List<String> valueM;
+	@XmlElement(name="valueM")
+	private List<Opcion> valueM;
 	
 	@XmlAttribute(name="checked")
 	private Boolean checked;
@@ -235,11 +235,11 @@ public class Campo {
 		this.change = change;
 	}
 
-	public List<String> getValueM() {
+	public List<Opcion> getValueM() {
 		return valueM;
 	}
 
-	public void setValueM(List<String> valueM) {
+	public void setValueM(List<Opcion> valueM) {
 		this.valueM = valueM;
 	}
 
