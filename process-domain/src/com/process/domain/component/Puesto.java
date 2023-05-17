@@ -18,10 +18,17 @@ public class Puesto {
 	private List<Perfil> listPerfil;
 	private String codigoAcceso;
 	private String msj;
+	private EmpRel empRel;
 	
 	
 	
 	
+	public EmpRel getEmpRel() {
+		return empRel;
+	}
+	public void setEmpRel(EmpRel empRel) {
+		this.empRel = empRel;
+	}
 	public String getMsj() {
 		return msj;
 	}

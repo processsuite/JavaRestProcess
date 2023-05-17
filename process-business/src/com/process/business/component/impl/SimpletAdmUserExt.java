@@ -1,10 +1,12 @@
 package com.process.business.component.impl;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -177,7 +179,7 @@ public class SimpletAdmUserExt implements AdmuserExt{
 					  * 
 					  * */
 					 
-					 String sqlValP = "select COUNT(*) as contador , max(nro_ident) as ultPuesto from (select PUESTO, NRO_IDENT from PUESTO where PUESTO like 'usersw%' union select PUESTO, NRO_IDENT from PUESTOh where PUESTO like 'usersw%' ) as a";
+					 String sqlValP = "select COUNT(*) as contador , max(convert(numeric,nro_ident)) as ultPuesto from (select PUESTO, NRO_IDENT from PUESTO where PUESTO like 'usersw%' union select PUESTO, NRO_IDENT from PUESTOh where PUESTO like 'usersw%' ) as a";
 					 ResultSet r1 = stmt.executeQuery(sqlValP);
 					 logger.info("puesto maximo "+sqlValP);
 					 
@@ -191,13 +193,13 @@ public class SimpletAdmUserExt implements AdmuserExt{
 						nro = ultPuesto+1;
 						logger.info("ver calculo "+"usersw-"+nro);
 						//p.setPuesto("usersw-"+nro);
-						puestoWS = "usersw-"+nro;
+						puestoWS = "USERSW-"+nro;
 						logger.info("ver puesto asignado "+puestoWS+" usuario "+p.getCd_usr_act());
-						nbPuestoWS = "usersw-"+nro;
+						nbPuestoWS = "USERSW-"+nro;
 						//p.setNb_puesto("usersw-"+nro);
 					 }else {
-						puestoWS = "usersw-1";
-						nbPuestoWS = "usersw-1";
+						puestoWS = "USERSW-1";
+						nbPuestoWS = "USERSW-1";
 						nro = 1;
 						 //p.setPuesto("usersw-1"); 
 						 //p.setNb_puesto("usersw-1");
@@ -243,6 +245,38 @@ public class SimpletAdmUserExt implements AdmuserExt{
 								
 								int affectedRows = statement.executeUpdate();
 								logger.info("insert "+affectedRows);
+								
+								
+								
+								
+								/*ejecutar procedimiento de almacenado*/
+								CallableStatement proc = con.prepareCall("{ call f_diaco_rel_usuario(?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+								
+								proc.setString("codUser", p.getCd_usr_act());
+								proc.setInt("codProd", p.getEmpRel().getCodProd());
+								proc.setInt("codPerfil", p.getEmpRel().getCodPerfil());
+								proc.setString("codTpoEmpRel", p.getEmpRel().getCodTpoEmpRel());
+								proc.setInt("tpoNITRel", p.getEmpRel().getTpoNITRel());
+								proc.setString("NITRel", p.getEmpRel().getNitRel());
+								proc.setInt("tpoNITClte", p.getEmpRel().getTpoNitClte());
+								proc.setString("NITClte", p.getEmpRel().getNitClte());
+								
+								proc.setString("cedula", p.getEmpRel().getCedula());
+								proc.setString("codTpoIdent", p.getEmpRel().getCodTpoIdent());
+								proc.setString("tipoDoc", p.getEmpRel().getTipoDoc());
+								proc.setString("celular", p.getEmpRel().getCelular());
+								
+								
+								proc.registerOutParameter("resultado", Types.VARCHAR);
+								proc.execute();   
+								 
+								String resultado = proc.getString("resultado");
+								
+								logger.info("Resultado de store procedure "+resultado);
+								
+								
+								
+								/*Registrar perfil despues de registrar puesto y relacionarlo con empresa*/
 								if (affectedRows == 0) {
 						               throw new SQLException("Registrando de auditoria fallido");
 						        }else {

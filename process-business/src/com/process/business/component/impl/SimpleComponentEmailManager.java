@@ -43,7 +43,9 @@ public class SimpleComponentEmailManager implements ComponentEmailManager{
 	    props.put("mail.smtp.auth", email.getAuthUsuClave());    //Usar autenticación mediante usuario y clave
 	    
 	    if(email.getStartTls().equals("true")) {
+	    	 logger.info("ingresa al tls");
 	    	props.put("mail.smtp.starttls.enable", email.getStartTls()); //Para conectar de manera segura al servidor SMTP	
+	    	props.put("mail.smtp.ssl.protocols", "TLSv1.2");
 	    }else {
 	   	 // SSL Factory 
 	           props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
